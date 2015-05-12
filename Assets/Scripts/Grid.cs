@@ -14,10 +14,10 @@ public class Grid : MonoBehaviour {
 	void Start () {
 		CreateTiles ();
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
 
 	void CreateTiles() {
