@@ -1,9 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class Tile : MonoBehaviour {
 
-	public GameObject defenseType;
+	public Defense defenseType;
 	public bool isOccupied = false;
 	public bool isHover = false;
 
@@ -19,8 +19,8 @@ public class Tile : MonoBehaviour {
 
 	public void BuildDefense() {
 		// Build tower when button is released
-		//GameObject defense = (GameObject)Instantiate (defenseType);
-		//defense.transform.position = transform.position;
+		Defense defense = (Defense)Instantiate (defenseType);
+		defense.transform.position = transform.position;
 		isOccupied = true;
 		Debug.Log ("Defense built");
 	}
