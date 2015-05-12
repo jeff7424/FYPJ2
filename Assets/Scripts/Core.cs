@@ -3,11 +3,11 @@ using System.Collections;
 
 public class Core : MonoBehaviour {
 
-	TextMesh tm;
+	int health;
 
 	// Use this for initialization
 	void Start () {
-		tm = GetComponent<TextMesh> ();
+		health = 10;
 	}
 	
 	// Update is called once per frame
@@ -16,12 +16,12 @@ public class Core : MonoBehaviour {
 	}
 
 	public int CurrentHealth() {
-		return tm.text.Length;
+		return health;
 	}
 
 	public void DecreaseHealth() {
 		if (CurrentHealth () > 1)
-			tm.text = tm.text.Remove (tm.text.Length - 1);
+			health -= 1;
 		else
 			Destroy (transform.parent.gameObject);
 	}
