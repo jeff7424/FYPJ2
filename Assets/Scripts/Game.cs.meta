@@ -1,10 +1,13 @@
 fileFormatVersion: 2
 guid: a1c2f7eae2ee34049868471ae96528e0
-timeCreated: 1431358203
+timeCreated: 1431419181
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - PauseButton: {instanceID: 0}
+  - Core: {instanceID: 0}
+  - enemy: {fileID: 11409850, guid: 79b170b3fc48d9e41a27aac224a187d0, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

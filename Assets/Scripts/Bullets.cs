@@ -7,12 +7,13 @@ public class Bullets : MonoBehaviour {
 	private int damage;
 	private int speed;
 	private Vector3 direction;
+	public GameObject enemy;
 
 	// Use this for initialization
 	void Start () {
-		damage = defense.GetComponent<Defense> ().GetDamage ();
 		speed = 1;
-		direction = defense.GetComponent<Defense> ().GetDirection ();
+		damage = defense.GetComponent<Defense> ().GetDamage ();
+		direction = enemy.transform.position - transform.position;
 	}
 	
 	// Update is called once per frame

@@ -8,14 +8,14 @@ public class Game : MonoBehaviour {
 	public Tile[] tile;
 	public GameObject Core;
 	private GameObject TilePressed = null;
-
+	public Enemy enemy;
 	public bool Pause = false;
 
 	Vector2 InputPos;
 
 	// Use this for initialization
 	void Start () {
-	
+		Instantiate (enemy, new Vector2 (10, 0), Quaternion.identity);
 	}
 	
 	// Update is called once per frame
