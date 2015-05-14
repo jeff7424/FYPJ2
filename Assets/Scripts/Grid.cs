@@ -4,14 +4,22 @@ using System.Collections;
 public class Grid : MonoBehaviour {
 
 	// Script to create a grid of tiles
+	public GameObject thePathfinder;
+	public GameObject thePathfinderRoot;
+	public GameObject EnemySpawner;
 
+	public GameObject node;
 	public Tile tile;
 	public int numberOfTilesColumn = 10;
 	public int numberOfTilesRow = 9;
 	public float tileSize = 1.0f;
 
+	//public Pathfinder thePathFinder;
+
 	// Use this for initialization
 	void Start () {
+		//thePathFinder.initMap(numberOfTilesColumn, numberOfTilesRow);
+
 		CreateTiles ();
 	}
 
@@ -36,10 +44,28 @@ public class Grid : MonoBehaviour {
 					yOffset += tileSize;
 					xOffset = 0;
 					y++;
+
+					//Create a node that serves as enemy spawn points
+					GameObject newEnemySpawnNode = (GameObject)Instantiate (node, new Vector2(transform.position.x + tileSize*numberOfTilesColumn, transform.position.y + yOffset), Quaternion.identity);
+					newEnemySpawnNode.name = "enemySpawn" + y.ToString();
+					newEnemySpawnNode.transform.SetParent(thePathfinderRoot.transform);
+					EnemySpawner.GetComponent<EnemySpawner>().spawnNodes[y-1] = newEnemySpawnNode;
 				}
 				
-				Instantiate (tile, new Vector2(transform.position.x + xOffset, transform.position.y + yOffset), Quaternion.identity);
+				Tile newTile = (Tile)Instantiate (tile, new Vector2(transform.position.x + xOffset, transform.position.y + yOffset), Quaternion.identity);
+				GameObject newNode = (GameObject)Instantiate (node, new Vector2(transform.position.x + xOffset, transform.position.y + yOffset), Quaternion.identity);
+				//Assign the node to the tile
+				newTile.PathNode = newNode;
+				//Set the node as a child of the pathfinder root
+				newNode.transform.SetParent(thePathfinderRoot.transform);
+
+				if(x == 0 && y == (numberOfTilesRow/2)+(numberOfTilesRow%2)){
+					newNode.name = "enemyTargetPoint";
+				}
 			}
 		}
+
+		//Scan and create links for the pathfinding graph
+		thePathfinder.GetComponent<AstarPath>().Scan();
 	}
 }
