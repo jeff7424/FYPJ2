@@ -6,6 +6,8 @@ public class Tile : MonoBehaviour {
 	public Defense defenseType;
 	public bool isOccupied = false;
 	public bool isHover = false;
+	//The pathnode assigned to the tile for pathfinding
+	public GameObject PathNode;
 
 	// Use this for initialization
 	void Start () {
