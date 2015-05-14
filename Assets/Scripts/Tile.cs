@@ -25,6 +25,8 @@ public class Tile : MonoBehaviour {
 		defense.transform.position = transform.position;
 		isOccupied = true;
 		Debug.Log ("Defense built");
+		PathNode.transform.parent = null;
+		GameObject.Find("Pathfinder").GetComponent<AstarPath>().Scan();
 	}
 
 	void OnMouseDown() {

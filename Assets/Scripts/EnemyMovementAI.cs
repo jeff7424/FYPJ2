@@ -3,9 +3,6 @@ using System.Collections;
 using Pathfinding;
 
 public class EnemyMovementAI : MonoBehaviour {
-	//The point to move to
-	public Transform target;
-
 	private Seeker seeker;
 
 	//The calculated path
@@ -25,7 +22,8 @@ public class EnemyMovementAI : MonoBehaviour {
 		seeker = GetComponent<Seeker>();
 
 		//Start a new path to the targetPosition, return the result to the OnPathComplete function
-		seeker.StartPath( transform.position, GameObject.Find("enemyTargetPoint").transform.position, OnPathComplete );
+		//seeker.StartPath( transform.position, GameObject.Find("enemyTargetPoint").transform.position, OnPathComplete );
+		FindPath(GameObject.Find("enemyTargetPoint").transform.position);
 	}
 	
 	public void OnPathComplete ( Path p )
@@ -64,5 +62,9 @@ public class EnemyMovementAI : MonoBehaviour {
 			currentWaypoint++;
 			return;
 		}
+	}
+
+	public void FindPath(Vector3 targetPos){
+		seeker.StartPath( transform.position, targetPos, OnPathComplete );
 	}
 }

@@ -20,7 +20,7 @@ public class EnemySpawner : MonoBehaviour {
 	void Update () {
 		time += Time.deltaTime;
 		if(time >= 1.0f){
-			Instantiate(Enemy, spawnNodes[Random.Range(0, 5)].transform.position, Quaternion.identity);
+			Instantiate(Enemy, spawnNodes[Random.Range(0, spawnNodes.Length)].transform.position, Quaternion.identity);
 			time = 0.0f;
 		}
 	}
