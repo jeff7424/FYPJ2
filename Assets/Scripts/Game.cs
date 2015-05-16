@@ -15,7 +15,7 @@ public class Game : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Instantiate (enemy, new Vector2 (10, 0), Quaternion.identity);
+		//Instantiate (enemy, new Vector2 (10, 0), Quaternion.identity);
 	}
 	
 	// Update is called once per frame

@@ -22,8 +22,9 @@ public class EnemyMovementAI : MonoBehaviour {
 		seeker = GetComponent<Seeker>();
 
 		//Start a new path to the targetPosition, return the result to the OnPathComplete function
-		//seeker.StartPath( transform.position, GameObject.Find("enemyTargetPoint").transform.position, OnPathComplete );
 		FindPath(GameObject.Find("enemyTargetPoint").transform.position);
+
+		speed = GetComponent<Enemy>().getSpeed();
 	}
 	
 	public void OnPathComplete ( Path p )

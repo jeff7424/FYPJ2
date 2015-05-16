@@ -8,11 +8,15 @@ public class Enemy : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		health = 100;
-		speed = 1f;
+		speed = 1.0f;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		transform.position = new Vector3(transform.position.x - speed * Time.deltaTime, transform.position.y, transform.position.z);
+		//transform.position = new Vector3(transform.position.x - speed * Time.deltaTime, transform.position.y, transform.position.z);
+	}
+
+	public float getSpeed(){
+		return speed;
 	}
 }

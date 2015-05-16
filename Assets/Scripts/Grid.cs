@@ -14,12 +14,8 @@ public class Grid : MonoBehaviour {
 	public int numberOfTilesRow = 9;
 	public float tileSize = 1.0f;
 
-	//public Pathfinder thePathFinder;
-
 	// Use this for initialization
 	void Start () {
-		//thePathFinder.initMap(numberOfTilesColumn, numberOfTilesRow);
-
 		CreateTiles ();
 	}
 
@@ -58,10 +54,6 @@ public class Grid : MonoBehaviour {
 				newTile.PathNode = newNode;
 				//Set the node as a child of the pathfinder root
 				newNode.transform.SetParent(thePathfinderRoot.transform);
-
-				if(x == 0 && y == (numberOfTilesRow/2)+(numberOfTilesRow%2)){
-					newNode.name = "enemyTargetPoint";
-				}
 			}
 		}
 
