@@ -9,7 +9,7 @@ public class EnemyMovementAI : MonoBehaviour {
 	public Path path;
 	
 	//The AI's speed per second
-	public float speed = 2.0f;
+	public float speed = 1.0f;
 	
 	//The max distance from the AI to a waypoint for it to continue to the next waypoint
 	public float nextWaypointDistance = 0.05f;
