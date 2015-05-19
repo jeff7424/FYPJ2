@@ -25,7 +25,10 @@ public class Tile : MonoBehaviour {
 		Debug.Log ("Defense built");
 		this.transform.parent = null;
 		GameObject.Find("Pathfinder").GetComponent<AstarPath>().Scan();
-		GameObject.Find("EnemyParent").GetComponentInChildren<EnemyMovementAI>().FindPath();
+		EnemyMovementAI[] enemyAIs = GameObject.Find("EnemyParent").GetComponentsInChildren<EnemyMovementAI>();
+		foreach(EnemyMovementAI ai in enemyAIs){
+			ai.FindPath();
+		}
 	}
 
 	void OnMouseDown() {
