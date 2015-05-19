@@ -3,7 +3,7 @@ using System.Collections;
 using Pathfinding;
 
 public class EnemyMovementAI : MonoBehaviour {
-	private Seeker seeker;
+	public Seeker seeker;
 
 	//The calculated path
 	public Path path;
@@ -67,5 +67,8 @@ public class EnemyMovementAI : MonoBehaviour {
 
 	public void FindPath(Vector3 targetPos){
 		seeker.StartPath( transform.position, targetPos, OnPathComplete );
+	}
+	public void FindPath(){
+		seeker.StartPath( transform.position, GameObject.Find("enemyTargetPoint").transform.position, OnPathComplete );
 	}
 }

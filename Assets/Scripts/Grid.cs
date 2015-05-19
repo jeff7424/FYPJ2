@@ -49,11 +49,7 @@ public class Grid : MonoBehaviour {
 				}
 				
 				Tile newTile = (Tile)Instantiate (tile, new Vector2(transform.position.x + xOffset, transform.position.y + yOffset), Quaternion.identity);
-				GameObject newNode = (GameObject)Instantiate (node, new Vector2(transform.position.x + xOffset, transform.position.y + yOffset), Quaternion.identity);
-				//Assign the node to the tile
-				newTile.PathNode = newNode;
-				//Set the node as a child of the pathfinder root
-				newNode.transform.SetParent(thePathfinderRoot.transform);
+				newTile.transform.SetParent(thePathfinderRoot.transform);
 			}
 		}
 

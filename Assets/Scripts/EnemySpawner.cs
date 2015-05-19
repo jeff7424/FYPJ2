@@ -6,6 +6,7 @@ public class EnemySpawner : MonoBehaviour {
 	//The nodes where enemies will spawn
 	public GameObject[] spawnNodes;
 
+	public GameObject EnemyParent;
 	public GameObject Enemy;
 
 	private Random randomSpawn = new Random();
@@ -20,7 +21,8 @@ public class EnemySpawner : MonoBehaviour {
 	void Update () {
 		time += Time.deltaTime;
 		if(time >= 1.0f){
-			Instantiate(Enemy, spawnNodes[Random.Range(0, spawnNodes.Length)].transform.position, Quaternion.identity);
+			GameObject newEnemy = (GameObject)Instantiate(Enemy, spawnNodes[Random.Range(0, spawnNodes.Length)].transform.position, Quaternion.identity);
+			newEnemy.transform.SetParent(EnemyParent.transform);
 			time = 0.0f;
 		}
 	}
