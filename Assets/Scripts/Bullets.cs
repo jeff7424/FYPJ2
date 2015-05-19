@@ -3,25 +3,30 @@ using System.Collections;
 
 public class Bullets : MonoBehaviour {
 
-	public Defense defense;
-	private int damage;
-	private int speed;
-	private Vector3 direction;
-	public GameObject enemy;
+	private float speed = 10.0f;
 
+	public int damage;
+	public Vector3 direction;
+	public Transform target;
+	
 	// Use this for initialization
 	void Start () {
-		speed = 1;
-		damage = defense.GetComponent<Defense> ().GetDamage ();
-		direction = enemy.transform.position - transform.position;
+		direction = target.position - transform.position;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		//check if enemy in range
-		transform.position += direction * speed * Time.deltaTime;
+		// Move the bullet towards the direction of enemy
+		transform.position += direction * Time.deltaTime * speed;
 	}
 
-	// Check for collision with enemy
-	// If collide, destroy this object
+	void OnTriggerEnter2D(Collider2D other) {
+		// Check if collides with enemy
+		if (other.gameObject.tag == "Enemy" || other.GetComponent<Enemy>()) {
+			// Deal damage to enemy (Not working yet)
+			other.GetComponent<Enemy>().health -= damage;
+			// Destroy bullet once hit enemy
+			Destroy (gameObject);
+		} 
+	}
 }

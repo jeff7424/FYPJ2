@@ -7,51 +7,63 @@ public class Defense : MonoBehaviour {
 	private int cost;
 	private float firerate;
 	private int level;
-	private Vector2 direction;
-	public GameObject enemy;
-	public GameObject bulletPrefab;
-	public Bullets bullet;
-	public bool inRange;
 
+	public Vector2 direction;
+	public Transform target;
+	public GameObject bullet;
+	
 	// Use this for initialization
 	void Start () {
 		damage = 10;
 		level = 1;
 		cost = 300;
-		firerate = 3;
-		inRange = false;
+		firerate = 1;
 		direction = new Vector2 (0, 0);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		direction = enemy.transform.position - transform.position;
-		if (firerate > 0) {
-			firerate -= Time.deltaTime;
-		} 
-		else {
-			Instantiate (bulletPrefab, transform.position, Quaternion.identity);//create new object
-			firerate = 3;
-			//GameObject g = (GameObject)Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+		//direction = target.position - transform.position;
+		// If target is available (not null)
+		if (target) {
+			// If fire rate is not 0 then countdown else fire bullet
+			if (firerate > 0) {
+				firerate -= Time.deltaTime;
+			} else {
+				ShootBullet ();
+			}
 		}
 	}
 	
-	public Vector2 GetDirection() {
-		return direction;
-	}
-
 	public int GetDamage() {
 		return damage;
 	}
-
-	void OnTriggerEnter(Collider co)
+	
+	void OnTriggerEnter2D(Collider2D co)
 	{
-		if (co.GetComponent<Enemy> ()) {
-			inRange = true;
-			//g.GetComponent<Bullets>().target = co.transform;
-		} 
-		else {
-			inRange = false;
+		// Check if defense has no target then assign new one
+		if (target == null) {
+			if (co.gameObject.tag == "Enemy" || co.GetComponent<Enemy>()) {
+				target = co.gameObject.transform;
+			} 
 		}
 	}
+	
+	void OnTriggerExit2D(Collider2D co) {
+		// If target exits the defense range then set target to null
+		if (target) {
+			if (co.gameObject.tag == "Enemy" || co.GetComponent<Enemy>()) {
+				target = null;
+			}
+		}
+	}
+	
+	void ShootBullet() {
+		// Instantiation of bullet object
+		GameObject b = (GameObject)Instantiate (bullet, transform.position, Quaternion.identity);
+		b.GetComponent<Bullets>().target = target;
+		b.GetComponent<Bullets> ().damage = damage;
+		firerate = 1;
+	}
+	
 }
