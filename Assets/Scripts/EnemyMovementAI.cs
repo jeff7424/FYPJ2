@@ -9,13 +9,15 @@ public class EnemyMovementAI : MonoBehaviour {
 	public Path path;
 	
 	//The AI's speed per second
-	public float speed = 1.0f;
+	public float speed;
 	
 	//The max distance from the AI to a waypoint for it to continue to the next waypoint
 	public float nextWaypointDistance = 0.05f;
 	
 	//The waypoint we are currently moving towards
 	private int currentWaypoint = 0;
+
+	private bool firstPath = true;
 
 	// Use this for initialization
 	void Start () {
@@ -26,14 +28,20 @@ public class EnemyMovementAI : MonoBehaviour {
 
 		speed = GetComponent<Enemy>().getSpeed();
 	}
-	
+
+	//This function is called when path has been calculated
 	public void OnPathComplete ( Path p )
 	{
 		if (!p.error)
 		{
 			path = p;
 			//Reset the waypoint counter
-			currentWaypoint = 0;
+			if(firstPath){
+				currentWaypoint = 0;
+				firstPath = false;
+			}
+			else
+				currentWaypoint = 1;
 		}
 	}
 	
