@@ -3,13 +3,13 @@ using System.Collections;
 
 public class Game : MonoBehaviour {
 
-	public GUITexture PauseButton = null;
+	//public GUITexture PauseButton = null;
 
 	public Tile[] tile;
 	public GameObject Core;
 	private GameObject TilePressed = null;
 	public Enemy enemy;
-	public bool Pause = false;
+	public bool isPause = false;
 
 	Vector2 InputPos;
 
@@ -47,31 +47,12 @@ public class Game : MonoBehaviour {
 			}
 		}
 		#elif UNITY_EDITOR
-		//if (Input.GetMouseButton (0)) {
-		//	if (PauseButton.HitTest (InputPos)) {
-		//		Pause = !Pause;
-		//	}
-		//}
-		//if (TilePressed == null) {
-		//	Vector3 ScreenToWorld = Camera.main.ScreenToWorldPoint (InputPos);
-		//	RaycastHit2D Pressed = Physics2D.Raycast (new Vector2(ScreenToWorld.x, ScreenToWorld.y),
-		//	                                          Vector2.zero);
 
-		//	if (Pressed != null) {
-		//		if (Pressed.collider.gameObject.tag == "Tile") {
-		//			TilePressed = Pressed.collider.gameObject;
-		//		}
-		//	}
-		//}
-		//else if (TilePressed != null) {
-		//	tile = TilePressed.GetComponents<Tile>();
-		//	foreach (Tile tiles in tile) {
-				//if (tiles.isOccupied == false) {
-				//	tiles.BuildDefense();
-				//}
-		//		Debug.Log ("Clicked");
-		//	}
-		//}
+
 		#endif
+	}
+
+	public void SetPause(bool Pause) {
+		isPause = Pause;
 	}
 }

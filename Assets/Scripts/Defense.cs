@@ -7,10 +7,12 @@ public class Defense : MonoBehaviour {
 	private int cost;
 	private float firerate;
 	private int level;
+	private float weaponRotation;
 
 	public Vector2 direction;
 	public Transform target;
 	public GameObject bullet;
+	public Transform weapon;
 	
 	// Use this for initialization
 	void Start () {
@@ -26,6 +28,8 @@ public class Defense : MonoBehaviour {
 		//direction = target.position - transform.position;
 		// If target is available (not null)
 		if (target) {
+			CalculateAim (target);
+			//weapon.rotation = Quaternion.Lerp (weapon.rotation, weaponRotation, Time.deltaTime);
 			// If fire rate is not 0 then countdown else fire bullet
 			if (firerate > 0) {
 				firerate -= Time.deltaTime;
@@ -65,5 +69,13 @@ public class Defense : MonoBehaviour {
 		b.GetComponent<Bullets> ().damage = damage;
 		firerate = 1;
 	}
-	
+
+	void CalculateAim(Transform target) {
+		// Calculate the direction of the target from the defense
+		Vector2 aim = new Vector2 (target.position.x - transform.position.x, target.position.y - transform.position.y);
+		// Do a atan2 and convert to degree
+		weaponRotation = Mathf.Atan2 (aim.y, aim.x) * Mathf.Rad2Deg;
+		// Apply rotation to the child
+		weapon.rotation = Quaternion.Euler (0, 0, weaponRotation);
+	}
 }

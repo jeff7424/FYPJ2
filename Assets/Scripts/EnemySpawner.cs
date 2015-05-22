@@ -20,10 +20,10 @@ public class EnemySpawner : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		time += Time.deltaTime;
-		if(time >= 1.0f){
-			GameObject newEnemy = (GameObject)Instantiate(Enemy, spawnNodes[Random.Range(0, spawnNodes.Length)].transform.position, Quaternion.identity);
-			newEnemy.transform.SetParent(EnemyParent.transform);
-			newEnemy.GetComponent<Enemy>().setType((global::Enemy.enemyType)Random.Range(0, (int)global::Enemy.enemyType.TYPE_MAX));
+		if (time >= 1.0f) {
+			GameObject newEnemy = (GameObject)Instantiate (Enemy, spawnNodes [Random.Range (0, spawnNodes.Length)].transform.position, Quaternion.identity);
+			newEnemy.transform.SetParent (EnemyParent.transform);
+			newEnemy.GetComponent<Enemy> ().setType ((global::Enemy.enemyType)Random.Range (0, (int)global::Enemy.enemyType.TYPE_MAX));
 			//newEnemy.GetComponent<Enemy>().setType(global::Enemy.enemyType.TYPE_SLOW);
 			time = 0.0f;
 		}

@@ -32,17 +32,15 @@ public class EnemyMovementAI : MonoBehaviour {
 	//This function is called when path has been calculated
 	public void OnPathComplete ( Path p )
 	{
-		if (!p.error)
-		{
+		if (!p.error) {
 			path = p;
 			//Reset the waypoint counter
-			if(prevNode != null){
-				if(path.vectorPath[0] == prevNode)
+			if (prevNode != null) {
+				if (path.vectorPath [0] == prevNode)
 					currentWaypoint = 1;
 				else
 					currentWaypoint = 0;
-			}
-			else
+			} else
 				currentWaypoint = 0;
 		}
 	}
