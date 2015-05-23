@@ -12,7 +12,9 @@ public class Defense : MonoBehaviour {
 	public Vector2 direction;
 	public Transform target;
 	public GameObject bullet;
-	public Transform weapon;
+
+	private GameObject weapon;
+	public GameObject cannon;
 	
 	// Use this for initialization
 	void Start () {
@@ -21,6 +23,8 @@ public class Defense : MonoBehaviour {
 		cost = 300;
 		firerate = 1;
 		direction = new Vector2 (0, 0);
+		weapon = Instantiate (cannon, transform.position, Quaternion.identity) as GameObject;
+		weapon.transform.parent = transform;
 	}
 	
 	// Update is called once per frame
@@ -52,7 +56,15 @@ public class Defense : MonoBehaviour {
 			} 
 		}
 	}
-	
+
+	void OnTriggerStay2D(Collider2D co) {
+		if (target == null) {
+			if (co.gameObject.tag == "Enemy" || co.GetComponent<Enemy>()) {
+				target = co.gameObject.transform;
+			} 
+		}
+	}
+
 	void OnTriggerExit2D(Collider2D co) {
 		// If target exits the defense range then set target to null
 		if (target) {
@@ -76,6 +88,6 @@ public class Defense : MonoBehaviour {
 		// Do a atan2 and convert to degree
 		weaponRotation = Mathf.Atan2 (aim.y, aim.x) * Mathf.Rad2Deg;
 		// Apply rotation to the child
-		weapon.rotation = Quaternion.Euler (0, 0, weaponRotation);
+		weapon.transform.rotation = Quaternion.Euler (0, 0, weaponRotation);
 	}
 }
