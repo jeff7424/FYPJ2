@@ -3,9 +3,8 @@ using System.Collections;
 
 public class Tile : MonoBehaviour {
 
-	public Defense defenseType;
-	public bool isOccupied = false;
-	public bool isHover = false;
+	public Defense defenses;
+	private bool isOccupied = false;
 
 	// Use this for initialization
 	void Start () {
@@ -19,7 +18,7 @@ public class Tile : MonoBehaviour {
 
 	public void BuildDefense() {
 		// Build tower when button is released
-		Defense defense = (Defense)Instantiate (defenseType);
+		Defense defense = (Defense)Instantiate (defenses);
 		defense.transform.position = transform.position;
 		isOccupied = true;
 		Debug.Log ("Defense built");
@@ -32,8 +31,11 @@ public class Tile : MonoBehaviour {
 	}
 
 	void OnMouseDown() {
-		BuildDefense ();
-		//Destroy (this.gameObject);
+		if (!isOccupied) {
+			BuildDefense ();
+		} else {
+			Debug.Log ("Occupied");
+		}
 	}
 
 	public Vector2 TilePosition() {

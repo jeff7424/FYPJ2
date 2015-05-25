@@ -2,6 +2,10 @@
 using System.Collections;
 
 public class Enemy : MonoBehaviour {
+	public Sprite slow;
+	public Sprite normal;
+	public Sprite fast;
+
 	public int health;
 	private float speed;
 
@@ -37,18 +41,21 @@ public class Enemy : MonoBehaviour {
 			health = 25;
 			speed = 1.0f;
 			gameObject.name = "Normal";
+			GetComponent<SpriteRenderer>().sprite = normal;
 			break;
 
 		case enemyType.TYPE_SLOW:
 			health = 50;
 			speed = 0.5f;
 			gameObject.name = "Slow";
+			GetComponent<SpriteRenderer>().sprite = slow;
 			break;
 
 		case enemyType.TYPE_FAST:
 			health = 10;
 			speed = 1.5f;
 			gameObject.name = "Fast";
+			GetComponent<SpriteRenderer>().sprite = fast;
 			break;
 		}
 

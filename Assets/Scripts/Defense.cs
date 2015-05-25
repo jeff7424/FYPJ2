@@ -3,40 +3,44 @@ using System.Collections;
 
 public class Defense : MonoBehaviour {
 	//declaration
-	private int damage;
-	private int cost;
-	private float firerate;
-	private int level;
-	private float weaponRotation;
+	public enum defenseType {
+		DEF_CANNON 	= 0,	// 1 target, 1 shot, ground only
+		DEF_TURRET 	= 1,	// 1 target, 3 shots, ground only
+		DEF_SLOW 	= 2,	// 1 target, 1 shot, ground and air
+		DEF_ANTIAIR = 3		// 1 target, 3 shots, air only
+	}
 
-	public Vector2 direction;
+	public defenseType selection;
+	public int damage;
+	private int cost;
+	private int level;
+	private float firerate;
+	private float fireratecounter;
+	private float weaponRotation;
+	
 	public Transform target;
-	public GameObject bullet;
+	public Bullets bullet;
 
 	private GameObject weapon;
-	public GameObject cannon;
+	public GameObject weaponObject;
+	public Sprite cannon;	
+	public Sprite turret;
+	public Sprite slow;
+	public Sprite antiair;
 	
 	// Use this for initialization
 	void Start () {
-		damage = 10;
-		level = 1;
-		cost = 300;
-		firerate = 1;
-		direction = new Vector2 (0, 0);
-		weapon = Instantiate (cannon, transform.position, Quaternion.identity) as GameObject;
-		weapon.transform.parent = transform;
+		SetType (selection);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		//direction = target.position - transform.position;
 		// If target is available (not null)
 		if (target) {
 			CalculateAim (target);
-			//weapon.rotation = Quaternion.Lerp (weapon.rotation, weaponRotation, Time.deltaTime);
 			// If fire rate is not 0 then countdown else fire bullet
-			if (firerate > 0) {
-				firerate -= Time.deltaTime;
+			if (fireratecounter > 0.0f) {
+				fireratecounter -= Time.deltaTime;
 			} else {
 				ShootBullet ();
 			}
@@ -75,11 +79,9 @@ public class Defense : MonoBehaviour {
 	}
 	
 	void ShootBullet() {
-		// Instantiation of bullet object
-		GameObject b = (GameObject)Instantiate (bullet, transform.position, Quaternion.identity);
-		b.GetComponent<Bullets>().target = target;
-		b.GetComponent<Bullets> ().damage = damage;
-		firerate = 1;
+		Instantiate (bullet, weapon.transform.position, weapon.transform.rotation);
+		bullet.damage = damage;
+		this.fireratecounter = this.firerate;
 	}
 
 	void CalculateAim(Transform target) {
@@ -89,5 +91,52 @@ public class Defense : MonoBehaviour {
 		weaponRotation = Mathf.Atan2 (aim.y, aim.x) * Mathf.Rad2Deg;
 		// Apply rotation to the child
 		weapon.transform.rotation = Quaternion.Euler (0, 0, weaponRotation);
+	}
+
+	public void SetSelection (int selection) {
+		this.selection = (defenseType)selection;
+	}
+
+	public void SetType(defenseType type) {
+		this.weapon = Instantiate (weaponObject, transform.position, Quaternion.identity) as GameObject;
+		this.weapon.transform.parent = transform;
+		switch (selection) {
+		case defenseType.DEF_CANNON:
+			{
+				this.damage = 10;
+				this.cost = 300;
+				this.firerate = 1.0f;
+				this.weapon.GetComponent<SpriteRenderer>().sprite = cannon;
+				this.GetComponent<CircleCollider2D>().radius = 3;
+				this.gameObject.name = "Cannon";
+				break;
+			}
+			case defenseType.DEF_TURRET:
+			{
+				this.damage = 2;
+				this.cost = 300;
+				this.firerate = 0.2f;
+				this.gameObject.name = "Turret";
+				break;
+			}
+			case defenseType.DEF_SLOW:
+			{
+				this.damage = 5;
+				this.cost = 300;
+				this.firerate = 3.0f;
+				this.weapon.GetComponent<SpriteRenderer>().sprite = slow;
+				this.GetComponent<CircleCollider2D>().radius = 7;
+				this.gameObject.name = "Slow";
+				break;
+			}
+			case defenseType.DEF_ANTIAIR:
+			{
+				this.gameObject.name = "Anti-Air";
+				break;
+			}
+			this.fireratecounter = this.firerate;
+			this.level = 1;
+			this.gameObject.tag = "Defense";
+		}
 	}
 }

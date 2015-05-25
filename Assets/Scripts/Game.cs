@@ -3,13 +3,20 @@ using System.Collections;
 
 public class Game : MonoBehaviour {
 
-	//public GUITexture PauseButton = null;
+	//public GUITexture PauseButton;
+	public GameObject Button_Pause;
+	public GameObject Button_DefenseCannon;
+	public GameObject Button_DefenseTurret;
+	public GameObject Button_DefenseSlow;
+	public GameObject Button_DefenseAntiAir;
 
 	public Tile[] tile;
 	public GameObject Core;
 	private GameObject TilePressed = null;
 	public Enemy enemy;
 	public bool isPause = false;
+
+	private int selection = 0;
 
 	Vector2 InputPos;
 
@@ -54,5 +61,13 @@ public class Game : MonoBehaviour {
 
 	public void SetPause(bool Pause) {
 		isPause = Pause;
+	}
+
+	public void SetSelection(int selection) {
+		this.selection = selection;
+	}
+
+	public int GetSelection() {
+		return selection;
 	}
 }
