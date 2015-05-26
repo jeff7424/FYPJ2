@@ -3,19 +3,21 @@ using System.Collections;
 using Pathfinding;
 
 public class EnemyMovementAI : MonoBehaviour {
-	private Seeker seeker;
+	public Seeker seeker;
 
 	//The calculated path
 	public Path path;
 	
 	//The AI's speed per second
-	public float speed = 1.0f;
+	public float speed;
 	
 	//The max distance from the AI to a waypoint for it to continue to the next waypoint
 	public float nextWaypointDistance = 0.05f;
 	
 	//The waypoint we are currently moving towards
 	private int currentWaypoint = 0;
+
+	private Vector3 prevNode;
 
 	// Use this for initialization
 	void Start () {
@@ -26,17 +28,23 @@ public class EnemyMovementAI : MonoBehaviour {
 
 		speed = GetComponent<Enemy>().getSpeed();
 	}
-	
+
+	//This function is called when path has been calculated
 	public void OnPathComplete ( Path p )
 	{
-		if (!p.error)
-		{
+		if (!p.error) {
 			path = p;
 			//Reset the waypoint counter
-			currentWaypoint = 0;
+			if (prevNode != null) {
+				if (path.vectorPath [0] == prevNode)
+					currentWaypoint = 1;
+				else
+					currentWaypoint = 0;
+			} else
+				currentWaypoint = 0;
 		}
 	}
-	
+
 	public void FixedUpdate ()
 	{
 		if (path == null)
@@ -50,7 +58,7 @@ public class EnemyMovementAI : MonoBehaviour {
 		{
 			return;
 		}
-		
+
 		//Direction to the next waypoint
 		Vector3 dir = ( path.vectorPath[ currentWaypoint ] - transform.position ).normalized;
 		dir *= speed * Time.fixedDeltaTime;
@@ -66,6 +74,12 @@ public class EnemyMovementAI : MonoBehaviour {
 	}
 
 	public void FindPath(Vector3 targetPos){
+		if(path != null)
+			prevNode = path.vectorPath[currentWaypoint-1];
+
 		seeker.StartPath( transform.position, targetPos, OnPathComplete );
+	}
+	public void FindPath(){
+		FindPath(GameObject.Find("enemyTargetPoint").transform.position);
 	}
 }
