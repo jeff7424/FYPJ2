@@ -34,15 +34,15 @@ public class Enemy : MonoBehaviour {
 		return speed;
 	}
 
-<<<<<<< HEAD
 	void OnTriggerEnter2D(Collider2D other) {
 		// Check if collides with enemy
-		if (other.gameObject.tag == "Core" || other.GetComponent<Core>()) {
+		if (other.gameObject.tag == "Core" || other.GetComponent<Core> ()) {
 			// Deal damage to enemy (Not working yet)
 			// Destroy bullet once hit enemy
 			//Destroy (other.gameObject);
 		} 
-=======
+	}
+
 	public void setType(enemyType newType){
 		type = newType;
 
@@ -70,6 +70,5 @@ public class Enemy : MonoBehaviour {
 		}
 
 		GetComponent<EnemyMovementAI>().speed = speed;
->>>>>>> origin/master
 	}
 }
