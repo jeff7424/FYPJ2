@@ -16,7 +16,9 @@ public class Grid : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		CreateTiles ();
+		if (WinGame.kills < 10) {
+			CreateTiles ();
+		}
 	}
 
 	// Update is called once per frame
