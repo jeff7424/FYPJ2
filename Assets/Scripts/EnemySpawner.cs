@@ -35,14 +35,15 @@ public class EnemySpawner : MonoBehaviour {
 //		}
 
 
-		if(currWave <= LevelWaves.waves.Length){
+		if(currWave < LevelWaves.waves.Length){
 			if(LevelWaves.waves[currWave].TotalEnemies <= 0){
 				//When wave has finished spawning all enemies
 				//Wait for timer before going to next wave
 				waveChangeTimer += Time.deltaTime;
-				if(waveChangeTimer > 10.0f){
+				if(waveChangeTimer > 10.0f && currWave+1 < LevelWaves.waves.Length){
 					++currWave;
 					WaveText.text = "Wave " + (currWave+1);
+					waveChangeTimer = 0.0f;
 				}
 			}
 			else{
