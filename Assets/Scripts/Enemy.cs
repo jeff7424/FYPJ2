@@ -25,12 +25,22 @@ public class Enemy : MonoBehaviour {
 	void Update () {
 		// If health less than zero destroy object
 		if (health <= 0) {
+			WinGame.kills++;
 			Destroy (gameObject);
 		}
 	}
 
 	public float getSpeed(){
 		return speed;
+	}
+
+	void OnTriggerEnter2D(Collider2D other) {
+		// Check if collides with enemy
+		if (other.gameObject.tag == "Core" || other.GetComponent<Core> ()) {
+			// Deal damage to enemy (Not working yet)
+			// Destroy bullet once hit enemy
+			//Destroy (other.gameObject);
+		} 
 	}
 
 	public void setType(enemyType newType){

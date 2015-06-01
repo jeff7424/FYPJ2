@@ -51,7 +51,7 @@ public class Defense : MonoBehaviour {
 		return damage;
 	}
 	
-	void OnTriggerEnter2D(Collider2D co)
+	void OnTriggerEnter2D(Collider2D co)//range of the tower's target
 	{
 		// Check if defense has no target then assign new one
 		if (target == null) {
