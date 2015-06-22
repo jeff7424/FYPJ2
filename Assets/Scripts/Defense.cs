@@ -17,6 +17,7 @@ public class Defense : MonoBehaviour {
 	private float firerate;
 	private float fireratecounter;
 	private float weaponRotation;
+	private float aimposition;
 	
 	public Transform target;
 	public Bullets bullet;
@@ -88,8 +89,20 @@ public class Defense : MonoBehaviour {
 		// Calculate the direction of the target from the defense
 		Vector2 aim = new Vector2 (target.position.x - transform.position.x, target.position.y - transform.position.y);
 		// Do a atan2 and convert to degree
-		weaponRotation = Mathf.Atan2 (aim.y, aim.x) * Mathf.Rad2Deg;
+		aimposition = Mathf.Atan2 (aim.y, aim.x) * Mathf.Rad2Deg;
 		// Apply rotation to the child
+		weaponRotation = weapon.transform.eulerAngles.z;
+		if (weaponRotation > aimposition) {
+			weaponRotation -= Time.deltaTime * 100;
+			if (weaponRotation == 0) {
+				weaponRotation = 360;
+			}
+		} else if (weaponRotation < aimposition) {
+			weaponRotation += Time.deltaTime * 100;
+			if (weaponRotation == 360) {
+				weaponRotation = 0;
+			}
+		}
 		weapon.transform.rotation = Quaternion.Euler (0, 0, weaponRotation);
 	}
 
@@ -138,5 +151,13 @@ public class Defense : MonoBehaviour {
 			this.level = 1;
 			this.gameObject.tag = "Defense";
 		}
+	}
+
+	public int GetCost(defenseType type) {
+		return cost;
+	}
+
+	void OnClick() {
+		// Render circle
 	}
 }
