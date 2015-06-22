@@ -5,7 +5,6 @@ public class Core : MonoBehaviour {
 
 	int health;
 	public GameObject thePathfinderRoot;
-	public GameObject thePathfinder;
 
 	public GameObject pathNode;
 
