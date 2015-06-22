@@ -22,11 +22,12 @@ public class Tile : MonoBehaviour {
 		defense.transform.position = transform.position;
 		isOccupied = true;
 		Debug.Log ("Defense built");
-		this.transform.parent = null;
-		GameObject.Find("Pathfinder").GetComponent<AstarPath>().Scan();
+
+		//Update pathNode type and search path for all AI present
+		GetComponent<Node>().type = Node.NodeType.NODE_TOWER;
 		EnemyMovementAI[] enemyAIs = GameObject.Find("EnemyParent").GetComponentsInChildren<EnemyMovementAI>();
 		foreach(EnemyMovementAI ai in enemyAIs){
-			ai.FindPath();
+			ai.searchPath();
 		}
 	}
 
