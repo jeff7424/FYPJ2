@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Pathfinding;
+using System.Collections.Generic;
 
 public class EnemyMovementAI : MonoBehaviour {
-	public Seeker seeker;
-
 	//The calculated path
-	public Path path;
+	public List<GameObject> thePath;
 	
 	//The AI's speed per second
 	public float speed;
@@ -19,67 +17,47 @@ public class EnemyMovementAI : MonoBehaviour {
 
 	private Vector3 prevNode;
 
+
 	// Use this for initialization
 	void Start () {
-		seeker = GetComponent<Seeker>();
-
-		//Start a new path to the targetPosition, return the result to the OnPathComplete function
-		FindPath(GameObject.Find("enemyTargetPoint").transform.position);
+		thePath = new List<GameObject>();
+		searchPath();
 
 		speed = GetComponent<Enemy>().getSpeed();
 	}
 
-	//This function is called when path has been calculated
-	public void OnPathComplete ( Path p )
-	{
-		if (!p.error) {
-			path = p;
-			//Reset the waypoint counter
-			if (prevNode != null) {
-				if (path.vectorPath [0] == prevNode)
-					currentWaypoint = 1;
-				else
-					currentWaypoint = 0;
-			} else
-				currentWaypoint = 0;
-		}
-	}
-
 	public void FixedUpdate ()
 	{
-		if (path == null)
+		if (thePath == null)
 		{
 			//We have no path to move after yet
 			return;
 		}
 
 		//Reached end of path
-		if (currentWaypoint >= path.vectorPath.Count)
+		if (currentWaypoint >= thePath.Count)
 		{
+			thePath.Clear();
+			currentWaypoint = 0;
 			return;
 		}
 
 		//Direction to the next waypoint
-		Vector3 dir = ( path.vectorPath[ currentWaypoint ] - transform.position ).normalized;
-		dir *= speed * Time.fixedDeltaTime;
+		Vector3 dir = ( thePath[currentWaypoint].transform.position - transform.position ).normalized;
+		dir *= speed * Time.deltaTime;
 		this.gameObject.transform.Translate( dir );
-		
+
 		//Check if we are close enough to the next waypoint
 		//If we are, proceed to follow the next waypoint
-		if (Vector3.Distance( transform.position, path.vectorPath[ currentWaypoint ] ) < nextWaypointDistance)
+		if (Vector3.Distance( transform.position, thePath[currentWaypoint].transform.position ) < nextWaypointDistance)
 		{
 			currentWaypoint++;
 			return;
 		}
 	}
 
-	public void FindPath(Vector3 targetPos){
-		if(path != null)
-			prevNode = path.vectorPath[currentWaypoint-1];
-
-		seeker.StartPath( transform.position, targetPos, OnPathComplete );
-	}
-	public void FindPath(){
-		FindPath(GameObject.Find("enemyTargetPoint").transform.position);
+	public void searchPath(){
+		thePath.Clear();
+		thePath = transform.parent.GetComponent<EnemyParentScript>().Pathfinder.FindPath(transform.position, GetComponent<Enemy>().getType());
 	}
 }
