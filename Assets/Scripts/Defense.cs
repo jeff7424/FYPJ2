@@ -152,7 +152,6 @@ public class Defense : MonoBehaviour {
 			this.gameObject.tag = "Defense";
 		}
 	}
-<<<<<<< HEAD
 
 	public int GetCost(defenseType type) {
 		return cost;
@@ -162,6 +161,3 @@ public class Defense : MonoBehaviour {
 		// Render circle
 	}
 }
-=======
-}
->>>>>>> 5f418bfaec5ea93c2d15b7179c4c34fa53e19ff2

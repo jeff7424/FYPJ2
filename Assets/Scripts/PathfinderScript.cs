@@ -58,7 +58,7 @@ public class PathfinderScript : MonoBehaviour {
 		
 		
 		//Add initial node to the path
-		path.Add(closestNode);
+		//path.Add(closestNode);
 
 		//Pathfinding
 		bool pathFound = false;

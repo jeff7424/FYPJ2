@@ -58,6 +58,7 @@ public class EnemyMovementAI : MonoBehaviour {
 
 	public void searchPath(){
 		thePath.Clear();
+		currentWaypoint = 0;
 		thePath = transform.parent.GetComponent<EnemyParentScript>().Pathfinder.FindPath(transform.position, GetComponent<Enemy>().getType());
 	}
 }
