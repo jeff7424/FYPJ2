@@ -4,23 +4,28 @@ using System.Collections;
 public class Defense : MonoBehaviour {
 	//declaration
 	public enum defenseType {
-		DEF_CANNON 	= 0,	// 1 target, 1 shot, ground only
-		DEF_TURRET 	= 1,	// 1 target, 3 shots, ground only
-		DEF_SLOW 	= 2,	// 1 target, 1 shot, ground and air
-		DEF_ANTIAIR = 3		// 1 target, 3 shots, air only
+		DEF_CANNON 	= 1,	// 1 target, 1 shot, ground only
+		DEF_TURRET 	= 2,	// 1 target, 3 shots, ground only
+		DEF_SLOW 	= 3,	// 1 target, 1 shot, ground and air
+		DEF_ANTIAIR = 4		// 1 target, 3 shots, air only
 	}
 
 	public defenseType selection;
 	public int damage;
 	private int cost;
 	private int level;
+	private int health;
+	private int bulletcount = 0;
+	private float bulletcounttimer = 0.1f;
 	private float firerate;
 	private float fireratecounter;
-	private float weaponRotation;
 	private float aimposition;
+	private float weaponRotationSpeed = 20.0f;
+	private Quaternion weaponRotation = Quaternion.identity;
 	
 	public Transform target;
 	public Bullets bullet;
+	public Rect healthbar;
 
 	private GameObject weapon;
 	public GameObject weaponObject;
@@ -33,7 +38,7 @@ public class Defense : MonoBehaviour {
 	void Start () {
 		SetType (selection);
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		// If target is available (not null)
@@ -43,8 +48,16 @@ public class Defense : MonoBehaviour {
 			if (fireratecounter > 0.0f) {
 				fireratecounter -= Time.deltaTime;
 			} else {
-				ShootBullet ();
+				if (this.gameObject.name == "Turret") {
+					TurretFire ();
+				} 
+				else {
+					ShootBullet ();
+				}
 			}
+		}
+		if (health <= 0) {
+			Destroy (gameObject);
 		}
 	}
 	
@@ -85,29 +98,39 @@ public class Defense : MonoBehaviour {
 		this.fireratecounter = this.firerate;
 	}
 
+	void TurretFire() {
+		if (bulletcounttimer > 0.0f) {
+			bulletcounttimer -= Time.deltaTime;
+		} else {
+			Instantiate (bullet, weapon.transform.position, weapon.transform.rotation);
+			bullet.damage = damage;
+			bulletcount += 1;
+			bulletcounttimer = 0.15f;
+		}
+
+		if (bulletcount >= 3) {
+			bulletcount = 0;
+			this.fireratecounter = this.firerate;
+		}
+	}
+
 	void CalculateAim(Transform target) {
 		// Calculate the direction of the target from the defense
 		Vector2 aim = new Vector2 (target.position.x - transform.position.x, target.position.y - transform.position.y);
 		// Do a atan2 and convert to degree
 		aimposition = Mathf.Atan2 (aim.y, aim.x) * Mathf.Rad2Deg;
 		// Apply rotation to the child
-		weaponRotation = weapon.transform.eulerAngles.z;
-		if (weaponRotation > aimposition) {
-			weaponRotation -= Time.deltaTime * 100;
-			if (weaponRotation == 0) {
-				weaponRotation = 360;
-			}
-		} else if (weaponRotation < aimposition) {
-			weaponRotation += Time.deltaTime * 100;
-			if (weaponRotation == 360) {
-				weaponRotation = 0;
-			}
-		}
-		weapon.transform.rotation = Quaternion.Euler (0, 0, weaponRotation);
+		Vector3 angles = weapon.transform.eulerAngles;
+		angles.z = Mathf.LerpAngle (weapon.transform.eulerAngles.z, aimposition, weaponRotationSpeed * Time.deltaTime);
+		weapon.transform.eulerAngles = angles;
 	}
 
 	public void SetSelection (int selection) {
 		this.selection = (defenseType)selection;
+	}
+
+	public int GetSelection () {
+		return (int)selection;
 	}
 
 	public void SetType(defenseType type) {
@@ -126,9 +149,11 @@ public class Defense : MonoBehaviour {
 			}
 			case defenseType.DEF_TURRET:
 			{
-				this.damage = 2;
+				this.damage = 3;
 				this.cost = 300;
-				this.firerate = 0.2f;
+				this.firerate = 1.0f;
+				this.weapon.GetComponent<SpriteRenderer>().sprite = turret;
+				this.GetComponent<CircleCollider2D>().radius = 2;
 				this.gameObject.name = "Turret";
 				break;
 			}
@@ -138,7 +163,7 @@ public class Defense : MonoBehaviour {
 				this.cost = 300;
 				this.firerate = 3.0f;
 				this.weapon.GetComponent<SpriteRenderer>().sprite = slow;
-				this.GetComponent<CircleCollider2D>().radius = 7;
+				this.GetComponent<CircleCollider2D>().radius = 5;
 				this.gameObject.name = "Slow";
 				break;
 			}
@@ -147,17 +172,17 @@ public class Defense : MonoBehaviour {
 				this.gameObject.name = "Anti-Air";
 				break;
 			}
-			this.fireratecounter = this.firerate;
-			this.level = 1;
-			this.gameObject.tag = "Defense";
 		}
+		this.fireratecounter = this.firerate;
+		this.health = 10;
+		this.level = 1;
+		this.gameObject.tag = "Defense";
+
+		//healthbar = new Rect (transform.position.x - health / 2, transform.position.y - 10, 10, 2);
+		healthbar = new Rect (0, 0, 10, 3);
 	}
 
 	public int GetCost(defenseType type) {
 		return cost;
-	}
-
-	void OnClick() {
-		// Render circle
 	}
 }

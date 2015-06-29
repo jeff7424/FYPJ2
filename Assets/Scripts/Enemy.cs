@@ -61,6 +61,7 @@ public class Enemy : MonoBehaviour {
 
 		GetComponent<EnemyMovementAI>().speed = speed;
 	}
+
 	public enemyType getType(){
 		return type;
 	}
