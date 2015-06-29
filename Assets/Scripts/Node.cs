@@ -11,6 +11,8 @@ public class Node : MonoBehaviour {
 
 	public List<GameObject> LinkedNodes = new List<GameObject>();
 	public NodeType type = NodeType.NODE_OPEN;
+	public float F = 0.0f, G = 0.0f;
+	public GameObject parent = null;
 
 	// Use this for initialization
 	void Start () {
@@ -22,13 +24,16 @@ public class Node : MonoBehaviour {
 	
 	}
 	
-	public float F(Vector3 currTile, Vector3 targetTile){
-		return G(currTile) + H(targetTile);
-	}
-	public float G(Vector3 currTile){
-		return (transform.position - currTile).magnitude;
+	public float getF(Vector3 targetTile){
+		return F = G + H(targetTile);
 	}
 	public float H(Vector3 targetTile){
-		return (transform.position - targetTile).magnitude;
+		Vector2 distance = transform.position - targetTile;
+		return Mathf.Abs(distance.x) + Mathf.Abs(distance.y);
+	}
+
+	public void resetPathfindValues(){
+		F = G = 0.0f;
+		parent = null;
 	}
 }
