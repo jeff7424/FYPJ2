@@ -25,6 +25,7 @@ public class Defense : MonoBehaviour {
 	
 	public Transform target;
 	public Bullets bullet;
+	public Bullets slowbullet;
 	public Rect healthbar;
 
 	private GameObject weapon;
@@ -93,14 +94,25 @@ public class Defense : MonoBehaviour {
 	}
 	
 	void ShootBullet() {
-		Instantiate (bullet, weapon.transform.position, weapon.transform.rotation);
 		if (this.gameObject.name == "Slow") {
-			bullet.GetComponent<Bullets>().slow = true;
-			bullet.GetComponent<Bullets>().buff_duration = 3.0f;
-			bullet.GetComponent<Bullets>().buff_value = 0.5f;
+			Instantiate (slowbullet, weapon.transform.position, weapon.transform.rotation);
+			slowbullet.name = this.gameObject.name + " bullet";
+			slowbullet.damage = damage;
+		} else {
+			Instantiate (bullet, weapon.transform.position, weapon.transform.rotation);
+			bullet.name = this.gameObject.name + " bullet";
+			bullet.damage = damage;
+	//		if (this.gameObject.name == "Slow") {
+	//			bullet.slow = true;
+	//			bullet.buff_duration = 3.0f;
+	//			bullet.buff_value = 0.5f;
+	//		} else {
+	//			bullet.slow = false;
+	//			bullet.buff_duration = 0.0f;
+	//			bullet.buff_value = 0.0f;
+	//		}
 		}
-		bullet.name = this.gameObject.name + bullet.name;
-		bullet.damage = damage;
+
 		this.fireratecounter = this.firerate;
 	}
 
@@ -109,7 +121,7 @@ public class Defense : MonoBehaviour {
 			bulletcounttimer -= Time.deltaTime;
 		} else {
 			Instantiate (bullet, weapon.transform.position, weapon.transform.rotation);
-			bullet.name = this.gameObject.name + bullet.name;
+			bullet.name = this.gameObject.name + " bullet";
 			bullet.damage = damage;
 			bulletcount += 1;
 			bulletcounttimer = 0.15f;
@@ -146,7 +158,7 @@ public class Defense : MonoBehaviour {
 		switch (selection) {
 		case defenseType.DEF_CANNON:
 			{
-				this.damage = 10;
+				this.damage = 8;
 				this.cost = 300;
 				this.firerate = 1.0f;
 				this.weapon.GetComponent<SpriteRenderer>().sprite = cannon;
@@ -156,7 +168,7 @@ public class Defense : MonoBehaviour {
 			}
 			case defenseType.DEF_TURRET:
 			{
-				this.damage = 3;
+				this.damage = 2;
 				this.cost = 300;
 				this.firerate = 1.0f;
 				this.weapon.GetComponent<SpriteRenderer>().sprite = turret;
