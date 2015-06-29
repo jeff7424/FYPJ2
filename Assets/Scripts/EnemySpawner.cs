@@ -12,7 +12,6 @@ public class EnemySpawner : MonoBehaviour {
 	public EnemyWaves LevelWaves;
 	public Text WaveText;
 
-	private Random randomSpawn = new Random();
 	private float time = 0.0f;
 	private float waveChangeTimer = 0.0f;
 
@@ -66,6 +65,15 @@ public class EnemySpawner : MonoBehaviour {
 						case 2:
 							if(LevelWaves.waves[currWave].Slow > 0){
 								--LevelWaves.waves[currWave].Slow;
+								canSpawn = true;
+							}
+							else
+								canSpawn = false;
+							break;
+							
+						case 3:
+							if(LevelWaves.waves[currWave].Jump > 0){
+								--LevelWaves.waves[currWave].Jump;
 								canSpawn = true;
 							}
 							else

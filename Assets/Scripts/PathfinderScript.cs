@@ -52,6 +52,9 @@ public class PathfinderScript : MonoBehaviour {
 					if(node.GetComponent<Node>().type == Node.NodeType.NODE_TOWER)
 						closedset.Add(node);
 					break;
+
+				case Enemy.enemyType.TYPE_JUMP:
+					break;
 				}
 			}
 		}
