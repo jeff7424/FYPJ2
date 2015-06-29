@@ -4,6 +4,7 @@ using System.Collections;
 public class Tile : MonoBehaviour {
 
 	public Defense defenses;
+	public Tree trees;
 	private bool isOccupied = false;
 
 	// Use this for initialization
@@ -22,7 +23,7 @@ public class Tile : MonoBehaviour {
 		defense.transform.position = transform.position;
 		isOccupied = true;
 		Debug.Log ("Defense built");
-
+		
 		//Update pathNode type and search path for all AI present
 		GetComponent<Node>().type = Node.NodeType.NODE_TOWER;
 		EnemyMovementAI[] enemyAIs = GameObject.Find("EnemyParent").GetComponentsInChildren<EnemyMovementAI>();
@@ -31,8 +32,14 @@ public class Tile : MonoBehaviour {
 		}
 	}
 
+	public bool BuildObstacles()
+	{
+		isOccupied = true;
+		return false;
+	}
+	
 	void OnMouseDown() {
-		if (!isOccupied) {
+		if (!isOccupied && !BuildObstacles()) {
 			BuildDefense ();
 		} else {
 			Debug.Log ("Occupied");
