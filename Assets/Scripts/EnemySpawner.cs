@@ -29,9 +29,12 @@ public class EnemySpawner : MonoBehaviour {
 				//When wave has finished spawning all enemies
 				//Wait for timer before going to next wave
 				waveChangeTimer += Time.deltaTime;
-				if(waveChangeTimer > 10.0f){
+				if(waveChangeTimer > 10.0f && currWave < 5){
 					++currWave;
 					WaveText.text = "Wave " + (currWave+1);
+				} else if (currWave == 5) {
+					GameObject win = GameObject.Find ("WinGame");
+					win.GetComponent<Text>().enabled = true;
 				}
 			}
 			else{
