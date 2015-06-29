@@ -12,7 +12,6 @@ public class EnemySpawner : MonoBehaviour {
 	public EnemyWaves LevelWaves;
 	public Text WaveText;
 
-	private Random randomSpawn = new Random();
 	private float time = 0.0f;
 	private float waveChangeTimer = 0.0f;
 
