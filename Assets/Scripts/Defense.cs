@@ -188,6 +188,10 @@ public class Defense : MonoBehaviour {
 			}
 			case defenseType.DEF_ANTIAIR:
 			{
+				this.damage = 3;
+				this.cost = 300;
+				this.firerate = 3.0f;
+				this.weapon.GetComponent<SpriteRenderer>().sprite = cannon;
 				this.gameObject.name = "Anti-Air";
 				break;
 			}
