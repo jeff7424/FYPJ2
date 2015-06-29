@@ -147,10 +147,10 @@ public class Defense : MonoBehaviour {
 				this.gameObject.name = "Anti-Air";
 				break;
 			}
-			this.fireratecounter = this.firerate;
-			this.level = 1;
-			this.gameObject.tag = "Defense";
 		}
+		this.fireratecounter = this.firerate;
+		this.level = 1;
+		this.gameObject.tag = "Defense";
 	}
 
 	public int GetCost(defenseType type) {
