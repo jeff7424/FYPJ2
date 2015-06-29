@@ -70,6 +70,15 @@ public class EnemySpawner : MonoBehaviour {
 							else
 								canSpawn = false;
 							break;
+							
+						case 3:
+							if(LevelWaves.waves[currWave].Jump > 0){
+								--LevelWaves.waves[currWave].Jump;
+								canSpawn = true;
+							}
+							else
+								canSpawn = false;
+							break;
 						}
 					}
 

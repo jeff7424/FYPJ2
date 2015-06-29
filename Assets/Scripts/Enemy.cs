@@ -5,6 +5,7 @@ public class Enemy : MonoBehaviour {
 	public Sprite slow;
 	public Sprite normal;
 	public Sprite fast;
+	public Sprite jump;
 
 	public int health;
 	private float speed;
@@ -13,6 +14,7 @@ public class Enemy : MonoBehaviour {
 		TYPE_NORMAL = 0,
 		TYPE_SLOW,
 		TYPE_FAST,
+		TYPE_JUMP,
 		TYPE_MAX
 	}
 	private enemyType type;
@@ -56,6 +58,13 @@ public class Enemy : MonoBehaviour {
 			speed = 1.5f;
 			gameObject.name = "Fast";
 			GetComponent<SpriteRenderer>().sprite = fast;
+			break;
+
+		case enemyType.TYPE_JUMP:
+			health = 35;
+			speed = 1.0f;
+			gameObject.name = "Jump";
+			GetComponent<SpriteRenderer>().sprite = jump;
 			break;
 		}
 
