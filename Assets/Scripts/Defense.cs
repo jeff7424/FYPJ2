@@ -94,6 +94,12 @@ public class Defense : MonoBehaviour {
 	
 	void ShootBullet() {
 		Instantiate (bullet, weapon.transform.position, weapon.transform.rotation);
+		if (this.gameObject.name == "Slow") {
+			bullet.GetComponent<Bullets>().slow = true;
+			bullet.GetComponent<Bullets>().buff_duration = 3.0f;
+			bullet.GetComponent<Bullets>().buff_value = 0.5f;
+		}
+		bullet.name = this.gameObject.name + bullet.name;
 		bullet.damage = damage;
 		this.fireratecounter = this.firerate;
 	}
@@ -103,6 +109,7 @@ public class Defense : MonoBehaviour {
 			bulletcounttimer -= Time.deltaTime;
 		} else {
 			Instantiate (bullet, weapon.transform.position, weapon.transform.rotation);
+			bullet.name = this.gameObject.name + bullet.name;
 			bullet.damage = damage;
 			bulletcount += 1;
 			bulletcounttimer = 0.15f;

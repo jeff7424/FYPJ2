@@ -29,6 +29,7 @@ public class EnemyMovementAI : MonoBehaviour {
 
 	public void FixedUpdate ()
 	{
+		speed = GetComponent<Enemy>().getSpeed();
 		if (thePath == null)
 		{
 			//We have no path to move after yet
