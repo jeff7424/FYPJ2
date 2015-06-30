@@ -12,7 +12,7 @@ public class Tile : MonoBehaviour {
 	}
 
 	public Defense defenses;
-	private bool isOccupied = false;
+	public bool isOccupied = false;
 	private int cost = 0;
 	private int selection = 1;
 

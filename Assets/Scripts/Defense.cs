@@ -27,6 +27,7 @@ public class Defense : MonoBehaviour {
 	public Bullets bullet;
 	public Bullets slowbullet;
 	public Rect healthbar;
+	public Tile tile;
 
 	private GameObject weapon;
 	public GameObject weaponObject;
