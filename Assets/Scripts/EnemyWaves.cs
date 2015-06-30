@@ -7,9 +7,10 @@ public class EnemyWaves : MonoBehaviour {
 		public int Normal;
 		public int Slow;
 		public int Fast;
+		public int Jump;
 
 		public int TotalEnemies{
-			get{return Normal+Fast+Slow;}
+			get{return Normal+Fast+Slow+Jump;}
 		}
 	}
 

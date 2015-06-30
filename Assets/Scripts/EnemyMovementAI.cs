@@ -15,7 +15,8 @@ public class EnemyMovementAI : MonoBehaviour {
 	//The waypoint we are currently moving towards
 	private int currentWaypoint = 0;
 
-	private Vector3 prevNode;
+	//The previous node enemy moved to
+	private Node prevNode = null;
 
 
 	// Use this for initialization
@@ -28,19 +29,22 @@ public class EnemyMovementAI : MonoBehaviour {
 
 	public void FixedUpdate ()
 	{
+		speed = GetComponent<Enemy>().getSpeed();
 		if (thePath == null)
 		{
 			//We have no path to move after yet
 			return;
 		}
-
+		
 		//Reached end of path
+		//--------------------------------------------------------
 		if (currentWaypoint >= thePath.Count)
 		{
 			thePath.Clear();
 			currentWaypoint = 0;
 			return;
 		}
+		//--------------------------------------------------------
 
 		//Direction to the next waypoint
 		Vector3 dir = ( thePath[currentWaypoint].transform.position - transform.position ).normalized;
@@ -51,7 +55,25 @@ public class EnemyMovementAI : MonoBehaviour {
 		//If we are, proceed to follow the next waypoint
 		if (Vector3.Distance( transform.position, thePath[currentWaypoint].transform.position ) < nextWaypointDistance)
 		{
+			prevNode = thePath[currentWaypoint].GetComponent<Node>();
 			currentWaypoint++;
+
+
+			//Behaviour change for certain enemy types
+			//--------------------------------------------------------
+			if(currentWaypoint < thePath.Count){
+				switch(GetComponent<Enemy>().getType()){
+				case Enemy.enemyType.TYPE_JUMP:
+					if(thePath[currentWaypoint].GetComponent<Node>().type == Node.NodeType.NODE_TOWER || prevNode.type == Node.NodeType.NODE_TOWER){
+						speed = 5.0f;
+					}
+					else
+						speed = GetComponent<Enemy>().getSpeed();
+					break;
+				}
+			}
+			//--------------------------------------------------------
+
 			return;
 		}
 	}
