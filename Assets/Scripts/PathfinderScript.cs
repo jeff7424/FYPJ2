@@ -100,6 +100,8 @@ public class PathfinderScript : MonoBehaviour {
 					if(closedset.Contains(neighbour)){
 						continue;
 					}
+					//If it is in the openset and current node's G < neighbour's G
+					//Set current node as the neighbour's parent & update it's G with the new and lower one
 					else if(openset.Contains(neighbour) && currNode.GetComponent<Node>().G <= neighbour.GetComponent<Node>().G){
 						neighbour.GetComponent<Node>().parent = currNode.gameObject;
 						neighbour.GetComponent<Node>().G = currNode.GetComponent<Node>().G + 1;

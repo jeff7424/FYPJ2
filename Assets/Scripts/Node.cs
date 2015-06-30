@@ -29,7 +29,8 @@ public class Node : MonoBehaviour {
 	}
 	public float H(Vector3 targetTile){
 		Vector2 distance = transform.position - targetTile;
-		return Mathf.Abs(distance.x) + Mathf.Abs(distance.y);
+		//return Mathf.Abs(distance.x) + Mathf.Abs(distance.y);				//Manhattan distance
+		return Mathf.Sqrt(distance.x*distance.x + distance.y*distance.y);	//Euclidean distance
 	}
 
 	public void resetPathfindValues(){
