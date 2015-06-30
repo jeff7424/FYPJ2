@@ -6,9 +6,6 @@ public class EnemyMovementAI : MonoBehaviour {
 	//The calculated path
 	public List<GameObject> thePath;
 	
-	//The AI's speed per second
-	public float speed;
-	
 	//The max distance from the AI to a waypoint for it to continue to the next waypoint
 	public float nextWaypointDistance = 0.05f;
 	
@@ -23,8 +20,6 @@ public class EnemyMovementAI : MonoBehaviour {
 	void Start () {
 		thePath = new List<GameObject>();
 		searchPath();
-
-		speed = GetComponent<Enemy>().getSpeed();
 	}
 
 	public void FixedUpdate ()
@@ -47,7 +42,7 @@ public class EnemyMovementAI : MonoBehaviour {
 
 		//Direction to the next waypoint
 		Vector3 dir = ( thePath[currentWaypoint].transform.position - transform.position ).normalized;
-		dir *= speed * Time.deltaTime;
+		dir *= GetComponent<Enemy>().getFinalSpeed() * Time.deltaTime;
 		this.gameObject.transform.Translate( dir );
 
 		//Check if we are close enough to the next waypoint
@@ -64,10 +59,10 @@ public class EnemyMovementAI : MonoBehaviour {
 				switch(GetComponent<Enemy>().getType()){
 				case Enemy.enemyType.TYPE_JUMP:
 					if(thePath[currentWaypoint].GetComponent<Node>().type == Node.NodeType.NODE_TOWER || prevNode.type == Node.NodeType.NODE_TOWER){
-						speed = 5.0f;
+						GetComponent<Enemy>().setSpeed(5.0f);
 					}
 					else
-						speed = GetComponent<Enemy>().getSpeed();
+						GetComponent<Enemy>().setSpeed(GetComponent<Enemy>().getOriginalSpeed());
 					break;
 				}
 			}

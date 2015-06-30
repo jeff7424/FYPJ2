@@ -6,6 +6,7 @@ public class Node : MonoBehaviour {
 	public enum NodeType{
 		NODE_OPEN = 0,
 		NODE_TOWER,
+		NODE_OBSTACLE,
 		NODE_MAX
 	}
 

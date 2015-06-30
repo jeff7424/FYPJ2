@@ -60,7 +60,7 @@ public class Grid : MonoBehaviour {
 
 				//Create the tile
 				GameObject newTile = (GameObject)Instantiate (tile, new Vector2(transform.position.x + xOffset, transform.position.y + yOffset), Quaternion.identity);
-				newTile.name = "Tile" + (y*9+x).ToString();
+				newTile.name = "Tile" + ((y-1)*9+x).ToString();
 				newTile.transform.SetParent(thePathfinderRoot.transform);
 
 				//Linking nodes together

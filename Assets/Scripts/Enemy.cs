@@ -12,6 +12,8 @@ public class Enemy : MonoBehaviour {
 	public float slow_duration = 0.0f;
 	private float speed;
 	private float originalSpeed;
+	private float finalSpeed = 0.0f;
+	private float effectValue = 0.0f;
 	private GameObject game;
 
 	public enum enemyType{
@@ -38,8 +40,11 @@ public class Enemy : MonoBehaviour {
 		if (slow_duration > 0.0f) {
 			slow_duration -= Time.deltaTime;
 			GetComponent<SpriteRenderer>().color = new Color(0.0f, 0.0f, 1.0f, 0.8f);
+			finalSpeed = speed * effectValue;
 		} else {
-			speed = originalSpeed;
+			effectValue = 0.0f;
+			//speed = originalSpeed;
+			finalSpeed = speed;
 			GetComponent<SpriteRenderer>().color = Color.white;
 		}
 	}
@@ -52,8 +57,16 @@ public class Enemy : MonoBehaviour {
 		return originalSpeed;
 	}
 
+	public float getFinalSpeed(){
+		return finalSpeed;
+	}
+
 	public void setSpeed(float new_speed) {
 		this.speed = new_speed;
+	}
+
+	public void setEffectValue(float effectValue){
+		this.effectValue = effectValue;
 	}
 
 	public void setType(enemyType newType){
@@ -96,8 +109,6 @@ public class Enemy : MonoBehaviour {
 			GetComponent<SpriteRenderer>().sprite = jump;
 			break;
 		}
-
-		GetComponent<EnemyMovementAI>().speed = speed;
 	}
 
 	public enemyType getType(){

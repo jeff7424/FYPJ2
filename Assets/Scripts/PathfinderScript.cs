@@ -50,11 +50,14 @@ public class PathfinderScript : MonoBehaviour {
 				case Enemy.enemyType.TYPE_NORMAL:
 				case Enemy.enemyType.TYPE_SLOW:
 				case Enemy.enemyType.TYPE_FAST:
-					if(node.GetComponent<Node>().type == Node.NodeType.NODE_TOWER)
+					if(node.GetComponent<Node>().type == Node.NodeType.NODE_TOWER ||
+					   node.GetComponent<Node>().type == Node.NodeType.NODE_OBSTACLE)
 						closedset.Add(node);
 					break;
 
 				case Enemy.enemyType.TYPE_JUMP:
+					if(node.GetComponent<Node>().type == Node.NodeType.NODE_OBSTACLE)
+						closedset.Add(node);
 					break;
 				}
 			}
