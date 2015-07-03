@@ -18,10 +18,12 @@ public class Grid : MonoBehaviour {
 
 	//Testing
 	public GameObject obstacleTile;
+	public int maxSpawn;
 
 	// Use this for initialization
 	void Start () {
 		CreateTiles ();
+		maxSpawn = 0;
 	}
 
 	// Update is called once per frame
@@ -66,6 +68,18 @@ public class Grid : MonoBehaviour {
 				newTile.name = "Tile" + ((y-1)*9+x).ToString();
 				newTile.transform.SetParent(thePathfinderRoot.transform);
 
+				//Create Obstacles
+				int i = Random.Range (1,25); //Random between 1 to 11
+				if (i == 5)
+				{
+					if (maxSpawn < 3)
+					{
+						GameObject newObstacleTile = (GameObject)Instantiate (obstacleTile, new Vector2(transform.position.x + xOffset, transform.position.y + yOffset), Quaternion.identity);
+						newObstacleTile.transform.SetParent(thePathfinderRoot.transform);
+						maxSpawn++;
+					}
+				}
+
 				//Linking nodes together
 				thePathfinder.Nodes[y-1][x] = newTile;
 				if(y > 1){
@@ -81,11 +95,6 @@ public class Grid : MonoBehaviour {
 					newTile.GetComponent<Node>().LinkedNodes.Add(thePathfinder.Nodes[y-1][numberOfTilesColumn]);
 					thePathfinder.Nodes[y-1][numberOfTilesColumn].GetComponent<Node>().LinkedNodes.Add(newTile);
 				}
-
-				//Create Obstacles
-				GameObject newObstacleTile = (GameObject)Instantiate (obstacleTile, obstacleTile.transform.position, Quaternion.identity);
-				newObstacleTile.name = "Obstacle";
-				newObstacleTile.transform.SetParent(thePathfinderRoot.transform);
 			}
 		}
 

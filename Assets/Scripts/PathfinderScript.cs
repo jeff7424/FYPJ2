@@ -39,7 +39,7 @@ public class PathfinderScript : MonoBehaviour {
 
 		for(int i = 0; i < Nodes.GetLength(0); ++i){
 			foreach(GameObject node in Nodes[i]){
-				if((start - (Vector2)node.transform.position).magnitude < shortestDist){
+				if((start - (Vector2  )node.transform.position).magnitude < shortestDist){
 					shortestDist = (start - (Vector2)node.transform.position).magnitude;
 					closestNode = node;
 				}

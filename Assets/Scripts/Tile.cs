@@ -5,11 +5,11 @@ public class Tile : MonoBehaviour {
 
 	public Defense defenses;
 	public Tree trees;
-	private bool isOccupied = false;
+	public bool isOccupied;
 
 	// Use this for initialization
 	void Start () {
-
+		isOccupied = false;
 	}
 	
 	// Update is called once per frame
@@ -31,15 +31,9 @@ public class Tile : MonoBehaviour {
 			ai.searchPath();
 		}
 	}
-
-	public bool BuildObstacles()
-	{
-		isOccupied = true;
-		return false;
-	}
 	
 	void OnMouseDown() {
-		if (!isOccupied && !BuildObstacles()) {
+		if (!isOccupied) {
 			BuildDefense ();
 		} else {
 			Debug.Log ("Occupied");
@@ -48,5 +42,11 @@ public class Tile : MonoBehaviour {
 
 	public Vector2 TilePosition() {
 		return transform.position;
+	}
+
+	void OnTriggerStay2D(Collider2D other){
+		if (other.gameObject.tag == "Obstacle") {
+			isOccupied = true;
+		}
 	}
 }
