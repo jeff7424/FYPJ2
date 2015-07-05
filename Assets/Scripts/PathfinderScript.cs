@@ -39,7 +39,7 @@ public class PathfinderScript : MonoBehaviour {
 
 		for(int i = 0; i < Nodes.GetLength(0); ++i){
 			foreach(GameObject node in Nodes[i]){
-				if((start - (Vector2  )node.transform.position).magnitude < shortestDist){
+				if((start - (Vector2)node.transform.position).magnitude < shortestDist){
 					shortestDist = (start - (Vector2)node.transform.position).magnitude;
 					closestNode = node;
 				}
@@ -80,7 +80,11 @@ public class PathfinderScript : MonoBehaviour {
 					selectedNode = node;
 				}
 			}
-			currNode = selectedNode.GetComponent<Node>();
+			if(selectedNode == null)
+				break;
+			else
+				currNode = selectedNode.GetComponent<Node>();
+
 
 			//If the node is the core(target)
 			if(currNode == coreNode.GetComponent<Node>()){
@@ -117,67 +121,6 @@ public class PathfinderScript : MonoBehaviour {
 					}
 				}
 			}
-
-
-//			//Finish search if path has been found
-//			if(currNode == coreNode.GetComponent<Node>()){
-//				pathFound = true;
-//				break;
-//			}
-//
-//			//Find linked nodes that can be traversed
-//			List<GameObject> openLinkedNodes = new List<GameObject>();
-//			foreach(GameObject node in currNode.LinkedNodes){
-//				//Check which nodes are in closed list first
-//				if(!closedset.Contains(node))
-//					openLinkedNodes.Add(node);
-//			}
-//
-//			if(openLinkedNodes.Count > 0){
-//				//Find open linked node with lowest F
-//				float lowestF = 2000.0f;
-//				GameObject selectedNode = null;
-//				foreach(GameObject openNode in openLinkedNodes){
-//					float F = openNode.GetComponent<Node>().F(G, coreNode.transform.position);
-//					if(F < lowestF){
-//						lowestF = F;
-//						selectedNode = openNode;
-//					}
-//				}
-//				//Add selectedNode to path
-//				path.Add(selectedNode);
-//				closedset.Add(currNode.gameObject);
-//				currNode = selectedNode.GetComponent<Node>();
-//				++G;
-//			}
-//			else{
-//				//Reverse search for node with openLinkedNodes > 0
-//				for(int i = path.Count-1; i > -1; --i){
-//					List<GameObject> openNodes = new List<GameObject>();
-//					foreach(GameObject node in path[i].GetComponent<Node>().LinkedNodes){
-//						//Check which nodes are in closed list first
-//						if(!closedset.Contains(node))
-//							openLinkedNodes.Add(node);
-//					}
-//
-//					//Node has an open node
-//					if(openNodes.Count > 0){
-//						currNode = path[i].GetComponent<Node>();
-//						//Cleanup and remove path that leads to dead end
-//						for(int j = path.Count-1; j > i; --j){
-//							path.RemoveAt(j);
-//						}
-//						break;
-//					}
-//					else{
-//						//If all nodes in the path do not have a openLinkedNode, just send the path back
-//						if(i == 0){
-//							pathFound = true;
-//							break;
-//						}
-//					}
-//				}
-//			}
 		}
 
 

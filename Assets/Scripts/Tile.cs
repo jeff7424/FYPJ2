@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Tile : MonoBehaviour {
 
@@ -34,7 +35,10 @@ public class Tile : MonoBehaviour {
 	
 	void OnMouseDown() {
 		if (!isOccupied) {
-			BuildDefense ();
+			if(!checkAIPath())
+				Debug.Log ("Monsters cannot pass through");
+			else
+				BuildDefense();
 		} else {
 			Debug.Log ("Occupied");
 		}
@@ -48,5 +52,18 @@ public class Tile : MonoBehaviour {
 		if (other.gameObject.tag == "Obstacle") {
 			isOccupied = true;
 		}
+	}
+	
+	bool checkAIPath(){
+		GetComponent<Node>().type = Node.NodeType.NODE_TOWER;
+		List<GameObject> path = new List<GameObject>();
+		path = GameObject.Find("Pathfinder").GetComponent<PathfinderScript>().FindPath(GameObject.Find("enemySpawn5").transform.position, Enemy.enemyType.TYPE_NORMAL);
+		GetComponent<Node>().type = Node.NodeType.NODE_OPEN;
+		
+		if(path.Count > 0)
+			//Normal monsters are still able to reach the core
+			return true;
+		else
+			return false;
 	}
 }
