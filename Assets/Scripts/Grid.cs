@@ -16,6 +16,9 @@ public class Grid : MonoBehaviour {
 	public int numberOfTilesRow = 9;
 	public float tileSize = 1.0f;
 
+	//Testing
+	public GameObject obstacleTile;
+
 	// Use this for initialization
 	void Start () {
 		CreateTiles ();
@@ -78,6 +81,11 @@ public class Grid : MonoBehaviour {
 					newTile.GetComponent<Node>().LinkedNodes.Add(thePathfinder.Nodes[y-1][numberOfTilesColumn]);
 					thePathfinder.Nodes[y-1][numberOfTilesColumn].GetComponent<Node>().LinkedNodes.Add(newTile);
 				}
+
+				//Create Obstacles
+				GameObject newObstacleTile = (GameObject)Instantiate (obstacleTile, obstacleTile.transform.position, Quaternion.identity);
+				newObstacleTile.name = "Obstacle";
+				newObstacleTile.transform.SetParent(thePathfinderRoot.transform);
 			}
 		}
 

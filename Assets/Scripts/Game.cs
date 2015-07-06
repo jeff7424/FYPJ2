@@ -19,7 +19,7 @@ public class Game : MonoBehaviour {
 	public bool isPause = false;
 
 	public int selection = 1;
-	public int resources = 300;
+	public int resources = 200;
 
 	Vector2 InputPos;
 

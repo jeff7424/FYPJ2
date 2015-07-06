@@ -15,6 +15,7 @@ public class Tile : MonoBehaviour {
 	public bool isOccupied = false;
 	private int cost = 0;
 	private int selection = 1;
+	public Tree trees;
 
 	// Use this for initialization
 	void Start () {
@@ -41,6 +42,12 @@ public class Tile : MonoBehaviour {
 		}
 	}
 
+	public bool BuildObstacles()
+	{
+		isOccupied = true;
+		return false;
+	}
+	
 	void OnMouseDown() {
 		GameObject game = GameObject.Find ("Game");
 		selection = (int)defenses.GetComponent<Defense>().selection;

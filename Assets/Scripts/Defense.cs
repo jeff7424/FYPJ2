@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(ParticleSystem))]
 public class Defense : MonoBehaviour {
 	//declaration
 	public enum defenseType {
@@ -22,6 +24,7 @@ public class Defense : MonoBehaviour {
 	private float aimposition;
 	private float weaponRotationSpeed = 20.0f;
 	private Quaternion weaponRotation = Quaternion.identity;
+	public ParticleSystem flare;
 	
 	public Transform target;
 	public Bullets bullet;
@@ -103,17 +106,8 @@ public class Defense : MonoBehaviour {
 			Instantiate (bullet, weapon.transform.position, weapon.transform.rotation);
 			bullet.name = this.gameObject.name + " bullet";
 			bullet.damage = damage;
-	//		if (this.gameObject.name == "Slow") {
-	//			bullet.slow = true;
-	//			bullet.buff_duration = 3.0f;
-	//			bullet.buff_value = 0.5f;
-	//		} else {
-	//			bullet.slow = false;
-	//			bullet.buff_duration = 0.0f;
-	//			bullet.buff_value = 0.0f;
-	//		}
 		}
-
+		//FireFlare ();
 		this.fireratecounter = this.firerate;
 	}
 
@@ -126,12 +120,18 @@ public class Defense : MonoBehaviour {
 			bullet.damage = damage;
 			bulletcount += 1;
 			bulletcounttimer = 0.15f;
+			FireFlare ();
 		}
 
 		if (bulletcount >= 3) {
 			bulletcount = 0;
 			this.fireratecounter = this.firerate;
 		}
+	}
+
+	void FireFlare() {
+		ParticleSystem fireFlare = Instantiate (flare, weapon.transform.position, weapon.transform.rotation) as ParticleSystem;
+		Destroy (fireFlare.gameObject, fireFlare.startLifetime);
 	}
 
 	void CalculateAim(Transform target) {
