@@ -6,6 +6,7 @@ public class Node : MonoBehaviour {
 	public enum NodeType{
 		NODE_OPEN = 0,
 		NODE_TOWER,
+		NODE_OBSTACLE,
 		NODE_MAX
 	}
 
@@ -29,7 +30,8 @@ public class Node : MonoBehaviour {
 	}
 	public float H(Vector3 targetTile){
 		Vector2 distance = transform.position - targetTile;
-		return Mathf.Abs(distance.x) + Mathf.Abs(distance.y);
+		//return Mathf.Abs(distance.x) + Mathf.Abs(distance.y);				//Manhattan distance
+		return Mathf.Sqrt(distance.x*distance.x + distance.y*distance.y);	//Euclidean distance
 	}
 
 	public void resetPathfindValues(){

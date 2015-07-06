@@ -36,7 +36,8 @@ public class Bullets : MonoBehaviour {
 			if (slow == true) {
 				other.GetComponent<Enemy>().slow_duration = buff_duration;
 				if (other.GetComponent<Enemy>().getSpeed () == other.GetComponent<Enemy>().getOriginalSpeed()) {
-					other.GetComponent<Enemy>().setSpeed (other.GetComponent<Enemy>().getSpeed () * buff_value);
+					//other.GetComponent<Enemy>().setSpeed (other.GetComponent<Enemy>().getSpeed () * buff_value);
+					other.GetComponent<Enemy>().setEffectValue(buff_value);
 				}
 			}
 			// Destroy bullet once hit enemy

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Tile : MonoBehaviour {
 
@@ -19,7 +20,7 @@ public class Tile : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+		//isOccupied = false;
 	}
 	
 	// Update is called once per frame
@@ -41,14 +42,9 @@ public class Tile : MonoBehaviour {
 			ai.searchPath();
 		}
 	}
-
-	public bool BuildObstacles()
-	{
-		isOccupied = true;
-		return false;
-	}
 	
 	void OnMouseDown() {
+
 		GameObject game = GameObject.Find ("Game");
 		selection = (int)defenses.GetComponent<Defense>().selection;
 		switch (selection) {
@@ -65,9 +61,15 @@ public class Tile : MonoBehaviour {
 			cost = (int)defenseCost.DEF_ANTIAIR;
 			break;
 		}
+
 		if (!isOccupied && game.GetComponent<Game>().resources - cost >= 0) {
-			BuildDefense ();
-			game.GetComponent<Game>().resources -= cost;
+			if(!checkAIPath())
+				Debug.Log ("Monsters cannot pass through");
+			else {
+				BuildDefense ();
+				game.GetComponent<Game>().resources -= cost;
+			}
+
 		} else {
 			Debug.Log ("Occupied");
 		}
@@ -75,5 +77,24 @@ public class Tile : MonoBehaviour {
 
 	public Vector2 TilePosition() {
 		return transform.position;
+	}
+
+	void OnTriggerStay2D(Collider2D other){
+		if (other.gameObject.tag == "Obstacle") {
+			isOccupied = true;
+		}
+	}
+	
+	bool checkAIPath(){
+		GetComponent<Node>().type = Node.NodeType.NODE_TOWER;
+		List<GameObject> path = new List<GameObject>();
+		path = GameObject.Find("Pathfinder").GetComponent<PathfinderScript>().FindPath(GameObject.Find("enemySpawn5").transform.position, Enemy.enemyType.TYPE_NORMAL);
+		GetComponent<Node>().type = Node.NodeType.NODE_OPEN;
+		
+		if(path.Count > 0)
+			//Normal monsters are still able to reach the core
+			return true;
+		else
+			return false;
 	}
 }

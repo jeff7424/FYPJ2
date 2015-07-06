@@ -50,11 +50,14 @@ public class PathfinderScript : MonoBehaviour {
 				case Enemy.enemyType.TYPE_NORMAL:
 				case Enemy.enemyType.TYPE_SLOW:
 				case Enemy.enemyType.TYPE_FAST:
-					if(node.GetComponent<Node>().type == Node.NodeType.NODE_TOWER)
+					if(node.GetComponent<Node>().type == Node.NodeType.NODE_TOWER ||
+					   node.GetComponent<Node>().type == Node.NodeType.NODE_OBSTACLE)
 						closedset.Add(node);
 					break;
 
 				case Enemy.enemyType.TYPE_JUMP:
+					if(node.GetComponent<Node>().type == Node.NodeType.NODE_OBSTACLE)
+						closedset.Add(node);
 					break;
 				}
 			}
@@ -77,7 +80,11 @@ public class PathfinderScript : MonoBehaviour {
 					selectedNode = node;
 				}
 			}
-			currNode = selectedNode.GetComponent<Node>();
+			if(selectedNode == null)
+				break;
+			else
+				currNode = selectedNode.GetComponent<Node>();
+
 
 			//If the node is the core(target)
 			if(currNode == coreNode.GetComponent<Node>()){
@@ -100,6 +107,8 @@ public class PathfinderScript : MonoBehaviour {
 					if(closedset.Contains(neighbour)){
 						continue;
 					}
+					//If it is in the openset and current node's G < neighbour's G
+					//Set current node as the neighbour's parent & update it's G with the new and lower one
 					else if(openset.Contains(neighbour) && currNode.GetComponent<Node>().G <= neighbour.GetComponent<Node>().G){
 						neighbour.GetComponent<Node>().parent = currNode.gameObject;
 						neighbour.GetComponent<Node>().G = currNode.GetComponent<Node>().G + 1;
@@ -112,67 +121,6 @@ public class PathfinderScript : MonoBehaviour {
 					}
 				}
 			}
-
-
-//			//Finish search if path has been found
-//			if(currNode == coreNode.GetComponent<Node>()){
-//				pathFound = true;
-//				break;
-//			}
-//
-//			//Find linked nodes that can be traversed
-//			List<GameObject> openLinkedNodes = new List<GameObject>();
-//			foreach(GameObject node in currNode.LinkedNodes){
-//				//Check which nodes are in closed list first
-//				if(!closedset.Contains(node))
-//					openLinkedNodes.Add(node);
-//			}
-//
-//			if(openLinkedNodes.Count > 0){
-//				//Find open linked node with lowest F
-//				float lowestF = 2000.0f;
-//				GameObject selectedNode = null;
-//				foreach(GameObject openNode in openLinkedNodes){
-//					float F = openNode.GetComponent<Node>().F(G, coreNode.transform.position);
-//					if(F < lowestF){
-//						lowestF = F;
-//						selectedNode = openNode;
-//					}
-//				}
-//				//Add selectedNode to path
-//				path.Add(selectedNode);
-//				closedset.Add(currNode.gameObject);
-//				currNode = selectedNode.GetComponent<Node>();
-//				++G;
-//			}
-//			else{
-//				//Reverse search for node with openLinkedNodes > 0
-//				for(int i = path.Count-1; i > -1; --i){
-//					List<GameObject> openNodes = new List<GameObject>();
-//					foreach(GameObject node in path[i].GetComponent<Node>().LinkedNodes){
-//						//Check which nodes are in closed list first
-//						if(!closedset.Contains(node))
-//							openLinkedNodes.Add(node);
-//					}
-//
-//					//Node has an open node
-//					if(openNodes.Count > 0){
-//						currNode = path[i].GetComponent<Node>();
-//						//Cleanup and remove path that leads to dead end
-//						for(int j = path.Count-1; j > i; --j){
-//							path.RemoveAt(j);
-//						}
-//						break;
-//					}
-//					else{
-//						//If all nodes in the path do not have a openLinkedNode, just send the path back
-//						if(i == 0){
-//							pathFound = true;
-//							break;
-//						}
-//					}
-//				}
-//			}
 		}
 
 
