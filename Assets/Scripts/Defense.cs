@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 [RequireComponent(typeof(SpriteRenderer))]
@@ -15,7 +16,7 @@ public class Defense : MonoBehaviour {
 	public defenseType selection;
 	public int damage;
 	private int cost;
-	private int level;
+	private int rank;
 	private int health;
 	private int bulletcount = 0;
 	private float bulletcounttimer = 0.1f;
@@ -25,6 +26,10 @@ public class Defense : MonoBehaviour {
 	private float weaponRotationSpeed = 20.0f;
 	private Quaternion weaponRotation = Quaternion.identity;
 	public ParticleSystem flare;
+	public Text info_level;
+	public Button upgrade;
+	private GameObject game;
+	public GameObject ranking;
 	
 	public Transform target;
 	public Bullets bullet;
@@ -38,9 +43,14 @@ public class Defense : MonoBehaviour {
 	public Sprite turret;
 	public Sprite slow;
 	public Sprite antiair;
+	public Sprite rank_1;
+	public Sprite rank_2;
+	public Sprite rank_3;
 	
 	// Use this for initialization
 	void Start () {
+		game = GameObject.Find ("Game");
+		selection = (defenseType)game.GetComponent<Game> ().selection;
 		SetType (selection);
 	}
 
@@ -64,12 +74,28 @@ public class Defense : MonoBehaviour {
 		if (health <= 0) {
 			Destroy (gameObject);
 		}
+
+//		if (Input.GetMouseButtonDown (0)) {
+//			if (game.GetComponent<Game>().isPause == false) {
+//				if (selectedDefense == null) {
+//					Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+//					RaycastHit2D hit = Physics2D.Raycast (new Vector2(worldPoint.x, worldPoint.y), Vector2.zero);
+//					if (hit != null) {
+//						selectedDefense = gameObject;
+//						this.GetComponent<SpriteRenderer>().color = Color.red;
+//					}
+//				} else if (selectedDefense != null) {
+//					selectedDefense = null;
+//					this.GetComponent<SpriteRenderer>().color = Color.white;
+//				}
+//			}
+//		}
 	}
 	
 	public int GetDamage() {
 		return damage;
 	}
-	
+
 	void OnTriggerEnter2D(Collider2D co)
 	{
 		// Check if defense has no target then assign new one
@@ -107,7 +133,7 @@ public class Defense : MonoBehaviour {
 			bullet.name = this.gameObject.name + " bullet";
 			bullet.damage = damage;
 		}
-		//FireFlare ();
+		FireFlare ();
 		this.fireratecounter = this.firerate;
 	}
 
@@ -199,14 +225,27 @@ public class Defense : MonoBehaviour {
 		}
 		this.fireratecounter = this.firerate;
 		this.health = 10;
-		this.level = 1;
+		this.rank = 1;
 		this.gameObject.tag = "Defense";
-
-		//healthbar = new Rect (transform.position.x - health / 2, transform.position.y - 10, 10, 2);
-		healthbar = new Rect (0, 0, 10, 3);
 	}
 
 	public int GetCost(defenseType type) {
 		return cost;
+	}
+
+	public void SetRank(int newRank) {
+		rank = newRank;
+	}
+
+	public int GetRank() {
+		return rank;
+	}
+
+	public float GetFireRate() {
+		return firerate;
+	}
+
+	public float GetRange() {
+		return GetComponent<CircleCollider2D>().radius;
 	}
 }
