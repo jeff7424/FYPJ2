@@ -18,6 +18,7 @@ public class Tile : MonoBehaviour {
 	private GameObject game;
 	public bool isOccupied = false;
 	public bool isSelected = false;
+	public bool isMouseOver = false;
 	public bool deleteDefense = false;
 	private int cost = 0;
 	private int selection = 1;
@@ -28,21 +29,23 @@ public class Tile : MonoBehaviour {
 	public Texture2D current;
 	public Texture2D[] weapontype;
 	public Rect temp;
-	private GameObject info_panel;
+	//private GameObject info_panel;
 
 	// Use this for initialization
 	void Start () {
-		//isOccupied = false;
-		info_panel = GameObject.Find ("Info panel");
-		info_panel.GetComponent<Image> ().enabled = false;
-		for (int i = 0; i < info_panel.transform.childCount; i++) {
-			info_panel.transform.GetChild(i).gameObject.SetActive(false);
-		}
+		game = GameObject.Find ("Game");
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
+		if (defense == null) {
+			isOccupied = false;
+			deleteDefense = false;
+			selection = 1;
+		}
+		if (Input.GetMouseButtonDown (0) && !isMouseOver) {
+			TileDeselected();
+		}
 	}
 
 	public void BuildDefense() {
@@ -66,10 +69,16 @@ public class Tile : MonoBehaviour {
 		isOccupied = false;
 		deleteDefense = false;
 		selection = 1;
+
+		GetComponent<Node>().type = Node.NodeType.NODE_TOWER;
+		EnemyMovementAI[] enemyAIs = GameObject.Find("EnemyParent").GetComponentsInChildren<EnemyMovementAI>();
+		foreach(EnemyMovementAI ai in enemyAIs){
+			ai.searchPath();
+		}
 	}
 
 	public void RankUpDefense() {
-		defense.GetComponent<Defense> ().SetRank (defense.GetComponent<Defense> ().GetRank () + 1);
+		defense.GetComponent<Defense> ().RankUp ();
 	}
 
 	void RenderGhost() {
@@ -85,16 +94,20 @@ public class Tile : MonoBehaviour {
 
 	void OnMouseEnter() {
 		RenderGhost ();
+		game.GetComponent<Game> ().mouseOverTile = true;
+		isMouseOver = true;
 	}
 
 	void OnMouseExit() {
 		// Revert back to original sprite
 		//this.GetComponent<SpriteRenderer> ().sprite = tile;
 		this.GetComponent<SpriteRenderer> ().color = new Color (1.0f, 1.0f, 1.0f, 1.0f);
+		game.GetComponent<Game> ().mouseOverTile = false;
+		isMouseOver = false;
 	}
 
 	void OnMouseDown() {
-		GameObject game = GameObject.Find ("Game");
+		//GameObject game = GameObject.Find ("Game");
 		selection = game.GetComponent<Game>().selection;
 		if (selection == 0) {
 			deleteDefense = true;
@@ -129,20 +142,28 @@ public class Tile : MonoBehaviour {
 			} else if (isOccupied && !deleteDefense && !isSelected) {
 				// level up defense
 				isSelected = true;
-//				GameObject info_panel = GameObject.Find ("Info panel");
-//				info_panel.GetComponent<InfoPanelScript>().defense = defense;
+				TileSelected ();
 				DisplayInfo ();
-
 			}
 		}
 	}
 
 	public void DisplayInfo() {
-		info_panel.GetComponent<Image> ().enabled = true;
-		for (int i = 0; i < info_panel.transform.childCount; i++) {
-			info_panel.transform.GetChild(i).gameObject.SetActive(true);
-		}
-		info_panel.GetComponent<InfoPanelScript>().defense = defense;	
+		game.GetComponent<Game> ().EnableInfoPanel ();
+		//Debug.Log ("Enabled");
+		game.GetComponent<Game> ().infoPanel.GetComponent<InfoPanelScript> ().defense = defense;	
+		game.GetComponent<Game> ().infoPanel.GetComponent<InfoPanelScript> ().tile = this;	
+	}
+
+	public void TileSelected() {
+		//this.transform.localScale = new Vector3 (0.7f, 0.7f, 1.0f);
+		this.GetComponent<SpriteRenderer> ().color = new Color (0.3f, 0.3f, 0.7f, 0.5f);
+
+	}
+
+	public void TileDeselected() {
+		//this.transform.localScale = new Vector3 (0.55f, 0.55f, 1.0f);
+		this.GetComponent<SpriteRenderer> ().color = new Color (1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
 	public Vector2 TilePosition() {

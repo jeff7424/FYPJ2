@@ -5,18 +5,14 @@ using System.Collections;
 public class Game : MonoBehaviour {
 
 	//public GUITexture PauseButton;
-	public GameObject Button_Pause;
-	public GameObject Button_DefenseCannon;
-	public GameObject Button_DefenseTurret;
-	public GameObject Button_DefenseSlow;
-	public GameObject Button_DefenseAntiAir;
+	public GameObject infoPanel;
 
 	public Text resourceText;
-	public Tile[] tile;
 	public GameObject Core;
-	//private GameObject TilePressed = null;
 	public Enemy enemy;
 	public bool isPause = false;
+	public bool mouseOverTile = false;
+	public bool mouseOverPanel = false;
 
 	public int selection = 1;
 	public int resources = 200;
@@ -27,6 +23,8 @@ public class Game : MonoBehaviour {
 	void Start () {
 		//Instantiate (enemy, new Vector2 (10, 0), Quaternion.identity);
 		resourceText.text = "Resources: " + resources;
+		infoPanel = GameObject.Find ("Info panel");
+		infoPanel.GetComponent<InfoPanelScript> ().DisablePanel ();
 	}
 	
 	// Update is called once per frame
@@ -59,10 +57,20 @@ public class Game : MonoBehaviour {
 			}
 		}
 		#elif UNITY_EDITOR
-
+		if (Input.GetMouseButtonDown(0) && (!mouseOverTile && !mouseOverPanel)) {
+			DisableInfoPanel();
+		}
 
 		#endif
 	}
+
+//	void OnMouseDown() {
+//		// Check if mouse over tile when tapping.
+//		// If mouse not over tile when tapping disable info panel is called
+//		if (!mouseOverTile) {
+//			DisableInfoPanel ();
+//		}
+//	}
 
 	public void SetPause() {
 		isPause = !isPause;
@@ -79,5 +87,21 @@ public class Game : MonoBehaviour {
 
 	public int GetSelection() {
 		return selection;
+	}
+
+	public void EnableInfoPanel() {
+		infoPanel.GetComponent<InfoPanelScript> ().EnablePanel ();
+	}
+
+	public void DisableInfoPanel() {
+		infoPanel.GetComponent<InfoPanelScript> ().DisablePanel ();
+	}
+
+	public void SetInfoPanelTarget(Defense defense) {
+		infoPanel.GetComponent<InfoPanelScript> ().defense = defense;
+	}
+
+	public void SetMouseOverPanel (bool isOver) {
+		mouseOverPanel = isOver;
 	}
 }

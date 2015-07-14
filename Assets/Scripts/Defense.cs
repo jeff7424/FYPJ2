@@ -30,6 +30,7 @@ public class Defense : MonoBehaviour {
 	public Button upgrade;
 	private GameObject game;
 	public GameObject ranking;
+	private GameObject rankImage;
 	
 	public Transform target;
 	public Bullets bullet;
@@ -226,6 +227,9 @@ public class Defense : MonoBehaviour {
 		this.fireratecounter = this.firerate;
 		this.health = 10;
 		this.rank = 1;
+		this.rankImage = Instantiate (ranking, transform.position, Quaternion.identity) as GameObject;
+		this.rankImage.transform.parent = transform;
+		this.rankImage.transform.localPosition = new Vector2 (-0.5f, -0.5f);
 		this.gameObject.tag = "Defense";
 	}
 
@@ -247,5 +251,16 @@ public class Defense : MonoBehaviour {
 
 	public float GetRange() {
 		return GetComponent<CircleCollider2D>().radius;
+	}
+
+	public int GetLevel() {
+		return rank;
+	}
+
+	public void RankUp() {
+		if (rank < 3) {
+			rank += 1;
+			rankImage.GetComponent<RankingScript>().UpdateSprite(rank);
+		}
 	}
 }
