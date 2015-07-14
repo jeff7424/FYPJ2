@@ -39,7 +39,7 @@ public class Enemy : MonoBehaviour {
 		}
 		if (slow_duration > 0.0f) {
 			slow_duration -= Time.deltaTime;
-			GetComponent<SpriteRenderer>().color = new Color(0.0f, 0.0f, 1.0f, 0.8f);
+			GetComponent<SpriteRenderer>().color = Color.blue;
 			finalSpeed = speed * effectValue;
 		} else {
 			effectValue = 0.0f;
@@ -109,6 +109,8 @@ public class Enemy : MonoBehaviour {
 			GetComponent<SpriteRenderer>().sprite = jump;
 			break;
 		}
+
+		gameObject.tag = "Enemy";
 	}
 
 	public enemyType getType(){
