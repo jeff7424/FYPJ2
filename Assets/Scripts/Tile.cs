@@ -67,10 +67,12 @@ public class Tile : MonoBehaviour {
 	public void DestroyDefense() {
 		Destroy (defense.gameObject);
 		isOccupied = false;
+		isSelected = false;
 		deleteDefense = false;
 		selection = 1;
-
-		GetComponent<Node>().type = Node.NodeType.NODE_TOWER;
+		
+		//Update pathNode type and search path for all AI present
+		GetComponent<Node>().type = Node.NodeType.NODE_OPEN;
 		EnemyMovementAI[] enemyAIs = GameObject.Find("EnemyParent").GetComponentsInChildren<EnemyMovementAI>();
 		foreach(EnemyMovementAI ai in enemyAIs){
 			ai.searchPath();
@@ -175,7 +177,8 @@ public class Tile : MonoBehaviour {
 			isOccupied = true;
 		}
 	}
-	
+
+	//Returns true if normal monsters are able to find a path to the core
 	bool checkAIPath(){
 		GetComponent<Node>().type = Node.NodeType.NODE_TOWER;
 		List<GameObject> path = new List<GameObject>();

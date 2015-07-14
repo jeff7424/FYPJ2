@@ -13,6 +13,12 @@ public class EnemyWaves : MonoBehaviour {
 			get{return Normal+Fast+Slow+Jump;}
 		}
 	}
-
-	public Wave[] waves;
+	
+	[System.Serializable]
+	public struct LevelWave{
+		public Wave[] waves;
+	}
+	
+	//public Wave[] waves;
+	public LevelWave[] levels;
 }
