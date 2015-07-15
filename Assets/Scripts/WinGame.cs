@@ -14,7 +14,7 @@ public class WinGame : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		print (kills);
+		//print (kills);
 		if (kills >= 10) {
 			winGame.GetComponent<Text> ().enabled = true;
 		} 
