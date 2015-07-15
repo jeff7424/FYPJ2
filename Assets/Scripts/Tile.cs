@@ -17,7 +17,6 @@ public class Tile : MonoBehaviour {
 	private Defense defense;
 	private GameObject game;
 	public bool isOccupied = false;
-	public bool isSelected = false;
 	public bool isMouseOver = false;
 	public bool deleteDefense = false;
 	private int cost = 0;
@@ -54,7 +53,7 @@ public class Tile : MonoBehaviour {
 		defense.transform.position = transform.position;
 		defense.transform.SetParent (gameObject.transform);
 		isOccupied = true;
-		Debug.Log ("Defense built");
+		game.GetComponent<Game> ().DisableInfoPanel ();
 
 		//Update pathNode type and search path for all AI present
 		GetComponent<Node>().type = Node.NodeType.NODE_TOWER;
@@ -67,7 +66,6 @@ public class Tile : MonoBehaviour {
 	public void DestroyDefense() {
 		Destroy (defense.gameObject);
 		isOccupied = false;
-		isSelected = false;
 		deleteDefense = false;
 		selection = 1;
 		
@@ -96,6 +94,7 @@ public class Tile : MonoBehaviour {
 
 	void OnMouseEnter() {
 		RenderGhost ();
+		this.GetComponent<SpriteRenderer> ().color = new Color (1.0f, 1.0f, 1.0f, 0.5f);
 		game.GetComponent<Game> ().mouseOverTile = true;
 		isMouseOver = true;
 	}
@@ -131,7 +130,7 @@ public class Tile : MonoBehaviour {
 			}
 		}
 		
-		if (!isOccupied && game.GetComponent<Game> ().resources - cost >= 0 && !deleteDefense && !isSelected) {
+		if (!isOccupied && game.GetComponent<Game> ().resources - cost >= 0 && !deleteDefense) {
 			if (!checkAIPath ())
 				Debug.Log ("Monsters cannot pass through");
 			else {
@@ -141,9 +140,8 @@ public class Tile : MonoBehaviour {
 		} else {
 			if (isOccupied && deleteDefense) {
 				DestroyDefense ();
-			} else if (isOccupied && !deleteDefense && !isSelected) {
+			} else if (isOccupied && !deleteDefense) {
 				// level up defense
-				isSelected = true;
 				TileSelected ();
 				DisplayInfo ();
 			}
