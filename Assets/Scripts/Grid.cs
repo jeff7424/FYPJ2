@@ -74,9 +74,9 @@ public class Grid : MonoBehaviour {
 				{
 					if (maxSpawn < 3)
 					{
-						GameObject newObstacleTile = (GameObject)Instantiate (obstacleTile, new Vector2(transform.position.x + xOffset, transform.position.y + yOffset), Quaternion.identity);
+						Instantiate (obstacleTile, new Vector2(transform.position.x + xOffset, transform.position.y + yOffset), Quaternion.identity);
 						newTile.GetComponent<Node>().type = Node.NodeType.NODE_OBSTACLE;
-						maxSpawn++;
+						++maxSpawn;
 					}
 				}
 
