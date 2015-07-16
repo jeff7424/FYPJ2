@@ -10,11 +10,12 @@ public class Defense : MonoBehaviour {
 		DEF_CANNON 	= 1,	// 1 target, 1 shot, ground only
 		DEF_TURRET 	= 2,	// 1 target, 3 shots, ground only
 		DEF_SLOW 	= 3,	// 1 target, 1 shot, ground and air
-		DEF_ANTIAIR = 4		// 1 target, 3 shots, air only
+		DEF_ANTIAIR = 4,	// 1 target, 3 shots, air only
+		DEF_FLAME	= 5		// burn target overtime 
 	}
 
 	public defenseType selection;
-	public int damage;
+	public float damage;
 	private int cost;
 	private int rank;
 	private int health;
@@ -24,17 +25,18 @@ public class Defense : MonoBehaviour {
 	private float fireratecounter;
 	private float aimposition;
 	private float weaponRotationSpeed = 20.0f;
-	private Quaternion weaponRotation = Quaternion.identity;
 	public ParticleSystem flare;
 	public Text info_level;
 	public Button upgrade;
 	private GameObject game;
 	public GameObject ranking;
 	private GameObject rankImage;
+	public GameObject muzzleFlare;
 	
 	public Transform target;
 	public Bullets bullet;
 	public Bullets slowbullet;
+	public Bullets firebullet;
 	public Rect healthbar;
 	public Tile tile;
 
@@ -44,9 +46,7 @@ public class Defense : MonoBehaviour {
 	public Sprite turret;
 	public Sprite slow;
 	public Sprite antiair;
-	public Sprite rank_1;
-	public Sprite rank_2;
-	public Sprite rank_3;
+	public Sprite flamethrower;
 	
 	// Use this for initialization
 	void Start () {
@@ -75,25 +75,9 @@ public class Defense : MonoBehaviour {
 		if (health <= 0) {
 			Destroy (gameObject);
 		}
-
-//		if (Input.GetMouseButtonDown (0)) {
-//			if (game.GetComponent<Game>().isPause == false) {
-//				if (selectedDefense == null) {
-//					Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-//					RaycastHit2D hit = Physics2D.Raycast (new Vector2(worldPoint.x, worldPoint.y), Vector2.zero);
-//					if (hit != null) {
-//						selectedDefense = gameObject;
-//						this.GetComponent<SpriteRenderer>().color = Color.red;
-//					}
-//				} else if (selectedDefense != null) {
-//					selectedDefense = null;
-//					this.GetComponent<SpriteRenderer>().color = Color.white;
-//				}
-//			}
-//		}
 	}
 	
-	public int GetDamage() {
+	public float GetDamage() {
 		return damage;
 	}
 
@@ -129,6 +113,10 @@ public class Defense : MonoBehaviour {
 			Instantiate (slowbullet, weapon.transform.position, weapon.transform.rotation);
 			slowbullet.name = this.gameObject.name + " bullet";
 			slowbullet.damage = damage;
+		} else if (this.gameObject.name == "Flamethrower") {
+			Instantiate (firebullet, weapon.transform.position, weapon.transform.rotation);
+			firebullet.name = this.gameObject.name + " bullet";
+			firebullet.damage = damage;
 		} else {
 			Instantiate (bullet, weapon.transform.position, weapon.transform.rotation);
 			bullet.name = this.gameObject.name + " bullet";
@@ -157,8 +145,9 @@ public class Defense : MonoBehaviour {
 	}
 
 	void FireFlare() {
-		ParticleSystem fireFlare = Instantiate (flare, weapon.transform.position, weapon.transform.rotation) as ParticleSystem;
-		Destroy (fireFlare.gameObject, fireFlare.startLifetime);
+//		GameObject flash = Instantiate (muzzleFlare, weapon.transform.position, Quaternion.identity) as GameObject;
+//		flash.transform.parent = weapon.transform;
+//		flash.transform.eulerAngles = weapon.transform.eulerAngles;
 	}
 
 	void CalculateAim(Transform target) {
@@ -223,6 +212,16 @@ public class Defense : MonoBehaviour {
 				this.gameObject.name = "Anti-Air";
 				break;
 			}
+			case defenseType.DEF_FLAME:
+			{
+				this.damage = 1.0f;
+				this.cost = 300;
+				this.firerate = 0.2f;
+				this.weapon.GetComponent<SpriteRenderer>().sprite = flamethrower;
+				this.GetComponent<CircleCollider2D>().radius = 3;
+				this.gameObject.name = "Flamethrower";
+				break;
+			}
 		}
 		this.fireratecounter = this.firerate;
 		this.health = 10;
@@ -261,6 +260,33 @@ public class Defense : MonoBehaviour {
 		if (rank < 3) {
 			rank += 1;
 			rankImage.GetComponent<RankingScript>().UpdateSprite(rank);
+			switch (selection) {
+				case defenseType.DEF_CANNON:
+				{
+					damage *= 1.5f;
+					break;
+				}
+				case defenseType.DEF_TURRET:
+				{
+					firerate -= 0.1f;
+					break;
+				}
+				case defenseType.DEF_SLOW:
+				{
+					
+					break;
+				}
+				case defenseType.DEF_ANTIAIR:
+				{
+
+					break;
+				}
+				case defenseType.DEF_FLAME:
+				{
+					damage *= 1.1f;
+					break;
+				}
+			}
 		}
 	}
 }

@@ -7,13 +7,16 @@ public class Enemy : MonoBehaviour {
 	public Sprite fast;
 	public Sprite jump;
 
-	public int health;
+	public float health;
 	public int reward;
 	public float slow_duration = 0.0f;
+	public float fire_duration = 0.0f;
+	public float damageRate = 0.3f;
 	private float speed;
 	private float originalSpeed;
 	private float finalSpeed = 0.0f;
 	private float effectValue = 0.0f;
+	private float burnDamage = 0.0f;
 	private GameObject game;
 
 	public enum enemyType{
@@ -47,6 +50,18 @@ public class Enemy : MonoBehaviour {
 			finalSpeed = speed;
 			GetComponent<SpriteRenderer>().color = Color.white;
 		}
+
+		if (fire_duration > 0.0f) {
+			fire_duration -= Time.deltaTime;
+			damageRate -= Time.deltaTime;
+			GetComponent<SpriteRenderer>().color = Color.red;
+			if (damageRate <= 0.0f) {
+				health -= burnDamage;
+				damageRate = 0.3f;
+			}
+		} else {
+			GetComponent<SpriteRenderer>().color = Color.white;
+		}
 	}
 
 	public float getSpeed(){
@@ -67,6 +82,10 @@ public class Enemy : MonoBehaviour {
 
 	public void setEffectValue(float effectValue){
 		this.effectValue = effectValue;
+	}
+
+	public void setBurnDamage(float damage) {
+		this.burnDamage = damage;
 	}
 
 	public void setType(enemyType newType){

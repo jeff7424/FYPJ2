@@ -5,9 +5,10 @@ public class Bullets : MonoBehaviour {
 
 	private float speed = 20.0f;
 
-	public int damage;
+	public float damage;
 	public Vector3 direction;
 	public bool slow = false;
+	public bool fire = false;
 	public float buff_duration = 0.0f;
 	public float buff_value = 0.0f;
 	public Defense owner;
@@ -19,6 +20,11 @@ public class Bullets : MonoBehaviour {
 			slow = true;
 			buff_duration = 3.0f;
 			buff_value = 0.5f;
+		}
+		else if (this.gameObject.name == "Flamethrower bullet") {
+			fire = true;
+			buff_duration = 3.0f;
+			buff_value = damage / 2;
 		}
 	}
 	
@@ -39,6 +45,10 @@ public class Bullets : MonoBehaviour {
 					//other.GetComponent<Enemy>().setSpeed (other.GetComponent<Enemy>().getSpeed () * buff_value);
 					other.GetComponent<Enemy>().setEffectValue(buff_value);
 				}
+			}
+			else if (fire == true) {
+				other.GetComponent<Enemy>().fire_duration = buff_duration;
+				other.GetComponent<Enemy>().setBurnDamage(buff_value);
 			}
 			// Destroy bullet once hit enemy
 			//Debug.Log (damage);
