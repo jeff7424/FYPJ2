@@ -15,14 +15,11 @@ public class Bullets : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		Debug.Log (this.gameObject.name);
-		if (this.gameObject.name == "Slow bullet") {
-			slow = true;
+		if (slow == true) {
 			buff_duration = 3.0f;
 			buff_value = 0.5f;
 		}
-		else if (this.gameObject.name == "Flamethrower bullet") {
-			fire = true;
+		else if (fire == true) {
 			buff_duration = 3.0f;
 			buff_value = damage / 2;
 		}
@@ -32,6 +29,8 @@ public class Bullets : MonoBehaviour {
 	void Update () {
 		// Move the bullet towards the direction of enemy
 		transform.Translate (Vector3.right * Time.deltaTime * speed);
+		// Destroy object if it doesn't hit anything after 2 seconds
+		Destroy (gameObject, 2.0f);
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
@@ -39,10 +38,10 @@ public class Bullets : MonoBehaviour {
 		if (other.gameObject.tag == "Enemy" || other.GetComponent<Enemy>()) {
 			// Deal damage to enemy (Not working yet)
 			other.GetComponent<Enemy>().health -= damage;
-			if (slow == true) {
+			if (slow == true && other.GetComponent<Enemy>().slowByBuff == false) {
 				other.GetComponent<Enemy>().slow_duration = buff_duration;
+				// Check if their speed is equivilent to their original speed, if it is then slow them (needs optimisation)
 				if (other.GetComponent<Enemy>().getSpeed () == other.GetComponent<Enemy>().getOriginalSpeed()) {
-					//other.GetComponent<Enemy>().setSpeed (other.GetComponent<Enemy>().getSpeed () * buff_value);
 					other.GetComponent<Enemy>().setEffectValue(buff_value);
 				}
 			}

@@ -23,6 +23,7 @@ public class Defense : MonoBehaviour {
 	private float bulletcounttimer = 0.1f;
 	private float firerate;
 	private float fireratecounter;
+	private float originalfirerate;
 	private float aimposition;
 	private float weaponRotationSpeed = 20.0f;
 	public ParticleSystem flare;
@@ -32,6 +33,9 @@ public class Defense : MonoBehaviour {
 	public GameObject ranking;
 	private GameObject rankImage;
 	public GameObject muzzleFlare;
+
+	public float rage_duration;
+	public float rage_value;
 	
 	public Transform target;
 	public Bullets bullet;
@@ -74,6 +78,9 @@ public class Defense : MonoBehaviour {
 		}
 		if (health <= 0) {
 			Destroy (gameObject);
+		}
+		if (rage_duration > 0.0f) {
+			RageCountdown();
 		}
 	}
 	
@@ -224,6 +231,7 @@ public class Defense : MonoBehaviour {
 			}
 		}
 		this.fireratecounter = this.firerate;
+		this.originalfirerate = this.firerate;
 		this.health = 10;
 		this.rank = 1;
 		this.rankImage = Instantiate (ranking, transform.position, Quaternion.identity) as GameObject;
@@ -287,6 +295,19 @@ public class Defense : MonoBehaviour {
 					break;
 				}
 			}
+		}
+	}
+
+	public void Rage(float duration, float value) {
+		rage_duration = duration;
+		firerate = firerate / value;
+	}
+
+	void RageCountdown() {
+		rage_duration -= Time.deltaTime;
+		if (rage_duration <= 0.0f) {
+			rage_duration = 0.0f;
+			firerate = originalfirerate;
 		}
 	}
 }

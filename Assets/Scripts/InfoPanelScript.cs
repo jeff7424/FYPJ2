@@ -26,6 +26,7 @@ public class InfoPanelScript : MonoBehaviour {
 	}
 
 	public void EnablePanel() {
+		// Enable info panel
 		enabledDisplay = true;
 		GetComponent<Image> ().enabled = true;
 		for (int i = 0; i < transform.childCount; i++) {
@@ -34,6 +35,7 @@ public class InfoPanelScript : MonoBehaviour {
 	}
 
 	public void DisablePanel() {
+		// Disable info panel
 		enabledDisplay = false;
 		GetComponent<Image> ().enabled = false;
 		for (int i = 0; i < transform.childCount; i++) {
@@ -42,12 +44,7 @@ public class InfoPanelScript : MonoBehaviour {
 	}
 
 	public void DestroyDefense() {
-//		if (defense != null) {
-//			Destroy (defense.gameObject);
-//			enabledDisplay = false;
-//			DisablePanel ();
-//			defense = null;
-//		}
+		// If defense exist, destroy defense when function is called
 		if (defense != null) {
 			tile.GetComponent<Tile> ().DestroyDefense ();
 			enabledDisplay = false;
@@ -57,6 +54,7 @@ public class InfoPanelScript : MonoBehaviour {
 	}
 
 	public void RankUpDefense() {
+		// If defense exist, rank up defense when function is called
 		if (defense != null) {
 			tile.GetComponent<Tile>().RankUpDefense();
 		}

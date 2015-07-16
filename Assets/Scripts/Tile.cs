@@ -189,4 +189,12 @@ public class Tile : MonoBehaviour {
 		else
 			return false;
 	}
+
+	public GameObject ReturnDefense() {
+		return defense.gameObject;
+	}
+
+	public void TowerRage(float duration, float newValue) {
+		defense.Rage (duration, newValue);
+	}
 }

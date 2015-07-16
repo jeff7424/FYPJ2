@@ -17,6 +17,7 @@ public class Enemy : MonoBehaviour {
 	private float finalSpeed = 0.0f;
 	private float effectValue = 0.0f;
 	private float burnDamage = 0.0f;
+	public bool slowByBuff = false;
 	private GameObject game;
 
 	public enum enemyType{
@@ -49,6 +50,7 @@ public class Enemy : MonoBehaviour {
 			//speed = originalSpeed;
 			finalSpeed = speed;
 			GetComponent<SpriteRenderer>().color = Color.white;
+			slowByBuff = false;
 		}
 
 		if (fire_duration > 0.0f) {
@@ -134,5 +136,15 @@ public class Enemy : MonoBehaviour {
 
 	public enemyType getType(){
 		return type;
+	}
+
+	public void SlowByBuff(float duration, float newValue) {
+		slowByBuff = true;
+		this.slow_duration = duration;
+		this.effectValue = newValue;
+	}
+
+	public void Kamikazed(int damage) {
+		health -= damage;
 	}
 }
