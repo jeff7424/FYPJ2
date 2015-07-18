@@ -25,7 +25,7 @@ public class EnemySpawner : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(currWave <= LevelWaves.levels[level].waves.Count){
+		if(currWave < LevelWaves.levels[level].waves.Count){
 			if(LevelWaves.levels[level].waves[currWave].TotalEnemies() <= 0){
 				//When wave has finished spawning all enemies
 				//Wait for timer before going to next wave
@@ -33,14 +33,16 @@ public class EnemySpawner : MonoBehaviour {
 				if(waveChangeTimer > 10.0f && currWave < 5){
 					++currWave;
 					WaveText.text = "Wave " + (currWave+1);
-				} else if (currWave == 5) {
+					waveChangeTimer = 0.0f;
+				} else if (currWave == LevelWaves.levels[level].waves.Count-1) {
+					//Victory!
 					GameObject win = GameObject.Find ("WinGame");
 					win.GetComponent<Text>().enabled = true;
 				}
 			}
 			else{
 				List<int> spawnList = LevelWaves.levels[level].waves[currWave].Update(Time.deltaTime);
-
+				
 				if(spawnList.Count > 0){
 					for(int index = 0; index < spawnList.Count; ++index){
 						for(int i = 0; i < spawnList[index]; ++i){

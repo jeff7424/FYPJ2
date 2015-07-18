@@ -149,7 +149,7 @@ public class EnemyWavesEditor : Editor {
 		}
 
 		//"-" button to remove waves
-		if(GUILayout.Button("-", EditorStyles.toolbarButton, GUILayout.Width(50))){
+		if(GUILayout.Button("-", EditorStyles.toolbarButton, GUILayout.Width(50)) && myTarget.levels[levelIndex].waves.Count > 0){
 			myTarget.levels[levelIndex].waves.RemoveAt(myTarget.levels[levelIndex].waves.Count-1);
 			subwaveIndex[levelIndex].RemoveAt(subwaveIndex[levelIndex].Count-1);
 			if(waveIndex[levelIndex] > myTarget.levels[levelIndex].waves.Count-1)
