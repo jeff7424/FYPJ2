@@ -6,8 +6,12 @@ public class EnemyWaves : MonoBehaviour {
 
 	[System.Serializable]
 	public class Wave{
-		public EnemySubwave[] Subwaves;
+		public List<EnemySubwave> Subwaves = new List<EnemySubwave>();
 		private float elapsedTime = 0.0f;
+
+		public Wave(){
+			Subwaves.Add(new EnemySubwave());
+		}
 
 		public List<int> Update(float dt){
 			List<int> list = new List<int>();
@@ -52,10 +56,20 @@ public class EnemyWaves : MonoBehaviour {
 
 
 	[System.Serializable]
-	public struct LevelWave{
-		public Wave[] waves;
+	public class Level{
+		public List<Wave> waves = new List<Wave>();
+
+		//Constructor
+		public Level(){
+			waves.Add(new Wave());
+		}
 	}
 
 
-	public LevelWave[] levels;
+	public List<Level> levels = new List<Level>();
+
+	//Constructor
+	public EnemyWaves(){
+		levels.Add(new Level());
+	}
 }

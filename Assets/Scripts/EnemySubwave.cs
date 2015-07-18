@@ -1,17 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class EnemySubwave {
 
-	public float spawnRate;
+	public float spawnRate = 1.0f;
 	private float timeLastSpawn = 0.0f;
 
 	private bool active = false;
-	public float activateTime;
+	public float activateTime = 0.0f;
 
-	public int[] Enemies = new int[(int)global::Enemy.enemyType.TYPE_MAX];
-	
+	public List<int> Enemies;
+
+	public EnemySubwave(){
+		Enemies = new List<int>();
+		for(int i = 0; i < (int)Enemy.enemyType.TYPE_MAX; ++i)
+			Enemies.Add(0);
+	}
+
 	// Update is called once per frame
 	public int Update () {
 		//If there's no more enemy to spawn, return -1
@@ -22,9 +29,9 @@ public class EnemySubwave {
 		if(Time.time - timeLastSpawn >= spawnRate){
 			timeLastSpawn = Time.time;
 
-			int spawnType = Random.Range (0, Enemies.Length);
+			int spawnType = Random.Range (0, Enemies.Count);
 			while(Enemies[spawnType] <= 0)
-				spawnType = Random.Range (0, Enemies.Length);
+				spawnType = Random.Range (0, Enemies.Count);
 			--Enemies[spawnType];
 
 			return spawnType;
