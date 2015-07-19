@@ -56,7 +56,7 @@ public class Tile : MonoBehaviour {
 		game.GetComponent<Game> ().DisableInfoPanel ();
 
 		//Update pathNode type and search path for all AI present
-		GetComponent<Node>().type = Node.NodeType.NODE_TOWER;
+		GetComponent<Node>().setNodeType(Node.NodeType.NODE_TOWER);
 		EnemyMovementAI[] enemyAIs = GameObject.Find("EnemyParent").GetComponentsInChildren<EnemyMovementAI>();
 		foreach(EnemyMovementAI ai in enemyAIs){
 			ai.searchPath();
@@ -70,7 +70,7 @@ public class Tile : MonoBehaviour {
 		selection = 1;
 		
 		//Update pathNode type and search path for all AI present
-		GetComponent<Node>().type = Node.NodeType.NODE_OPEN;
+		GetComponent<Node>().setNodeType(Node.NodeType.NODE_OPEN);
 		EnemyMovementAI[] enemyAIs = GameObject.Find("EnemyParent").GetComponentsInChildren<EnemyMovementAI>();
 		foreach(EnemyMovementAI ai in enemyAIs){
 			ai.searchPath();
@@ -131,9 +131,10 @@ public class Tile : MonoBehaviour {
 		}
 		
 		if (!isOccupied && game.GetComponent<Game> ().resources - cost >= 0 && !deleteDefense) {
-			if (!checkAIPath ())
+			if (!checkAIPath ())		//If monsters cannot find a path to the core
 				Debug.Log ("Monsters cannot pass through");
-			else {
+			else if(GetComponent<Node>().getNodeType() == Node.NodeType.NODE_OPEN ||
+			        GetComponent<Node>().getNodeType() == Node.NodeType.NODE_PLATFORM) {
 				BuildDefense ();
 				game.GetComponent<Game> ().resources -= cost;
 			}
@@ -178,10 +179,10 @@ public class Tile : MonoBehaviour {
 
 	//Returns true if normal monsters are able to find a path to the core
 	bool checkAIPath(){
-		GetComponent<Node>().type = Node.NodeType.NODE_TOWER;
+		GetComponent<Node>().setNodeType(Node.NodeType.NODE_TOWER);
 		List<GameObject> path = new List<GameObject>();
 		path = GameObject.Find("Pathfinder").GetComponent<PathfinderScript>().FindPath(GameObject.Find("enemySpawn5").transform.position, Enemy.enemyType.TYPE_NORMAL);
-		GetComponent<Node>().type = Node.NodeType.NODE_OPEN;
+		GetComponent<Node>().setNodeType(Node.NodeType.NODE_OPEN);
 		
 		if(path.Count > 0)
 			//Normal monsters are still able to reach the core

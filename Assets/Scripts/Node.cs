@@ -5,14 +5,19 @@ using System.Collections.Generic;
 public class Node : MonoBehaviour {
 	public enum NodeType{
 		NODE_OPEN = 0,
+		NODE_SPAWN,
+		NODE_CORE,
 		NODE_TOWER,
 		NODE_OBSTACLE,
+		NODE_TUNNEL,
+		NODE_PLATFORM,
 		NODE_MAX
 	}
 
 	public List<GameObject> LinkedNodes = new List<GameObject>();
-	public NodeType type = NodeType.NODE_OPEN;
+	private NodeType type = NodeType.NODE_OPEN;
 	public float F = 0.0f, G = 0.0f;
+	//Pathfinding parent
 	public GameObject parent = null;
 
 	// Use this for initialization
@@ -38,4 +43,30 @@ public class Node : MonoBehaviour {
 		F = G = 0.0f;
 		parent = null;
 	}
+
+	public void setNodeType(NodeType newType){
+		type = newType;
+		switch(type){
+		case NodeType.NODE_OPEN:
+			GetComponent<SpriteRenderer>().color = Color.white;
+			break;
+
+		case NodeType.NODE_TOWER:
+			GetComponent<SpriteRenderer>().color = Color.black;
+			break;
+			
+		case NodeType.NODE_OBSTACLE:
+			GetComponent<SpriteRenderer>().color = Color.green;
+			break;
+			
+		case NodeType.NODE_TUNNEL:
+			GetComponent<SpriteRenderer>().color = Color.yellow;
+			break;
+			
+		case NodeType.NODE_PLATFORM:
+			GetComponent<SpriteRenderer>().color = Color.blue;
+			break;
+		}
+	}
+	public NodeType getNodeType(){return type;}
 }

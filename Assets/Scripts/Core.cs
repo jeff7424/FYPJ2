@@ -5,9 +5,6 @@ using System.Collections;
 public class Core : MonoBehaviour {
 
 	int health;
-	public GameObject thePathfinderRoot;
-
-	public GameObject pathNode;
 
 	public Text healthValue;
 	public ParticleSystem explosionEffect;

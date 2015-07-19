@@ -46,17 +46,25 @@ public class PathfinderScript : MonoBehaviour {
 				
 				//Check which nodes are obstacles to the enemy type
 				//Add them to closedset
+				Node.NodeType theType = node.GetComponent<Node>().getNodeType();
 				switch(type){
 				case Enemy.enemyType.TYPE_NORMAL:
 				case Enemy.enemyType.TYPE_SLOW:
 				case Enemy.enemyType.TYPE_FAST:
-					if(node.GetComponent<Node>().type == Node.NodeType.NODE_TOWER ||
-					   node.GetComponent<Node>().type == Node.NodeType.NODE_OBSTACLE)
+					if(theType == Node.NodeType.NODE_TOWER ||
+					   theType == Node.NodeType.NODE_OBSTACLE ||
+					   theType == Node.NodeType.NODE_PLATFORM)
 						closedset.Add(node);
 					break;
 
 				case Enemy.enemyType.TYPE_JUMP:
-					if(node.GetComponent<Node>().type == Node.NodeType.NODE_OBSTACLE)
+					if(theType == Node.NodeType.NODE_OBSTACLE ||
+					   theType == Node.NodeType.NODE_PLATFORM)
+						closedset.Add(node);
+					break;
+
+				case Enemy.enemyType.TYPE_FLY:
+					if(theType == Node.NodeType.NODE_PLATFORM)
 						closedset.Add(node);
 					break;
 				}

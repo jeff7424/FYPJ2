@@ -75,7 +75,7 @@ public class Grid : MonoBehaviour {
 					if (maxSpawn < 3)
 					{
 						Instantiate (obstacleTile, new Vector2(transform.position.x + xOffset, transform.position.y + yOffset), Quaternion.identity);
-						newTile.GetComponent<Node>().type = Node.NodeType.NODE_OBSTACLE;
+						newTile.GetComponent<Node>().setNodeType(Node.NodeType.NODE_PLATFORM);
 						++maxSpawn;
 					}
 				}
@@ -99,11 +99,8 @@ public class Grid : MonoBehaviour {
 		}
 
 		//Link core with the nodes
-		Core.GetComponent<Core>().pathNode = (GameObject)Instantiate(node, Core.transform.position, Quaternion.identity);
-		Core.GetComponent<Core>().pathNode.name = "enemyTargetPoint";
-		Core.GetComponent<Core>().pathNode.transform.SetParent(thePathfinderRoot.transform);
-		Core.GetComponent<Core>().pathNode.GetComponent<Node>().LinkedNodes.Add(thePathfinder.Nodes[numberOfTilesRow/2][0]);
-		thePathfinder.Nodes[numberOfTilesRow/2][0].GetComponent<Node>().LinkedNodes.Add(Core.GetComponent<Core>().pathNode);
-		thePathfinder.coreNode = Core.GetComponent<Core>().pathNode;
+		Core.GetComponent<Node>().LinkedNodes.Add(thePathfinder.Nodes[numberOfTilesRow/2][0]);
+		thePathfinder.Nodes[numberOfTilesRow/2][0].GetComponent<Node>().LinkedNodes.Add(Core);
+		thePathfinder.coreNode = Core;
 	}
 }

@@ -58,7 +58,7 @@ public class EnemyMovementAI : MonoBehaviour {
 			if(currentWaypoint < thePath.Count){
 				switch(GetComponent<Enemy>().getType()){
 				case Enemy.enemyType.TYPE_JUMP:
-					if(thePath[currentWaypoint].GetComponent<Node>().type == Node.NodeType.NODE_TOWER || prevNode.type == Node.NodeType.NODE_TOWER){
+					if(thePath[currentWaypoint].GetComponent<Node>().getNodeType() == Node.NodeType.NODE_TOWER || prevNode.getNodeType() == Node.NodeType.NODE_TOWER){
 						GetComponent<Enemy>().setSpeed(5.0f);
 					}
 					else
