@@ -41,6 +41,7 @@ public class Enemy : MonoBehaviour {
 		// If health less than zero destroy object
 		if (health <= 0) {
 			Destroy (gameObject);
+			game.GetComponent<Game>().enemyLeft --;
 			game.GetComponent<Game>().resources += reward;
 		}
 		if (slow_duration > 0.0f) {

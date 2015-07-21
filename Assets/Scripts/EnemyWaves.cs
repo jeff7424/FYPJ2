@@ -63,6 +63,16 @@ public class EnemyWaves : MonoBehaviour {
 		public Level(){
 			waves.Add(new Wave());
 		}
+
+		public int TotalEnemies() {
+			int total = 0;
+
+			foreach(Wave wave in waves) {
+				total += wave.TotalEnemies ();
+			}
+
+			return total;
+		}
 	}
 
 

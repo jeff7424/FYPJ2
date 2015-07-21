@@ -5,30 +5,16 @@ using System.Collections.Generic;
 
 public class Tile : MonoBehaviour {
 
-	public enum defenseCost
-	{
-		DEF_CANON   = 3,
-		DEF_TURRET  = 3,
-		DEF_SLOW    = 5,
-		DEF_ANTIAIR = 6,
-	}
-
 	public Defense defenses;
 	private Defense defense;
 	private GameObject game;
 	public bool isOccupied = false;
 	public bool isMouseOver = false;
-	public bool deleteDefense = false;
 	private int cost = 0;
 	private int selection = 1;
 	public Tree trees;
-	public Sprite theBase;
 	public Sprite tile;
-	public Sprite weapon;
-	public Texture2D current;
-	public Texture2D[] weapontype;
 	public Rect temp;
-	//private GameObject info_panel;
 
 	// Use this for initialization
 	void Start () {
@@ -37,12 +23,11 @@ public class Tile : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (defense == null) {
-			isOccupied = false;
-			deleteDefense = false;
-			selection = 1;
-		}
-		if (Input.GetMouseButtonDown (0) && !isMouseOver) {
+//		if (defense == null) {
+//			isOccupied = false;
+//			selection = 1;
+//		}
+		if (Input.GetMouseButtonDown (0) && (!isMouseOver && !game.GetComponent<Game>().mouseOverPanel)) {
 			TileDeselected();
 		}
 	}
@@ -51,9 +36,10 @@ public class Tile : MonoBehaviour {
 		// Build tower when button is released
 		defense = (Defense)Instantiate (defenses);
 		defense.transform.position = transform.position;
-		defense.transform.SetParent (gameObject.transform);
+		defense.transform.parent = transform;
 		isOccupied = true;
-		game.GetComponent<Game> ().DisableInfoPanel ();
+
+		game.GetComponent<Game>().IncreaseDefenseUsed();
 
 		//Update pathNode type and search path for all AI present
 		GetComponent<Node>().setNodeType(Node.NodeType.NODE_TOWER);
@@ -66,8 +52,10 @@ public class Tile : MonoBehaviour {
 	public void DestroyDefense() {
 		Destroy (defense.gameObject);
 		isOccupied = false;
-		deleteDefense = false;
 		selection = 1;
+		TileDeselected();
+
+		game.GetComponent<Game>().IncreaseDefenseDeleted();
 		
 		//Update pathNode type and search path for all AI present
 		GetComponent<Node>().setNodeType(Node.NodeType.NODE_OPEN);
@@ -81,90 +69,77 @@ public class Tile : MonoBehaviour {
 		defense.GetComponent<Defense> ().RankUp ();
 	}
 
-	void RenderGhost() {
-		//selection = (int)defenses.GetComponent<Defense>().selection;
-		//current = weapontype [selection - 1];
-		//weapon = Sprite.Create (current, new Rect (0, 0, current.width, current.height), new Vector2(0.5f, 0.5f));
-
-		//this.GetComponent<SpriteRenderer> ().sprite = weapon;
-		this.GetComponent<SpriteRenderer> ().color = new Color (1.0f, 1.0f, 1.0f, 0.5f);
-
-		//temp = new Rect (0, 0, current.width, current.height);
-	}
-
 	void OnMouseEnter() {
-		RenderGhost ();
-		this.GetComponent<SpriteRenderer> ().color = new Color (1.0f, 1.0f, 1.0f, 0.5f);
-		game.GetComponent<Game> ().mouseOverTile = true;
-		isMouseOver = true;
+		if (game.GetComponent<Game>().isPause == false && GetComponent<Node>().getNodeType () == Node.NodeType.NODE_OPEN || GetComponent<Node>().getNodeType () == Node.NodeType.NODE_TOWER) {
+			this.GetComponent<SpriteRenderer> ().color = new Color (1.0f, 1.0f, 1.0f, 0.5f);
+			game.GetComponent<Game> ().mouseOverTile = true;
+			isMouseOver = true;
+		}
 	}
 
 	void OnMouseExit() {
 		// Revert back to original sprite
 		//this.GetComponent<SpriteRenderer> ().sprite = tile;
-		this.GetComponent<SpriteRenderer> ().color = new Color (1.0f, 1.0f, 1.0f, 1.0f);
-		game.GetComponent<Game> ().mouseOverTile = false;
-		isMouseOver = false;
+		if (game.GetComponent<Game>().isPause == false && GetComponent<Node>().getNodeType () == Node.NodeType.NODE_OPEN || GetComponent<Node>().getNodeType () == Node.NodeType.NODE_TOWER) {
+			this.GetComponent<SpriteRenderer> ().color = new Color (1.0f, 1.0f, 1.0f, 1.0f);
+			game.GetComponent<Game> ().mouseOverTile = false;
+			isMouseOver = false;
+		}
 	}
 
 	void OnMouseDown() {
-		//GameObject game = GameObject.Find ("Game");
-		selection = game.GetComponent<Game>().selection;
-		if (selection == 0) {
-			deleteDefense = true;
-		} else {
-			deleteDefense = false;
+		if (game.GetComponent<Game>().isPause == false) {
+			selection = game.GetComponent<Game>().selection;
 			switch (selection) {
 			case (1):
-				cost = (int)defenseCost.DEF_CANON;
+				cost = (int)Game.defenseCost.DEF_CANNON;
 				break;
 			case (2):
-				cost = (int)defenseCost.DEF_TURRET;
+				cost = (int)Game.defenseCost.DEF_TURRET;
 				break;
 			case (3):
-				cost = (int)defenseCost.DEF_SLOW;
+				cost = (int)Game.defenseCost.DEF_SLOW;
 				break;
 			case (4):
-				cost = (int)defenseCost.DEF_ANTIAIR;
+				cost = (int)Game.defenseCost.DEF_ANTIAIR;
+				break;
+			case (5):
+				cost = (int)Game.defenseCost.DEF_FLAME;
 				break;
 			}
-		}
-		
-		if (!isOccupied && game.GetComponent<Game> ().resources - cost >= 0 && !deleteDefense) {
-			if (!checkAIPath ())		//If monsters cannot find a path to the core
-				Debug.Log ("Monsters cannot pass through");
-			else if(GetComponent<Node>().getNodeType() == Node.NodeType.NODE_OPEN ||
-			        GetComponent<Node>().getNodeType() == Node.NodeType.NODE_PLATFORM) {
-				BuildDefense ();
-				game.GetComponent<Game> ().resources -= cost;
-			}
-		} else {
-			if (isOccupied && deleteDefense) {
-				DestroyDefense ();
-			} else if (isOccupied && !deleteDefense) {
-				// level up defense
-				TileSelected ();
-				DisplayInfo ();
+			
+			if (!isOccupied && isMouseOver && selection != 0) {
+				if (game.GetComponent<Game> ().resources - cost >= 0) {
+					if (!checkAIPath ())		//If monsters cannot find a path to the core
+						Debug.Log ("Monsters cannot pass through");
+					else if (GetComponent<Node>().getNodeType() == Node.NodeType.NODE_OPEN || GetComponent<Node>().getNodeType() == Node.NodeType.NODE_PLATFORM) {
+						BuildDefense ();
+						game.GetComponent<Game> ().DisableInfoPanel ();
+						game.GetComponent<Game> ().resources -= cost;
+					}
+				}
+			} else {
+				if (isOccupied && GetComponent<Node>().getNodeType() == Node.NodeType.NODE_TOWER) {
+					// level up defense
+					TileSelected ();
+					DisplayInfo ();
+				}
 			}
 		}
 	}
 
 	public void DisplayInfo() {
 		game.GetComponent<Game> ().EnableInfoPanel ();
-		//Debug.Log ("Enabled");
 		game.GetComponent<Game> ().infoPanel.GetComponent<InfoPanelScript> ().defense = defense;	
-		game.GetComponent<Game> ().infoPanel.GetComponent<InfoPanelScript> ().tile = this;	
+		game.GetComponent<Game> ().infoPanel.GetComponent<InfoPanelScript> ().tile = this;
 	}
 
 	public void TileSelected() {
-		//this.transform.localScale = new Vector3 (0.7f, 0.7f, 1.0f);
-		this.GetComponent<SpriteRenderer> ().color = new Color (0.3f, 0.3f, 0.7f, 0.5f);
-
+		this.transform.localScale = new Vector3 (1.2f, 1.2f, 1.0f);
 	}
 
 	public void TileDeselected() {
-		//this.transform.localScale = new Vector3 (0.55f, 0.55f, 1.0f);
-		this.GetComponent<SpriteRenderer> ().color = new Color (1.0f, 1.0f, 1.0f, 1.0f);
+		this.transform.localScale = new Vector3 (1.0f, 1.0f, 1.0f);
 	}
 
 	public Vector2 TilePosition() {

@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Bullets : MonoBehaviour {
 
-	private float speed = 20.0f;
+	private float speed = 15.0f;
 
 	public float damage;
 	public Vector3 direction;
@@ -11,10 +11,12 @@ public class Bullets : MonoBehaviour {
 	public bool fire = false;
 	public float buff_duration = 0.0f;
 	public float buff_value = 0.0f;
+	private Vector2 scale;
 	public Defense owner;
 	
 	// Use this for initialization
-	void Start () {
+	void Awake () {
+		scale = gameObject.transform.localScale;
 		if (slow == true) {
 			buff_duration = 3.0f;
 			buff_value = 0.5f;
@@ -30,6 +32,9 @@ public class Bullets : MonoBehaviour {
 		// Move the bullet towards the direction of enemy
 		transform.Translate (Vector3.right * Time.deltaTime * speed);
 		// Destroy object if it doesn't hit anything after 2 seconds
+		if (fire) {
+			FireAnimation();
+		}
 		Destroy (gameObject, 2.0f);
 	}
 
@@ -53,5 +58,12 @@ public class Bullets : MonoBehaviour {
 			//Debug.Log (damage);
 			Destroy (gameObject);
 		} 
+	}
+
+	void FireAnimation() {
+		scale.x += 5.0f * Time.deltaTime;
+		scale.y += 5.0f * Time.deltaTime;
+		Vector2 newSize = scale;
+		gameObject.transform.localScale = newSize;
 	}
 }

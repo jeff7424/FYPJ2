@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public class EnemySpawner : MonoBehaviour {
 	//The nodes where enemies will spawn
+	public GameObject game;
 	public GameObject[] spawnNodes;
 
 	public GameObject EnemyParent;
@@ -20,11 +21,12 @@ public class EnemySpawner : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		WaveText.text = "Wave 1";
-		level = GlobalVariables.level - 1;
+		level = PlayerPrefs.GetInt ("level", 0) - 1;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		//Debug.Log (LevelWaves.levels[level].TotalEnemies());
 		if(currWave < LevelWaves.levels[level].waves.Count){
 			if(LevelWaves.levels[level].waves[currWave].TotalEnemies() <= 0){
 				//When wave has finished spawning all enemies
@@ -36,8 +38,8 @@ public class EnemySpawner : MonoBehaviour {
 					waveChangeTimer = 0.0f;
 				} else if (currWave == LevelWaves.levels[level].waves.Count-1) {
 					//Victory!
-					GameObject win = GameObject.Find ("WinGame");
-					win.GetComponent<Text>().enabled = true;
+//					GameObject win = GameObject.Find ("WinGame");
+//					win.GetComponent<Text>().enabled = true;
 				}
 			}
 			else{

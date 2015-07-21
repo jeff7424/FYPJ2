@@ -7,10 +7,10 @@ using System.Collections;
 public class Defense : MonoBehaviour {
 	//declaration
 	public enum defenseType {
-		DEF_CANNON 	= 1,	// 1 target, 1 shot, ground only
-		DEF_TURRET 	= 2,	// 1 target, 3 shots, ground only
-		DEF_SLOW 	= 3,	// 1 target, 1 shot, ground and air
-		DEF_ANTIAIR = 4,	// 1 target, 3 shots, air only
+		DEF_CANNON 	= 1,	// 1 target 1 shot, normal
+		DEF_TURRET 	= 2,	// 1 target 3 shots, fast
+		DEF_SLOW 	= 3,	// slow target 
+		DEF_ANTIAIR = 4,	// air target only
 		DEF_FLAME	= 5		// burn target overtime 
 	}
 
@@ -26,9 +26,6 @@ public class Defense : MonoBehaviour {
 	private float originalfirerate;
 	private float aimposition;
 	private float weaponRotationSpeed = 20.0f;
-	public ParticleSystem flare;
-	public Text info_level;
-	public Button upgrade;
 	private GameObject game;
 	public GameObject ranking;
 	private GameObject rankImage;
@@ -45,12 +42,12 @@ public class Defense : MonoBehaviour {
 	public Tile tile;
 
 	private GameObject weapon;
+	private GameObject pivot;	// Pivot for the weapon rotation
 	public GameObject weaponObject;
-	public Sprite cannon;	
-	public Sprite turret;
-	public Sprite slow;
-	public Sprite antiair;
-	public Sprite flamethrower;
+
+	public Sprite[] barrel;
+	public Sprite[] body;
+	public Sprite[] projectile;
 	
 	// Use this for initialization
 	void Start () {
@@ -92,17 +89,29 @@ public class Defense : MonoBehaviour {
 	{
 		// Check if defense has no target then assign new one
 		if (target == null) {
-			if (co.gameObject.tag == "Enemy" || co.GetComponent<Enemy>()) {
-				target = co.gameObject.transform;
-			} 
+			if (this.gameObject.name == "Anti-Air") {
+				if ((co.gameObject.tag == "Enemy" && co.gameObject.name == "Fly")) {
+					target = co.gameObject.transform;
+				} 
+			} else {
+				if (co.gameObject.tag == "Enemy" || co.GetComponent<Enemy>()) {
+					target = co.gameObject.transform;
+				} 
+			}
 		}
 	}
 
 	void OnTriggerStay2D(Collider2D co) {
 		if (target == null) {
-			if (co.gameObject.tag == "Enemy" || co.GetComponent<Enemy>()) {
-				target = co.gameObject.transform;
-			} 
+			if (this.gameObject.name == "Anti-Air") {
+				if ((co.gameObject.tag == "Enemy" && co.gameObject.name == "Fly")) {
+					target = co.gameObject.transform;
+				} 
+			} else {
+				if (co.gameObject.tag == "Enemy" || co.GetComponent<Enemy>()) {
+					target = co.gameObject.transform;
+				} 
+			}
 		}
 	}
 
@@ -120,14 +129,17 @@ public class Defense : MonoBehaviour {
 			Instantiate (slowbullet, weapon.transform.position, weapon.transform.rotation);
 			slowbullet.name = this.gameObject.name + " bullet";
 			slowbullet.damage = damage;
+			slowbullet.GetComponent<SpriteRenderer>().sprite = projectile[(int)selection - 1];
 		} else if (this.gameObject.name == "Flamethrower") {
 			Instantiate (firebullet, weapon.transform.position, weapon.transform.rotation);
 			firebullet.name = this.gameObject.name + " bullet";
 			firebullet.damage = damage;
+			firebullet.GetComponent<SpriteRenderer>().sprite = projectile[(int)selection - 1];
 		} else {
 			Instantiate (bullet, weapon.transform.position, weapon.transform.rotation);
 			bullet.name = this.gameObject.name + " bullet";
 			bullet.damage = damage;
+			bullet.GetComponent<SpriteRenderer>().sprite = projectile[(int)selection - 1];
 		}
 		FireFlare ();
 		this.fireratecounter = this.firerate;
@@ -142,6 +154,7 @@ public class Defense : MonoBehaviour {
 			bullet.damage = damage;
 			bulletcount += 1;
 			bulletcounttimer = 0.15f;
+			bullet.GetComponent<SpriteRenderer>().sprite = projectile[(int)selection - 1];
 			FireFlare ();
 		}
 
@@ -152,9 +165,9 @@ public class Defense : MonoBehaviour {
 	}
 
 	void FireFlare() {
-//		GameObject flash = Instantiate (muzzleFlare, weapon.transform.position, Quaternion.identity) as GameObject;
-//		flash.transform.parent = weapon.transform;
-//		flash.transform.eulerAngles = weapon.transform.eulerAngles;
+		GameObject flash = Instantiate (muzzleFlare, weapon.transform.position, weapon.transform.rotation) as GameObject;
+		flash.transform.parent = weapon.transform;
+		flash.transform.localPosition = new Vector2 (0.5f, 0.0f);
 	}
 
 	void CalculateAim(Transform target) {
@@ -162,10 +175,10 @@ public class Defense : MonoBehaviour {
 		Vector2 aim = new Vector2 (target.position.x - transform.position.x, target.position.y - transform.position.y);
 		// Do a atan2 and convert to degree
 		aimposition = Mathf.Atan2 (aim.y, aim.x) * Mathf.Rad2Deg;
-		// Apply rotation to the child
-		Vector3 angles = weapon.transform.eulerAngles;
-		angles.z = Mathf.LerpAngle (weapon.transform.eulerAngles.z, aimposition, weaponRotationSpeed * Time.deltaTime);
-		weapon.transform.eulerAngles = angles;
+		// Apply rotation to the child		
+		Vector3 angles = pivot.transform.eulerAngles;
+		angles.z = Mathf.LerpAngle (pivot.transform.eulerAngles.z, aimposition, weaponRotationSpeed * Time.deltaTime);
+		pivot.transform.eulerAngles = angles;
 	}
 
 	public void SetSelection (int selection) {
@@ -177,15 +190,20 @@ public class Defense : MonoBehaviour {
 	}
 
 	public void SetType(defenseType type) {
+		GameObject temp = new GameObject();
+		this.pivot = Instantiate (temp, transform.position, Quaternion.identity) as GameObject;
+		this.pivot.transform.parent = transform;
+		this.pivot.gameObject.name = "Pivot";
 		this.weapon = Instantiate (weaponObject, transform.position, Quaternion.identity) as GameObject;
-		this.weapon.transform.parent = transform;
+		this.weapon.transform.parent = pivot.transform;
+		this.weapon.gameObject.name = "Barrel";
+		this.weapon.transform.localPosition = new Vector2 (0.25f, 0.0f);
 		switch (selection) {
 		case defenseType.DEF_CANNON:
 			{
 				this.damage = 8;
 				this.cost = 300;
 				this.firerate = 1.0f;
-				this.weapon.GetComponent<SpriteRenderer>().sprite = cannon;
 				this.GetComponent<CircleCollider2D>().radius = 3;
 				this.gameObject.name = "Cannon";
 				break;
@@ -195,7 +213,6 @@ public class Defense : MonoBehaviour {
 				this.damage = 2;
 				this.cost = 300;
 				this.firerate = 1.0f;
-				this.weapon.GetComponent<SpriteRenderer>().sprite = turret;
 				this.GetComponent<CircleCollider2D>().radius = 2;
 				this.gameObject.name = "Turret";
 				break;
@@ -205,17 +222,16 @@ public class Defense : MonoBehaviour {
 				this.damage = 5;
 				this.cost = 300;
 				this.firerate = 3.0f;
-				this.weapon.GetComponent<SpriteRenderer>().sprite = slow;
 				this.GetComponent<CircleCollider2D>().radius = 5;
 				this.gameObject.name = "Slow";
 				break;
 			}
 			case defenseType.DEF_ANTIAIR:
 			{
-				this.damage = 3;
+				this.damage = 5;
 				this.cost = 300;
-				this.firerate = 3.0f;
-				this.weapon.GetComponent<SpriteRenderer>().sprite = cannon;
+				this.firerate = 1.0f;
+				this.GetComponent<CircleCollider2D>().radius = 5;
 				this.gameObject.name = "Anti-Air";
 				break;
 			}
@@ -224,23 +240,29 @@ public class Defense : MonoBehaviour {
 				this.damage = 1.0f;
 				this.cost = 300;
 				this.firerate = 0.2f;
-				this.weapon.GetComponent<SpriteRenderer>().sprite = flamethrower;
 				this.GetComponent<CircleCollider2D>().radius = 3;
 				this.gameObject.name = "Flamethrower";
 				break;
 			}
 		}
+		this.weapon.GetComponent<SpriteRenderer>().sprite = barrel[(int)selection - 1];
+		this.GetComponent<SpriteRenderer>().sprite = body[(int)selection - 1];
 		this.fireratecounter = this.firerate;
 		this.originalfirerate = this.firerate;
 		this.health = 10;
 		this.rank = 1;
 		this.rankImage = Instantiate (ranking, transform.position, Quaternion.identity) as GameObject;
 		this.rankImage.transform.parent = transform;
-		this.rankImage.transform.localPosition = new Vector2 (-0.5f, -0.5f);
+		this.rankImage.transform.localPosition = new Vector2 (-0.3f, -0.3f);
 		this.gameObject.tag = "Defense";
+		Destroy (temp);
 	}
 
-	public int GetCost(defenseType type) {
+	public void SetCost(int newCost) {
+		cost = newCost;
+	}
+
+	public int GetCost() {
 		return cost;
 	}
 

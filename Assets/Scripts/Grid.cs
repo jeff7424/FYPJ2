@@ -8,6 +8,7 @@ public class Grid : MonoBehaviour {
 	public GameObject thePathfinderRoot;
 	public GameObject EnemySpawner;
 	public GameObject Core;
+	public ObstacleSpawnMaster ObstacleSpawn;
 	public PathfinderScript thePathfinder;
 
 	public GameObject node;
@@ -20,15 +21,14 @@ public class Grid : MonoBehaviour {
 	public GameObject obstacleTile;
 	public int maxSpawn;
 
+	private int level = 0;
+	private int currTile = 0;
+
 	// Use this for initialization
-	void Start () {
+	void Awake () {
+		level = PlayerPrefs.GetInt ("level", 1) - 1;
 		CreateTiles ();
 		maxSpawn = 0;
-	}
-
-	// Update is called once per frame
-	void Update () {
-
 	}
 
 	void CreateTiles() {
@@ -69,14 +69,25 @@ public class Grid : MonoBehaviour {
 				newTile.transform.SetParent(thePathfinderRoot.transform);
 
 				//Create Obstacles
-				int i = Random.Range (1,25); //Random between 1 to 11
-				if (i == 5)
-				{
-					if (maxSpawn < 3)
-					{
-						Instantiate (obstacleTile, new Vector2(transform.position.x + xOffset, transform.position.y + yOffset), Quaternion.identity);
-						newTile.GetComponent<Node>().setNodeType(Node.NodeType.NODE_PLATFORM);
-						++maxSpawn;
+//				int i = Random.Range (1,25); //Random between 1 to 11
+//				if (i == 5)
+//				{
+//					if (maxSpawn < 3)
+//					{
+//						Instantiate (obstacleTile, newTile.transform.position, Quaternion.identity);
+//						newTile.GetComponent<Node>().setNodeType(Node.NodeType.NODE_PLATFORM);
+//						++maxSpawn;
+//					}
+//				}
+
+				currTile++;
+
+				for (int i = 0; i < ObstacleSpawn.levels[level].Obstacles.Count; ++i) {
+					if (currTile == ObstacleSpawn.levels[level].Obstacles[i]) {
+						GameObject newObstacle = (GameObject)Instantiate (obstacleTile, newTile.transform.position, Quaternion.identity);
+						newTile.GetComponent<Tile>().isOccupied = true;
+						newTile.GetComponent<Node>().setNodeType(Node.NodeType.NODE_OBSTACLE);
+						//++maxSpawn;
 					}
 				}
 
@@ -102,5 +113,9 @@ public class Grid : MonoBehaviour {
 		Core.GetComponent<Node>().LinkedNodes.Add(thePathfinder.Nodes[numberOfTilesRow/2][0]);
 		thePathfinder.Nodes[numberOfTilesRow/2][0].GetComponent<Node>().LinkedNodes.Add(Core);
 		thePathfinder.coreNode = Core;
+	}
+
+	void CreateObstacles() {
+		
 	}
 }
