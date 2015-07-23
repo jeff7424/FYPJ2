@@ -57,4 +57,11 @@ public class EnemySpawner : MonoBehaviour {
 	}
 
 	public int getCurrWave(){return currWave;}
+
+	public GameObject spawnEnemy(Enemy.enemyType type){
+		GameObject newEnemy = (GameObject)Instantiate(Enemy, spawnNodes [Random.Range (0, spawnNodes.Length)].transform.position, Quaternion.identity);
+		newEnemy.GetComponent<Enemy>().setType(type);
+		newEnemy.transform.SetParent (EnemyParent.transform);
+		return newEnemy;
+	}
 }

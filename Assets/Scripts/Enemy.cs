@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour {
 	public Sprite fast;
 	public Sprite jump;
 	public Sprite fly;
+	public Sprite split;
 
 	public float health;
 	public int reward;
@@ -27,6 +28,8 @@ public class Enemy : MonoBehaviour {
 		TYPE_FAST,
 		TYPE_JUMP,
 		TYPE_FLY,
+		TYPE_SPLIT_PARENT,
+		TYPE_SPLIT_CHILD,
 		TYPE_MAX
 	}
 	private enemyType type;
@@ -35,7 +38,16 @@ public class Enemy : MonoBehaviour {
 	void Start () {
 		game = GameObject.Find ("Game");
 	}
-	
+
+	void OnDestroy(){
+		if(type == enemyType.TYPE_SPLIT_PARENT){
+			for(int i = 0; i < 2; ++i){
+				GameObject child = GameObject.Find("EnemySpawner").GetComponent<EnemySpawner>().spawnEnemy(enemyType.TYPE_SPLIT_CHILD);
+				child.transform.position = this.transform.position + new Vector3(i*0.25f, i*0.25f, 0);
+			}
+		}
+	}
+
 	// Update is called once per frame
 	void Update () {
 		// If health less than zero destroy object
@@ -139,6 +151,25 @@ public class Enemy : MonoBehaviour {
 			speed = originalSpeed;
 			gameObject.name = "Fly";
 			GetComponent<SpriteRenderer>().sprite = fly;
+			break;
+			
+		case enemyType.TYPE_SPLIT_PARENT:
+			health = 40;
+			reward = 15;
+			originalSpeed = 1.0f;
+			speed = originalSpeed;
+			gameObject.name = "SplitParent";
+			GetComponent<SpriteRenderer>().sprite = split;
+			break;
+
+		case enemyType.TYPE_SPLIT_CHILD:
+			health = 15;
+			reward = 5;
+			originalSpeed = 1.3f;
+			speed = originalSpeed;
+			gameObject.name = "SplitChild";
+			GetComponent<SpriteRenderer>().sprite = split;
+			gameObject.transform.localScale = new Vector3(0.4f, 0.4f, 1.0f);
 			break;
 		}
 

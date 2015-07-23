@@ -75,7 +75,7 @@ public class Grid : MonoBehaviour {
 					if (maxSpawn < 3)
 					{
 						Instantiate (obstacleTile, new Vector2(transform.position.x + xOffset, transform.position.y + yOffset), Quaternion.identity);
-						newTile.GetComponent<Node>().setNodeType(Node.NodeType.NODE_PLATFORM);
+						newTile.GetComponent<Node>().setNodeType(Node.NodeType.NODE_OBSTACLE);
 						++maxSpawn;
 					}
 				}
