@@ -5,7 +5,7 @@ using System.Collections;
 public class Core : MonoBehaviour {
 
 	int health;
-
+	private GameObject game;
 	public Text healthValue;
 	public ParticleSystem explosionEffect;
 
@@ -13,6 +13,7 @@ public class Core : MonoBehaviour {
 	void Start () {
 		health = 10;
 		healthValue.text = "Health: " + health;
+		game = GameObject.Find ("Game");
 	}
 	
 	// Update is called once per frame
@@ -23,8 +24,12 @@ public class Core : MonoBehaviour {
 			Destroy (explosion.gameObject, explosion.startLifetime);
 			Destroy (gameObject);
 			Time.timeScale = 0.5f;
-			GameObject lose = GameObject.Find ("GameOver");
-			lose.GetComponent<Text>().enabled = true;
+			//GameObject lose = GameObject.Find ("GameOver");
+			//lose.GetComponent<Text>().enabled = true;
+			if (!game.GetComponent<Game>().losegame) {
+				game.GetComponent<Game>().losegame = true;
+				game.GetComponent<Game>().EnableLosingScreen();
+			}
 		}
 	}
 
@@ -41,6 +46,7 @@ public class Core : MonoBehaviour {
 		// Check if collides with enemy
 		if (other.gameObject.tag == "Enemy" || other.GetComponent<Enemy>()) {
 			DecreaseHealth ();
+			game.GetComponent<Game>().enemyLeft --;
 			Destroy (other.gameObject);
 		} 
 	}

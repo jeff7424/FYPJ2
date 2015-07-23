@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -659,3 +660,5 @@ public class EditorPrefsX
 		idx += 4;
 	}
 }
+
+#endif

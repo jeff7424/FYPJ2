@@ -10,7 +10,7 @@ public class InfoPanelScript : MonoBehaviour {
 	private GameObject game;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		game = GameObject.Find ("Game");
 	}
 	
@@ -40,6 +40,9 @@ public class InfoPanelScript : MonoBehaviour {
 		GetComponent<Image> ().enabled = false;
 		for (int i = 0; i < transform.childCount; i++) {
 			transform.GetChild(i).gameObject.SetActive(false);
+		}
+		if (tile != null) {
+			tile.GetComponent<Tile>().TileDeselected();
 		}
 	}
 
