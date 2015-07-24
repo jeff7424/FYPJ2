@@ -25,12 +25,14 @@ public class Tile : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (errorDeployTime > 0.0f) {
-			errorDeployTime -= Time.deltaTime;
-			GetComponent<SpriteRenderer>().color = Color.Lerp(Color.white, Color.red, errorDeployTime);
-		}
-		if (Input.GetMouseButtonDown (0) && (!isMouseOver && !game.GetComponent<Game>().mouseOverPanel)) {
-			TileDeselected();
+		if (!game.GetComponent<Game>().isPause) {
+			if (errorDeployTime > 0.0f) {
+				errorDeployTime -= Time.deltaTime;
+				GetComponent<SpriteRenderer>().color = Color.Lerp(Color.white, Color.red, errorDeployTime);
+			}
+			if (Input.GetMouseButtonDown (0) && (!isMouseOver && !game.GetComponent<Game>().mouseOverPanel)) {
+				TileDeselected();
+			}
 		}
 	}
 

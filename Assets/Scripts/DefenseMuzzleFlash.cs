@@ -3,6 +3,8 @@ using System.Collections;
 
 public class DefenseMuzzleFlash : MonoBehaviour {
 
+	GameObject game;
+
 	float displayTime = 0.1f;
 	float fadeTime;
 	Color visible;
@@ -10,6 +12,7 @@ public class DefenseMuzzleFlash : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
+		game = GameObject.Find ("Game");
 		visible = GetComponent<SpriteRenderer>().color;
 		invisible = new Color(visible.r, visible.g, visible.b, 0.0f);
 		GetComponent<SpriteRenderer>().color = invisible;
@@ -22,13 +25,15 @@ public class DefenseMuzzleFlash : MonoBehaviour {
 	}
 
 	void FireMuzzle() {
-		displayTime -= Time.deltaTime;
-		if (displayTime >= fadeTime)
-			FadeIn();
-		else
-			FadeOut ();
-		if (displayTime <= 0.0f) {
-			Destroy (gameObject);
+		if (!game.GetComponent<Game>().isPause) {
+			displayTime -= Time.deltaTime;
+			if (displayTime >= fadeTime)
+				FadeIn();
+			else
+				FadeOut ();
+			if (displayTime <= 0.0f) {
+				Destroy (gameObject);
+			}
 		}
 	}
 

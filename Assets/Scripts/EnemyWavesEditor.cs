@@ -1,5 +1,4 @@
 ﻿#if UNITY_EDITOR
-
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -105,7 +104,7 @@ public class EnemyWavesEditor : Editor {
 		GUILayout.Space(10);
 		
 		//"+" button to add levels
-		if(GUILayout.Button("+", EditorStyles.toolbarButton, GUILayout.Width(50))){
+		if(GUILayout.Button("+", EditorStyles.toolbarButton, GUILayout.Width(40))){
 			myTarget.levels.Add(new EnemyWaves.Level());
 			//Increase waveIndex array
 			waveIndex.Add(0);
@@ -114,7 +113,7 @@ public class EnemyWavesEditor : Editor {
 			subwaveIndex[myTarget.levels.Count-1].Add(0);
 		}
 		//"-" button to remove levels
-		if(GUILayout.Button("-", EditorStyles.toolbarButton, GUILayout.Width(50)) && myTarget.levels.Count > 0){
+		if(GUILayout.Button("-", EditorStyles.toolbarButton, GUILayout.Width(40)) && myTarget.levels.Count > 0){
 			myTarget.levels.RemoveAt(myTarget.levels.Count-1);
 			waveIndex.RemoveAt(waveIndex.Count-1);
 			subwaveIndex.RemoveAt(subwaveIndex.Count-1);
@@ -125,6 +124,54 @@ public class EnemyWavesEditor : Editor {
 		}
 		
 		GUILayout.EndHorizontal();
+		////////////////////////////////////////////////////////////////////////////////////////////
+
+
+		//Level terrain
+		////////////////////////////////////////////////////////////////////////////////////////////
+		EditorGUILayout.BeginVertical(EditorStyles.textField);
+		GUILayout.Space(3);
+
+		//The grid buttons
+		for(int i = 0; i < 9; ++i){
+			GUILayout.BeginHorizontal();
+
+			for(int j = 0; j < 9; ++j){
+				if(GUILayout.Button("", EditorStyles.toolbarButton, GUILayout.Width(18))){
+
+				}
+				GUILayout.Space(3);
+			}
+
+			GUILayout.EndHorizontal();
+			GUILayout.Space(3);
+		}
+
+		//The terrain type buttons
+		GUILayout.BeginHorizontal();
+		//None
+		GUI.backgroundColor = new Color(1.0f,1.0f,1.0f,1.0f);
+		if(GUILayout.Button("None", EditorStyles.toolbarButton)){
+			
+		}
+		//Obstacle
+		GUI.backgroundColor = new Color(0.0f,1.0f,0.0f,1.0f);
+		if(GUILayout.Button("Obstacle", EditorStyles.toolbarButton)){
+
+		}
+		//Tunnel
+		GUI.backgroundColor = new Color(1.0f,1.0f,0.0f,1.0f);
+		if(GUILayout.Button("Tunnel", EditorStyles.toolbarButton)){
+			
+		}
+		//Platform
+		GUI.backgroundColor = new Color(0.25f,0.25f,1.0f,1.0f);
+		if(GUILayout.Button("Platform", EditorStyles.toolbarButton)){
+			
+		}
+		GUILayout.EndHorizontal();
+
+		EditorGUILayout.EndVertical();
 		////////////////////////////////////////////////////////////////////////////////////////////
 		
 		GUILayout.Space(5);
@@ -145,13 +192,13 @@ public class EnemyWavesEditor : Editor {
 		GUILayout.Space(10);
 		
 		//"+" button to add waves
-		if(GUILayout.Button("+", EditorStyles.toolbarButton, GUILayout.Width(50))){
+		if(GUILayout.Button("+", EditorStyles.toolbarButton, GUILayout.Width(40))){
 			myTarget.levels[levelIndex].waves.Add(new EnemyWaves.Wave());
 			subwaveIndex[levelIndex].Add(0);
 		}
 		
 		//"-" button to remove waves
-		if(GUILayout.Button("-", EditorStyles.toolbarButton, GUILayout.Width(50)) && myTarget.levels[levelIndex].waves.Count > 0){
+		if(GUILayout.Button("-", EditorStyles.toolbarButton, GUILayout.Width(40)) && myTarget.levels[levelIndex].waves.Count > 0){
 			myTarget.levels[levelIndex].waves.RemoveAt(myTarget.levels[levelIndex].waves.Count-1);
 			subwaveIndex[levelIndex].RemoveAt(subwaveIndex[levelIndex].Count-1);
 			if(waveIndex[levelIndex] > myTarget.levels[levelIndex].waves.Count-1)
@@ -168,7 +215,8 @@ public class EnemyWavesEditor : Editor {
 		if ( myTarget.levels[levelIndex].waves.Count < 1 || myTarget.levels[levelIndex].waves[waveIndex[levelIndex]] == null )
 			return;		// Quit if there's no wave for this level yet
 		EditorGUILayout.BeginVertical(EditorStyles.textField);
-		GUILayout.Space(15);
+		
+		GUILayout.Space(5);
 		
 		//Total enemies count
 		GUILayout.BeginHorizontal();
@@ -215,7 +263,7 @@ public class EnemyWavesEditor : Editor {
 		//Subwave details
 		////////////////////////////////////////////////////////////////////////////////////////////
 		EditorGUILayout.BeginVertical(EditorStyles.textField);
-		GUILayout.Space(10);
+		GUILayout.Space(5);
 		GUI.backgroundColor = Color.white;
 		EditorGUIUtility.labelWidth = 0;
 		EditorGUIUtility.fieldWidth = 0;

@@ -23,6 +23,7 @@ public class Game : MonoBehaviour {
 	}
 
 	public GameObject infoPanel;
+	public GameObject pauseScreen;
 	private GameObject resultPanel;
 	private GameObject winningScreen;
 	private GameObject losingScreen;
@@ -40,6 +41,7 @@ public class Game : MonoBehaviour {
 	public bool isPause = false;
 	public bool mouseOverTile = false;
 	public bool mouseOverPanel = false;
+	public bool mouseOverPauseScreen = false;
 	public bool wingame = false;
 	public bool losegame = false;
 
@@ -76,52 +78,64 @@ public class Game : MonoBehaviour {
 		resultPanel = GameObject.Find ("ResultScreen");
 		winningScreen = GameObject.Find ("WinningScreen");
 		losingScreen = GameObject.Find ("LosingScreen");
+		pauseScreen = GameObject.Find ("PauseScreen");
 
 		infoPanel.GetComponent<InfoPanelScript> ().DisablePanel ();
 		winningScreen.GetComponent<WinningScreen>().DisablePanel();	
 		losingScreen.GetComponent<LosingScreen>().DisablePanel();
+		pauseScreen.GetComponent<PauseScreen>().DisablePanel();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		timeElapsed += Time.deltaTime;
-		resourceText.text = "Resources: " + resources;
-		enemyLeftText.text = "Enemy Left: " + enemyLeft;
-		CheckIfAffordable();
-		CheckForResult();
-		if (wingame || losegame) {
-			PopUpResult();
-		}
-		if (errorMsgDisplayTime > 0.0f) {
-			errorMsgDisplayTime -= Time.deltaTime;
-		} else {
-			errorMsgDisplayTime = 0.0f;
-			errorMsgText.enabled = false;
-		}
+		if (!isPause) {
+			timeElapsed += Time.deltaTime;
+			CheckIfAffordable();
+			CheckForResult();
+			if (wingame || losegame) {
+				PopUpResult();
+			}
+			if (errorMsgDisplayTime > 0.0f) {
+				errorMsgDisplayTime -= Time.deltaTime;
+			} else {
+				errorMsgDisplayTime = 0.0f;
+				errorMsgText.enabled = false;
+			}
+			resourceText.text = "Resources: " + resources;
+			enemyLeftText.text = "Enemy Left: " + enemyLeft;
 
-		InputPos = new Vector2 (0, 0);
-		#if UNITY_ANDROID
-		if (Input.touchCount > 0) {
-			InputPos = Input.GetTouch(0).position;
-			if (!mouseOverTile && !mouseOverPanel) {
+			InputPos = new Vector2 (0, 0);
+
+			#if UNITY_ANDROID
+			if (Input.touchCount > 0) {
+				InputPos = Input.GetTouch(0).position;
+				if (!mouseOverTile && !mouseOverPanel) {
+					DisableInfoPanel();
+				}
+			}
+			#elif UNITY_EDITOR
+			if (Input.GetMouseButtonDown(0) && (!mouseOverTile && !mouseOverPanel)) {
 				DisableInfoPanel();
 			}
-		}
-		#elif UNITY_EDITOR
-		if (Input.GetMouseButtonDown(0) && (!mouseOverTile && !mouseOverPanel)) {
-			DisableInfoPanel();
-		}
 
-		#endif
+			#endif
+		}
 	}
 
 	public void SetPause() {
-//		isPause = !isPause;
-//		if (isPause == true) {
-//			Time.timeScale = 0.0f;
-//		} else {
-//			Time.timeScale = 1.0f;
-//		}
+		isPause = !isPause;
+		if (isPause)
+			EnablePauseScreen ();
+		else
+			DisablePauseScreen ();
+	}
+
+	public void SetRestart()
+	{
+		Application.LoadLevel("Game");
+	}
+
+	public void LevelSelectButton(){
 		Application.LoadLevel ("Level Select");
 	}
 
@@ -161,6 +175,18 @@ public class Game : MonoBehaviour {
 		losingScreen.GetComponent<LosingScreen>().SetGameTime (timeElapsed);
 		losingScreen.GetComponent<LosingScreen>().SetDefenseUsed (defenseUsed);
 		losingScreen.GetComponent<LosingScreen>().SetDefenseDeleted (defenseDeleted);
+	}
+
+	public void EnablePauseScreen() {
+		pauseScreen.GetComponent<PauseScreen>().EnablePanel();
+	}
+
+	public void DisablePauseScreen() {
+		pauseScreen.GetComponent<PauseScreen>().DisablePanel ();
+	}
+	
+	public void SetMouseOverPauseScreen (bool isDone) {
+		mouseOverPauseScreen = isDone;
 	}
 
 	public void IncreaseDefenseUsed() {

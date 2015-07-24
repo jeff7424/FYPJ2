@@ -59,25 +59,27 @@ public class Defense : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		// If target is available (not null)
-		if (target) {
-			CalculateAim (target);
-			// If fire rate is not 0 then countdown else fire bullet
-			if (fireratecounter > 0.0f) {
-				fireratecounter -= Time.deltaTime;
-			} else {
-				if (this.gameObject.name == "Turret") {
-					TurretFire ();
-				} 
-				else {
-					ShootBullet ();
+		if (!game.GetComponent<Game>().isPause) {
+			if (target) {
+				CalculateAim (target);
+				// If fire rate is not 0 then countdown else fire bullet
+				if (fireratecounter > 0.0f) {
+					fireratecounter -= Time.deltaTime;
+				} else {
+					if (this.gameObject.name == "Turret") {
+						TurretFire ();
+					} 
+					else {
+						ShootBullet ();
+					}
 				}
 			}
-		}
-		if (health <= 0) {
-			Destroy (gameObject);
-		}
-		if (rage_duration > 0.0f) {
-			RageCountdown();
+			if (health <= 0) {
+				Destroy (gameObject);
+			}
+			if (rage_duration > 0.0f) {
+				RageCountdown();
+			}
 		}
 	}
 	

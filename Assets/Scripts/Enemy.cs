@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour {
 	public Sprite fast;
 	public Sprite jump;
 	public Sprite fly;
+	public Sprite split;
 
 	public float health;
 	public int reward;
@@ -27,6 +28,8 @@ public class Enemy : MonoBehaviour {
 		TYPE_FAST,
 		TYPE_JUMP,
 		TYPE_FLY,
+		TYPE_SPLIT_PARENT,
+		TYPE_SPLIT_CHILD,
 		TYPE_MAX
 	}
 	private enemyType type;
@@ -35,37 +38,48 @@ public class Enemy : MonoBehaviour {
 	void Start () {
 		game = GameObject.Find ("Game");
 	}
-	
+
+	void OnDestroy(){
+		if(type == enemyType.TYPE_SPLIT_PARENT){
+			for(int i = 0; i < 2; ++i){
+				GameObject child = GameObject.Find("EnemySpawner").GetComponent<EnemySpawner>().spawnEnemy(enemyType.TYPE_SPLIT_CHILD);
+				child.transform.position = this.transform.position + new Vector3(i*0.25f, i*0.25f, 0);
+			}
+		}
+	}
+
 	// Update is called once per frame
 	void Update () {
 		// If health less than zero destroy object
-		if (health <= 0) {
-			Destroy (gameObject);
-			game.GetComponent<Game>().enemyLeft --;
-			game.GetComponent<Game>().resources += reward;
-		}
-		if (slow_duration > 0.0f) {
-			slow_duration -= Time.deltaTime;
-			GetComponent<SpriteRenderer>().color = Color.blue;
-			finalSpeed = speed * effectValue;
-		} else {
-			effectValue = 0.0f;
-			//speed = originalSpeed;
-			finalSpeed = speed;
-			GetComponent<SpriteRenderer>().color = Color.white;
-			slowByBuff = false;
-		}
-
-		if (fire_duration > 0.0f) {
-			fire_duration -= Time.deltaTime;
-			damageRate -= Time.deltaTime;
-			GetComponent<SpriteRenderer>().color = Color.red;
-			if (damageRate <= 0.0f) {
-				health -= burnDamage;
-				damageRate = 0.3f;
+		if (!game.GetComponent<Game>().isPause) {
+			if (health <= 0) {
+				Destroy (gameObject);
+				game.GetComponent<Game>().enemyLeft --;
+				game.GetComponent<Game>().resources += reward;
 			}
-		} else {
-			GetComponent<SpriteRenderer>().color = Color.white;
+			if (slow_duration > 0.0f) {
+				slow_duration -= Time.deltaTime;
+				GetComponent<SpriteRenderer>().color = Color.blue;
+				finalSpeed = speed * effectValue;
+			} else {
+				effectValue = 0.0f;
+				//speed = originalSpeed;
+				finalSpeed = speed;
+				GetComponent<SpriteRenderer>().color = Color.white;
+				slowByBuff = false;
+			}
+
+			if (fire_duration > 0.0f) {
+				fire_duration -= Time.deltaTime;
+				damageRate -= Time.deltaTime;
+				GetComponent<SpriteRenderer>().color = Color.red;
+				if (damageRate <= 0.0f) {
+					health -= burnDamage;
+					damageRate = 0.3f;
+				}
+			} else {
+				GetComponent<SpriteRenderer>().color = Color.white;
+			}
 		}
 	}
 
@@ -140,6 +154,25 @@ public class Enemy : MonoBehaviour {
 			speed = originalSpeed;
 			gameObject.name = "Fly";
 			GetComponent<SpriteRenderer>().sprite = fly;
+			break;
+			
+		case enemyType.TYPE_SPLIT_PARENT:
+			health = 40;
+			reward = 15;
+			originalSpeed = 1.0f;
+			speed = originalSpeed;
+			gameObject.name = "SplitParent";
+			GetComponent<SpriteRenderer>().sprite = split;
+			break;
+
+		case enemyType.TYPE_SPLIT_CHILD:
+			health = 15;
+			reward = 5;
+			originalSpeed = 1.3f;
+			speed = originalSpeed;
+			gameObject.name = "SplitChild";
+			GetComponent<SpriteRenderer>().sprite = split;
+			gameObject.transform.localScale = new Vector3(0.4f, 0.4f, 1.0f);
 			break;
 		}
 
