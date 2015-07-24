@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class EnemyMovementAI : MonoBehaviour {
+
+	GameObject game;
+
 	//The calculated path
 	public List<GameObject> thePath;
 	
@@ -18,57 +21,60 @@ public class EnemyMovementAI : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		game = GameObject.Find ("Game");
 		thePath = new List<GameObject>();
 		searchPath();
 	}
 
 	public void FixedUpdate ()
 	{
-		if (thePath == null)
-		{
-			//We have no path to move after yet
-			return;
-		}
-		
-		//Reached end of path
-		//--------------------------------------------------------
-		if (currentWaypoint >= thePath.Count)
-		{
-			thePath.Clear();
-			currentWaypoint = 0;
-			return;
-		}
-		//--------------------------------------------------------
-
-		//Direction to the next waypoint
-		Vector3 dir = ( thePath[currentWaypoint].transform.position - transform.position ).normalized;
-		dir *= GetComponent<Enemy>().getFinalSpeed() * Time.deltaTime;
-		this.gameObject.transform.Translate( dir );
-
-		//Check if we are close enough to the next waypoint
-		//If we are, proceed to follow the next waypoint
-		if (Vector3.Distance( transform.position, thePath[currentWaypoint].transform.position ) < nextWaypointDistance)
-		{
-			prevNode = thePath[currentWaypoint].GetComponent<Node>();
-			currentWaypoint++;
-
-
-			//Behaviour change for certain enemy types
+		if (!game.GetComponent<Game>().GetPause ()) {
+			if (thePath == null)
+			{
+				//We have no path to move after yet
+				return;
+			}
+			
+			//Reached end of path
 			//--------------------------------------------------------
-			if(currentWaypoint < thePath.Count){
-				switch(GetComponent<Enemy>().getType()){
-				case Enemy.enemyType.TYPE_JUMP:
-					if(thePath[currentWaypoint].GetComponent<Node>().getNodeType() == Node.NodeType.NODE_TOWER || prevNode.getNodeType() == Node.NodeType.NODE_TOWER){
-						GetComponent<Enemy>().setSpeed(5.0f);
-					}
-					else
-						GetComponent<Enemy>().setSpeed(GetComponent<Enemy>().getOriginalSpeed());
-					break;
-				}
+			if (currentWaypoint >= thePath.Count)
+			{
+				thePath.Clear();
+				currentWaypoint = 0;
+				return;
 			}
 			//--------------------------------------------------------
 
-			return;
+			//Direction to the next waypoint
+			Vector3 dir = ( thePath[currentWaypoint].transform.position - transform.position ).normalized;
+			dir *= GetComponent<Enemy>().getFinalSpeed() * Time.deltaTime;
+			this.gameObject.transform.Translate( dir );
+
+			//Check if we are close enough to the next waypoint
+			//If we are, proceed to follow the next waypoint
+			if (Vector3.Distance( transform.position, thePath[currentWaypoint].transform.position ) < nextWaypointDistance)
+			{
+				prevNode = thePath[currentWaypoint].GetComponent<Node>();
+				currentWaypoint++;
+
+
+				//Behaviour change for certain enemy types
+				//--------------------------------------------------------
+				if(currentWaypoint < thePath.Count){
+					switch(GetComponent<Enemy>().getType()){
+					case Enemy.enemyType.TYPE_JUMP:
+						if(thePath[currentWaypoint].GetComponent<Node>().getNodeType() == Node.NodeType.NODE_TOWER || prevNode.getNodeType() == Node.NodeType.NODE_TOWER){
+							GetComponent<Enemy>().setSpeed(5.0f);
+						}
+						else
+							GetComponent<Enemy>().setSpeed(GetComponent<Enemy>().getOriginalSpeed());
+						break;
+					}
+				}
+				//--------------------------------------------------------
+
+				return;
+			}
 		}
 	}
 

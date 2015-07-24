@@ -33,4 +33,8 @@ public class LevelSelection : MonoBehaviour {
 		PlayerPrefs.SetInt ("level", level);
 		Application.LoadLevel ("Game");
 	}
+
+	public void StartMultiplayer() {
+		Application.LoadLevel ("Multiplayer");
+	}
 }

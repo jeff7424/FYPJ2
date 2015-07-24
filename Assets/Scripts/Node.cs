@@ -20,16 +20,6 @@ public class Node : MonoBehaviour {
 	//Pathfinding parent
 	public GameObject parent = null;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-	
 	public float getF(Vector3 targetTile){
 		return F = G + H(targetTile);
 	}

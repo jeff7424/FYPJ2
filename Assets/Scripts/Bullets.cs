@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Bullets : MonoBehaviour {
 
+	GameObject game;
+
 	private float speed = 15.0f;
 
 	public float damage;
@@ -16,6 +18,8 @@ public class Bullets : MonoBehaviour {
 	
 	// Use this for initialization
 	void Awake () {
+		game = GameObject.Find ("Game");
+
 		scale = gameObject.transform.localScale;
 		if (slow == true) {
 			buff_duration = 3.0f;
@@ -29,13 +33,15 @@ public class Bullets : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		// Move the bullet towards the direction of enemy
-		transform.Translate (Vector3.right * Time.deltaTime * speed);
-		// Destroy object if it doesn't hit anything after 2 seconds
-		if (fire) {
-			FireAnimation();
+		if (!game.GetComponent<Game>().GetPause ()) {
+			// Move the bullet towards the direction of enemy
+			transform.Translate (Vector3.right * Time.deltaTime * speed);
+			// Destroy object if it doesn't hit anything after 2 seconds
+			if (fire) {
+				FireAnimation();
+			}
+			Destroy (gameObject, 2.0f);
 		}
-		Destroy (gameObject, 2.0f);
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {

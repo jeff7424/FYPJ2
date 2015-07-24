@@ -21,6 +21,7 @@ public class Enemy : MonoBehaviour {
 	private float burnDamage = 0.0f;
 	public bool slowByBuff = false;
 	private GameObject game;
+	private GameObject player;
 
 	public enum enemyType{
 		TYPE_NORMAL = 0,
@@ -37,6 +38,11 @@ public class Enemy : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		game = GameObject.Find ("Game");
+		if (Application.loadedLevelName == "Game")
+			player = GameObject.Find ("Player");
+		else if (Application.loadedLevelName == "Multiplayer") {
+			player = GameObject.Find (gameObject.tag);
+		}
 	}
 
 	void OnDestroy(){
@@ -51,33 +57,35 @@ public class Enemy : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		// If health less than zero destroy object
-		if (health <= 0) {
-			Destroy (gameObject);
-			game.GetComponent<Game>().enemyLeft --;
-			game.GetComponent<Game>().resources += reward;
-		}
-		if (slow_duration > 0.0f) {
-			slow_duration -= Time.deltaTime;
-			GetComponent<SpriteRenderer>().color = Color.blue;
-			finalSpeed = speed * effectValue;
-		} else {
-			effectValue = 0.0f;
-			//speed = originalSpeed;
-			finalSpeed = speed;
-			GetComponent<SpriteRenderer>().color = Color.white;
-			slowByBuff = false;
-		}
-
-		if (fire_duration > 0.0f) {
-			fire_duration -= Time.deltaTime;
-			damageRate -= Time.deltaTime;
-			GetComponent<SpriteRenderer>().color = Color.red;
-			if (damageRate <= 0.0f) {
-				health -= burnDamage;
-				damageRate = 0.3f;
+		if (!game.GetComponent<Game>().GetPause ()) {
+			if (health <= 0) {
+				Destroy (gameObject);
+				player.GetComponent<Player1>().enemyLeft --;
+				player.GetComponent<Player1>().resources += reward;
 			}
-		} else {
-			GetComponent<SpriteRenderer>().color = Color.white;
+			if (slow_duration > 0.0f) {
+				slow_duration -= Time.deltaTime;
+				GetComponent<SpriteRenderer>().color = Color.blue;
+				finalSpeed = speed * effectValue;
+			} else {
+				effectValue = 0.0f;
+				//speed = originalSpeed;
+				finalSpeed = speed;
+				GetComponent<SpriteRenderer>().color = Color.white;
+				slowByBuff = false;
+			}
+
+			if (fire_duration > 0.0f) {
+				fire_duration -= Time.deltaTime;
+				damageRate -= Time.deltaTime;
+				GetComponent<SpriteRenderer>().color = Color.red;
+				if (damageRate <= 0.0f) {
+					health -= burnDamage;
+					damageRate = 0.3f;
+				}
+			} else {
+				GetComponent<SpriteRenderer>().color = Color.white;
+			}
 		}
 	}
 

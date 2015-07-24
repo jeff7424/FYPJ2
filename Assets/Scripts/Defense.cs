@@ -27,6 +27,7 @@ public class Defense : MonoBehaviour {
 	private float aimposition;
 	private float weaponRotationSpeed = 20.0f;
 	private GameObject game;
+	private GameObject player;
 	public GameObject ranking;
 	private GameObject rankImage;
 	public GameObject muzzleFlare;
@@ -52,32 +53,45 @@ public class Defense : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		game = GameObject.Find ("Game");
-		selection = (defenseType)game.GetComponent<Game> ().selection;
+		if (Application.loadedLevelName == "Game")
+			player = GameObject.Find ("Player");
+		else if (Application.loadedLevelName == "Multiplayer") {
+//			if (gameObject.tag == "Player 1")
+//				player = GameObject.Find ("Player 1");
+//			else if (gameObject.tag == "Player 2")
+//				player = GameObject.Find ("Player 2");
+
+			player = GameObject.Find(gameObject.tag);
+		}
+		
+		selection = (defenseType)player.GetComponent<Player1> ().selection;
 		SetType (selection);
 	}
 
 	// Update is called once per frame
 	void Update () {
 		// If target is available (not null)
-		if (target) {
-			CalculateAim (target);
-			// If fire rate is not 0 then countdown else fire bullet
-			if (fireratecounter > 0.0f) {
-				fireratecounter -= Time.deltaTime;
-			} else {
-				if (this.gameObject.name == "Turret") {
-					TurretFire ();
-				} 
-				else {
-					ShootBullet ();
+		if (!game.GetComponent<Game>().GetPause ()) {
+			if (target) {
+				CalculateAim (target);
+				// If fire rate is not 0 then countdown else fire bullet
+				if (fireratecounter > 0.0f) {
+					fireratecounter -= Time.deltaTime;
+				} else {
+					if (this.gameObject.name == "Turret") {
+						TurretFire ();
+					} 
+					else {
+						ShootBullet ();
+					}
 				}
 			}
-		}
-		if (health <= 0) {
-			Destroy (gameObject);
-		}
-		if (rage_duration > 0.0f) {
-			RageCountdown();
+			if (health <= 0) {
+				Destroy (gameObject);
+			}
+			if (rage_duration > 0.0f) {
+				RageCountdown();
+			}
 		}
 	}
 	
