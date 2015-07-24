@@ -46,7 +46,7 @@ public class PowerScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (!game.GetComponent<Game>().isPause) {
+		if (!game.GetComponent<Game>().GetPause ()) {
 			towers = GameObject.FindGameObjectsWithTag("Defense");
 			if (cooldown_slow > 0.0f) {
 				cooldown_slow -= Time.deltaTime;
@@ -72,7 +72,7 @@ public class PowerScript : MonoBehaviour {
 	}
 
 	public void SlowEnemies() {
-		if (cooldown_slow <= 0.0f && !game.GetComponent<Game>().isPause) {
+		if (cooldown_slow <= 0.0f && !game.GetComponent<Game>().GetPause ()) {
 			EnemyParent.GetComponent<EnemyParentScript>().SlowEnemies();
 			cooldown_slow = cooldown_slow_original;
 			slowbutton.GetComponent<Button>().interactable = false;
@@ -80,7 +80,7 @@ public class PowerScript : MonoBehaviour {
 	}
 
 	public void Rage() {
-		if (cooldown_rage <= 0.0f && !game.GetComponent<Game>().isPause) {
+		if (cooldown_rage <= 0.0f && !game.GetComponent<Game>().GetPause()) {
 			foreach (GameObject tower in towers) {
 				tower.GetComponent<Defense>().Rage (3.0f, 2.0f);
 				cooldown_rage = cooldown_rage_original;
@@ -90,7 +90,7 @@ public class PowerScript : MonoBehaviour {
 	}
 
 	public void Kamikaze() {
-		if (cooldown_kamikaze <= 0.0f && !game.GetComponent<Game>().isPause) {
+		if (cooldown_kamikaze <= 0.0f && !game.GetComponent<Game>().GetPause ()) {
 			EnemyParent.GetComponent<EnemyParentScript>().Kamikaze();
 			cooldown_kamikaze = cooldown_kamikaze_original;
 			kamikazebutton.GetComponent<Button>().interactable = false;

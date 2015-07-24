@@ -30,7 +30,7 @@ public class EnemySpawner : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//Debug.Log (LevelWaves.levels[level].TotalEnemies());
-		if (!game.GetComponent<Game>().isPause) {
+		if (!game.GetComponent<Game>().GetPause ()) {
 			if(currWave < LevelWaves.levels[level].waves.Count){
 				if(LevelWaves.levels[level].waves[currWave].TotalEnemies() <= 0){
 					//When wave has finished spawning all enemies

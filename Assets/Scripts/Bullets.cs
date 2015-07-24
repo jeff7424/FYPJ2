@@ -33,7 +33,7 @@ public class Bullets : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (!game.GetComponent<Game>().isPause) {
+		if (!game.GetComponent<Game>().GetPause ()) {
 			// Move the bullet towards the direction of enemy
 			transform.Translate (Vector3.right * Time.deltaTime * speed);
 			// Destroy object if it doesn't hit anything after 2 seconds

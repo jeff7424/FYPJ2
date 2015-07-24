@@ -25,7 +25,7 @@ public class DefenseMuzzleFlash : MonoBehaviour {
 	}
 
 	void FireMuzzle() {
-		if (!game.GetComponent<Game>().isPause) {
+		if (!game.GetComponent<Game>().GetPause ()) {
 			displayTime -= Time.deltaTime;
 			if (displayTime >= fadeTime)
 				FadeIn();

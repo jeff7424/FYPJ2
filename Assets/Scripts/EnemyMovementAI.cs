@@ -28,7 +28,7 @@ public class EnemyMovementAI : MonoBehaviour {
 
 	public void FixedUpdate ()
 	{
-		if (!game.GetComponent<Game>().isPause) {
+		if (!game.GetComponent<Game>().GetPause ()) {
 			if (thePath == null)
 			{
 				//We have no path to move after yet

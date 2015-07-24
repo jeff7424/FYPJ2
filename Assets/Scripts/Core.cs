@@ -6,6 +6,7 @@ public class Core : MonoBehaviour {
 
 	int health;
 	private GameObject game;
+	private GameObject player;
 	public Text healthValue;
 	public ParticleSystem explosionEffect;
 
@@ -14,6 +15,15 @@ public class Core : MonoBehaviour {
 		health = 10;
 		healthValue.text = "Health: " + health;
 		game = GameObject.Find ("Game");
+		if (Application.loadedLevelName == "Game")
+			player = GameObject.Find ("Player");
+		else if (Application.loadedLevelName == "Multiplayer") {
+//			if (gameObject.tag == "Player 1")
+//				player = GameObject.Find ("Player 1");
+//			else if (gameObject.tag == "Player 2")
+//				player = GameObject.Find ("Player 2");
+			player = GameObject.Find (gameObject.tag);
+		}
 	}
 	
 	// Update is called once per frame
@@ -26,9 +36,9 @@ public class Core : MonoBehaviour {
 			Time.timeScale = 0.5f;
 			//GameObject lose = GameObject.Find ("GameOver");
 			//lose.GetComponent<Text>().enabled = true;
-			if (!game.GetComponent<Game>().losegame) {
-				game.GetComponent<Game>().losegame = true;
-				game.GetComponent<Game>().EnableLosingScreen();
+			if (!player.GetComponent<Player1>().losegame) {
+				player.GetComponent<Player1>().losegame = true;
+				player.GetComponent<Player1>().EnableLosingScreen();
 			}
 		}
 	}
@@ -46,7 +56,7 @@ public class Core : MonoBehaviour {
 		// Check if collides with enemy
 		if (other.gameObject.tag == "Enemy" || other.GetComponent<Enemy>()) {
 			DecreaseHealth ();
-			game.GetComponent<Game>().enemyLeft --;
+			player.GetComponent<Player1>().enemyLeft --;
 			Destroy (other.gameObject);
 		} 
 	}
