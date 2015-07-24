@@ -14,6 +14,6 @@ public class MainMenuButtons : MonoBehaviour {
 	}
 
 	public void PlayButton(){
-		Application.LoadLevel("Game");
+		Application.LoadLevel("Level Select");
 	}
 }
