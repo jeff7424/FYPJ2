@@ -21,7 +21,10 @@ public class EnemySpawner : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		WaveText.text = "Wave 1";
-		level = PlayerPrefs.GetInt ("level", 0) - 1;
+		if (Application.loadedLevelName == "Game")
+			level = PlayerPrefs.GetInt ("level", 1) - 1;
+		else
+			level = 1;
 	}
 	
 	// Update is called once per frame

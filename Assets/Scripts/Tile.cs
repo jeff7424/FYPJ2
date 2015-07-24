@@ -15,18 +15,20 @@ public class Tile : MonoBehaviour {
 	public Tree trees;
 	public Sprite tile;
 	public Rect temp;
+	private float errorDeployTime;
 
 	// Use this for initialization
 	void Start () {
 		game = GameObject.Find ("Game");
+		errorDeployTime = 0.0f;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-//		if (defense == null) {
-//			isOccupied = false;
-//			selection = 1;
-//		}
+		if (errorDeployTime > 0.0f) {
+			errorDeployTime -= Time.deltaTime;
+			GetComponent<SpriteRenderer>().color = Color.Lerp(Color.white, Color.red, errorDeployTime);
+		}
 		if (Input.GetMouseButtonDown (0) && (!isMouseOver && !game.GetComponent<Game>().mouseOverPanel)) {
 			TileDeselected();
 		}
@@ -35,6 +37,7 @@ public class Tile : MonoBehaviour {
 	public void BuildDefense() {
 		// Build tower when button is released
 		defense = (Defense)Instantiate (defenses);
+		defense.tag = gameObject.tag;
 		defense.transform.position = transform.position;
 		defense.transform.parent = transform;
 		isOccupied = true;
@@ -43,7 +46,15 @@ public class Tile : MonoBehaviour {
 
 		//Update pathNode type and search path for all AI present
 		GetComponent<Node>().setNodeType(Node.NodeType.NODE_TOWER);
-		EnemyMovementAI[] enemyAIs = GameObject.Find("EnemyParent").GetComponentsInChildren<EnemyMovementAI>();
+		EnemyMovementAI[] enemyAIs = null;
+		if (Application.loadedLevelName == "Game")
+			enemyAIs = GameObject.Find("EnemyParent").GetComponentsInChildren<EnemyMovementAI>();
+		else if (Application.loadedLevelName == "Multiplayer") {
+			if (gameObject.tag == "Player 1")
+				enemyAIs = GameObject.Find("EnemyParent 1").GetComponentsInChildren<EnemyMovementAI>();
+			else if (gameObject.tag == "Player 2")
+				enemyAIs = GameObject.Find("EnemyParent 2").GetComponentsInChildren<EnemyMovementAI>();
+		}
 		foreach(EnemyMovementAI ai in enemyAIs){
 			ai.searchPath();
 		}
@@ -59,7 +70,15 @@ public class Tile : MonoBehaviour {
 		
 		//Update pathNode type and search path for all AI present
 		GetComponent<Node>().setNodeType(Node.NodeType.NODE_OPEN);
-		EnemyMovementAI[] enemyAIs = GameObject.Find("EnemyParent").GetComponentsInChildren<EnemyMovementAI>();
+		EnemyMovementAI[] enemyAIs = null;
+		if (Application.loadedLevelName == "Game")
+			enemyAIs = GameObject.Find("EnemyParent").GetComponentsInChildren<EnemyMovementAI>();
+		else if (Application.loadedLevelName == "Multiplayer") {
+			if (gameObject.tag == "Player 1")
+				enemyAIs = GameObject.Find("EnemyParent 1").GetComponentsInChildren<EnemyMovementAI>();
+			else if (gameObject.tag == "Player 2")
+				enemyAIs = GameObject.Find("EnemyParent 2").GetComponentsInChildren<EnemyMovementAI>();
+		}
 		foreach(EnemyMovementAI ai in enemyAIs){
 			ai.searchPath();
 		}
@@ -70,7 +89,10 @@ public class Tile : MonoBehaviour {
 	}
 
 	void OnMouseEnter() {
-		if (game.GetComponent<Game>().isPause == false && GetComponent<Node>().getNodeType () == Node.NodeType.NODE_OPEN || GetComponent<Node>().getNodeType () == Node.NodeType.NODE_TOWER) {
+		if (game.GetComponent<Game>().isPause == false && 
+		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_OPEN || 
+		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_TOWER || 
+		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_PLATFORM) {
 			this.GetComponent<SpriteRenderer> ().color = new Color (1.0f, 1.0f, 1.0f, 0.5f);
 			game.GetComponent<Game> ().mouseOverTile = true;
 			isMouseOver = true;
@@ -79,8 +101,10 @@ public class Tile : MonoBehaviour {
 
 	void OnMouseExit() {
 		// Revert back to original sprite
-		//this.GetComponent<SpriteRenderer> ().sprite = tile;
-		if (game.GetComponent<Game>().isPause == false && GetComponent<Node>().getNodeType () == Node.NodeType.NODE_OPEN || GetComponent<Node>().getNodeType () == Node.NodeType.NODE_TOWER) {
+		if (game.GetComponent<Game>().isPause == false && 
+		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_OPEN || 
+		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_TOWER || 
+		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_PLATFORM) {
 			this.GetComponent<SpriteRenderer> ().color = new Color (1.0f, 1.0f, 1.0f, 1.0f);
 			game.GetComponent<Game> ().mouseOverTile = false;
 			isMouseOver = false;
@@ -110,8 +134,10 @@ public class Tile : MonoBehaviour {
 			
 			if (!isOccupied && isMouseOver && selection != 0) {
 				if (game.GetComponent<Game> ().resources - cost >= 0) {
-					if (!checkAIPath ())		//If monsters cannot find a path to the core
+					if (!checkAIPath ()) {	//If monsters cannot find a path to the core
 						Debug.Log ("Monsters cannot pass through");
+						DisplayDeployError();
+					}
 					else if (GetComponent<Node>().getNodeType() == Node.NodeType.NODE_OPEN || GetComponent<Node>().getNodeType() == Node.NodeType.NODE_PLATFORM) {
 						BuildDefense ();
 						game.GetComponent<Game> ().DisableInfoPanel ();
@@ -135,11 +161,17 @@ public class Tile : MonoBehaviour {
 	}
 
 	public void TileSelected() {
-		this.transform.localScale = new Vector3 (1.2f, 1.2f, 1.0f);
+		if (Application.loadedLevelName == "Game")
+			this.transform.localScale = new Vector3 (1.2f, 1.2f, 1.0f);
+		else if (Application.loadedLevelName == "Multiplayer")
+			this.transform.localScale = new Vector3 (0.9f, 0.9f, 1.0f);
 	}
 
 	public void TileDeselected() {
-		this.transform.localScale = new Vector3 (1.0f, 1.0f, 1.0f);
+		if (Application.loadedLevelName == "Game")
+			this.transform.localScale = new Vector3 (1.0f, 1.0f, 1.0f);
+		else if (Application.loadedLevelName == "Multiplayer")
+			this.transform.localScale = new Vector3 (0.75f, 0.75f, 1.0f);
 	}
 
 	public Vector2 TilePosition() {
@@ -156,7 +188,15 @@ public class Tile : MonoBehaviour {
 	bool checkAIPath(){
 		GetComponent<Node>().setNodeType(Node.NodeType.NODE_TOWER);
 		List<GameObject> path = new List<GameObject>();
-		path = GameObject.Find("Pathfinder").GetComponent<PathfinderScript>().FindPath(GameObject.Find("enemySpawn5").transform.position, Enemy.enemyType.TYPE_NORMAL);
+		if (Application.loadedLevelName == "Game") {
+			path = GameObject.Find("Pathfinder").GetComponent<PathfinderScript>().FindPath(GameObject.Find("enemySpawn5").transform.position, Enemy.enemyType.TYPE_NORMAL);
+		}
+		if (Application.loadedLevelName == "Multiplayer") {
+			if (gameObject.tag == "Player 1")
+				path = GameObject.Find("Pathfinder 1").GetComponent<PathfinderScript>().FindPath(GameObject.Find("enemySpawn5").transform.position, Enemy.enemyType.TYPE_NORMAL);
+			else if (gameObject.tag == "Player 2")
+				path = GameObject.Find("Pathfinder 2").GetComponent<PathfinderScript>().FindPath(GameObject.Find("enemySpawn5").transform.position, Enemy.enemyType.TYPE_NORMAL);
+		}
 		GetComponent<Node>().setNodeType(Node.NodeType.NODE_OPEN);
 		
 		if(path.Count > 0)
@@ -172,5 +212,10 @@ public class Tile : MonoBehaviour {
 
 	public void TowerRage(float duration, float newValue) {
 		defense.Rage (duration, newValue);
+	}
+
+	void DisplayDeployError() {
+		game.GetComponent<Game>().DisplayErrorMsg();
+		errorDeployTime = 3.0f;
 	}
 }

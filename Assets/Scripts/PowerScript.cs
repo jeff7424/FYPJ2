@@ -21,10 +21,17 @@ public class PowerScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		slowbutton = GameObject.Find ("Slow Power");
-		ragebutton = GameObject.Find ("Rage Power");
-		kamikazebutton = GameObject.Find ("Kamikaze");
-		EnemyParent = GameObject.Find ("EnemyParent");
+		if (gameObject.tag == "Player 1") {
+			slowbutton = GameObject.Find ("Slow Power 1");
+			ragebutton = GameObject.Find ("Rage Power 1");
+			kamikazebutton = GameObject.Find ("Kamikaze 1");
+			EnemyParent = GameObject.Find ("EnemyParent 1");
+		} else if (gameObject.tag == "Player 2") {
+			slowbutton = GameObject.Find ("Slow Power 2");
+			ragebutton = GameObject.Find ("Rage Power 2");
+			kamikazebutton = GameObject.Find ("Kamikaze 2");
+			EnemyParent = GameObject.Find ("EnemyParent 2");
+		}
 	}
 	
 	// Update is called once per frame

@@ -7,21 +7,21 @@ using UnityEditor;
 
 [CustomEditor(typeof(EnemyWaves))]
 public class EnemyWavesEditor : Editor {
-
+	
 	int levelIndex = 0;
 	List<int> waveIndex = new List<int>();
 	List<List<int>> subwaveIndex = new List<List<int>>();
-
+	
 	void Awake(){
 		levelIndex = EditorPrefs.GetInt("levelIndex", 0);
-
+		
 		//Waves
 		if(!EditorPrefs.HasKey("waveIndex"))
 			return;
 		int[] waveArray = EditorPrefsX.GetIntArray("waveIndex");
 		for(int i = 0; i < waveArray.Length; ++i)
 			waveIndex.Add(waveArray[i]);
-
+		
 		//Subwaves
 		int j = 0;
 		while(EditorPrefs.HasKey("subwaveIndex"+j)){
@@ -33,9 +33,9 @@ public class EnemyWavesEditor : Editor {
 			++j;
 		}
 	}
-
-
-
+	
+	
+	
 	void ResetValues(){
 		EditorPrefs.DeleteKey("levelIndex");
 		EditorPrefs.DeleteKey("waveIndex");
@@ -45,38 +45,38 @@ public class EnemyWavesEditor : Editor {
 			++i;
 		}
 	}
-
-
-
+	
+	
+	
 	void OnDestroy(){
 		EditorPrefs.SetInt("levelIndex", levelIndex);
-
+		
 		//Waves
 		if(waveIndex.Count < 1)
 			return;
 		int[] waveArray = waveIndex.ToArray();
 		EditorPrefsX.SetIntArray("waveIndex", waveArray);
-
+		
 		//Subwaves
 		for(int i = 0; i < subwaveIndex.Count; ++i){
 			int[] subwaveArray = null;
-
+			
 			if(subwaveIndex[i].Count > 0)
 				subwaveArray = subwaveIndex[i].ToArray();
 			else{
 				subwaveArray = new int[1];
 				subwaveArray[0] = 0;
 			}
-
+			
 			EditorPrefsX.SetIntArray("subwaveIndex"+i, subwaveArray);
 		}
 	}
-
-
-
+	
+	
+	
 	public override void OnInspectorGUI(){
 		EnemyWaves myTarget = (EnemyWaves) target;
-
+		
 		//Check if subwaveIndex is empty
 		if(subwaveIndex.Count == 0 && myTarget.levels.Count > 0){
 			int j = 0;
@@ -89,21 +89,21 @@ public class EnemyWavesEditor : Editor {
 				++j;
 			}
 		}
-
+		
 		GUILayout.Space(10.0f);
-
+		
 		//Level select
 		////////////////////////////////////////////////////////////////////////////////////////////
 		GUILayout.BeginHorizontal();
-
+		
 		string[] theLevels = new string[myTarget.levels.Count];
 		for(int i = 0; i < theLevels.Length; ++i){
 			theLevels[i] = "Level " + (i+1).ToString();
 		}
 		levelIndex = GUILayout.Toolbar(levelIndex, theLevels, EditorStyles.toolbarButton);
-
+		
 		GUILayout.Space(10);
-
+		
 		//"+" button to add levels
 		if(GUILayout.Button("+", EditorStyles.toolbarButton, GUILayout.Width(50))){
 			myTarget.levels.Add(new EnemyWaves.Level());
@@ -123,33 +123,33 @@ public class EnemyWavesEditor : Editor {
 			if(levelIndex < 0)
 				levelIndex = 0;
 		}
-
+		
 		GUILayout.EndHorizontal();
 		////////////////////////////////////////////////////////////////////////////////////////////
-
+		
 		GUILayout.Space(5);
-
+		
 		//Waves select
 		////////////////////////////////////////////////////////////////////////////////////////////
 		GUI.backgroundColor = new Color(0.95f,0.99f,1.0f,1.0f);
 		if ( myTarget.levels.Count < 1 || levelIndex >= myTarget.levels.Count )
 			return;        // Quit if there are no levels yet
-
+		
 		GUILayout.BeginHorizontal();
-
+		
 		string[] theWaves = new string[myTarget.levels[levelIndex].waves.Count];
 		for(int i = 0; i < theWaves.Length; ++i)
 			theWaves[i] = "Wave " + (i+1).ToString();
 		waveIndex[levelIndex] = GUILayout.Toolbar (waveIndex[levelIndex], theWaves, EditorStyles.toolbarButton);
-
+		
 		GUILayout.Space(10);
-
+		
 		//"+" button to add waves
 		if(GUILayout.Button("+", EditorStyles.toolbarButton, GUILayout.Width(50))){
 			myTarget.levels[levelIndex].waves.Add(new EnemyWaves.Wave());
 			subwaveIndex[levelIndex].Add(0);
 		}
-
+		
 		//"-" button to remove waves
 		if(GUILayout.Button("-", EditorStyles.toolbarButton, GUILayout.Width(50)) && myTarget.levels[levelIndex].waves.Count > 0){
 			myTarget.levels[levelIndex].waves.RemoveAt(myTarget.levels[levelIndex].waves.Count-1);
@@ -159,34 +159,34 @@ public class EnemyWavesEditor : Editor {
 			if(waveIndex[levelIndex] < 0)
 				waveIndex[levelIndex] = 0;
 		}
-
+		
 		GUILayout.EndHorizontal();
 		////////////////////////////////////////////////////////////////////////////////////////////
-
+		
 		//Start wave details box
 		////////////////////////////////////////////////////////////////////////////////////////////
 		if ( myTarget.levels[levelIndex].waves.Count < 1 || myTarget.levels[levelIndex].waves[waveIndex[levelIndex]] == null )
 			return;		// Quit if there's no wave for this level yet
 		EditorGUILayout.BeginVertical(EditorStyles.textField);
 		GUILayout.Space(15);
-
+		
 		//Total enemies count
 		GUILayout.BeginHorizontal();
 		GUI.backgroundColor = new Color(0.99f,0.95f,1.0f,1.0f);
 		GUILayout.Label ("Total Enemies", GUILayout.Width(100));
 		GUILayout.Label (myTarget.levels[levelIndex].waves[waveIndex[levelIndex]].TotalEnemies().ToString(), GUILayout.Width(40));
 		GUILayout.EndHorizontal();
-
+		
 		//Subwave count
 		GUILayout.BeginHorizontal();
 		GUI.backgroundColor = new Color(0.99f,0.95f,1.0f,1.0f);
 		GUILayout.Label ("Subwaves", GUILayout.Width(100));
 		GUILayout.Label (myTarget.levels[levelIndex].waves[waveIndex[levelIndex]].Subwaves.Count.ToString(), GUILayout.Width(40));
-
+		
 		//"+" button add subwaves
 		if ( GUILayout.Button("+", EditorStyles.toolbarButton, GUILayout.Width(30)) )
 			myTarget.levels[levelIndex].waves[waveIndex[levelIndex]].Subwaves.Add(new EnemySubwave());
-
+		
 		//"-" button remove subwaves
 		if ( GUILayout.Button("-", EditorStyles.toolbarButton, GUILayout.Width(30)) && myTarget.levels[levelIndex].waves[waveIndex[levelIndex]].Subwaves.Count > 0)
 		{
@@ -199,7 +199,7 @@ public class EnemyWavesEditor : Editor {
 		GUILayout.EndHorizontal();
 		EditorGUILayout.EndVertical();
 		////////////////////////////////////////////////////////////////////////////////////////////
-
+		
 		//Subwave dropdown
 		////////////////////////////////////////////////////////////////////////////////////////////
 		if ( myTarget.levels[levelIndex].waves[waveIndex[levelIndex]].Subwaves.Count < 1 ||
@@ -209,9 +209,9 @@ public class EnemyWavesEditor : Editor {
 		for (int i = 0; i < parsedSubwaves.Length; i++ )
 		{ parsedSubwaves[i] = "Subwave " + (i+1).ToString(); }
 		subwaveIndex[levelIndex][waveIndex[levelIndex]] = EditorGUILayout.Popup (subwaveIndex[levelIndex][waveIndex[levelIndex]], parsedSubwaves, EditorStyles.toolbarDropDown);
-
+		
 		////////////////////////////////////////////////////////////////////////////////////////////
-
+		
 		//Subwave details
 		////////////////////////////////////////////////////////////////////////////////////////////
 		EditorGUILayout.BeginVertical(EditorStyles.textField);
@@ -224,7 +224,7 @@ public class EnemyWavesEditor : Editor {
 			currSubwave.Enemies.Add(0);
 		while(currSubwave.Enemies.Count > (int)Enemy.enemyType.TYPE_MAX)
 			currSubwave.Enemies.RemoveAt(currSubwave.Enemies.Count-1);
-
+		
 		EditorGUILayout.LabelField("Total Enemies", currSubwave.getTotalEnemies().ToString());
 		currSubwave.activateTime = EditorGUILayout.FloatField("Start Time", currSubwave.activateTime);
 		currSubwave.spawnRate = EditorGUILayout.FloatField("Spawn Rate", currSubwave.spawnRate);
@@ -234,11 +234,11 @@ public class EnemyWavesEditor : Editor {
 			if(currSubwave.Enemies[i] < 0)
 				currSubwave.Enemies[i] = 0;
 		}
-
+		
 		EditorGUILayout.EndVertical();
 		////////////////////////////////////////////////////////////////////////////////////////////
 	}
-
+	
 }
 
 #endif

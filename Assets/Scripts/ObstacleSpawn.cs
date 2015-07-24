@@ -4,12 +4,42 @@ using System.Collections.Generic;
 
 [System.Serializable]
 public class ObstacleSpawn{
-
-	public List<int> Obstacles;
+	
+	public List<int> quantity;
 
 	public ObstacleSpawn() {
-		Obstacles = new List<int>();
-		for (int i = 0; i < (int)Node.NodeType.NODE_MAX; ++i)
-			Obstacles.Add (0);
+		quantity = new List<int>();
+		quantity.Add (0);
 	}
+
+	public int GetTotal () {
+		int total = 0;
+		
+		foreach(int number in quantity){
+			total = number;
+		}
+		
+		return total;
+	}
+}
+
+[System.Serializable]
+public class ObstaclePos {
+//	public List<int> index;
+//
+//	public ObstaclePos() {
+//		index = new List<int>();
+//		index.Add(0);
+//	}	
+//
+//	public int returnIndex() {
+//		int total = 0;
+//		
+//		foreach(int number in index){
+//			total = number;
+//		}
+//		
+//		return total;
+//	}
+	public int index;
 }

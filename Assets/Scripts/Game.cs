@@ -33,6 +33,7 @@ public class Game : MonoBehaviour {
 	public Text resourceText;
 	public Text levelText;
 	public Text enemyLeftText;
+	public Text errorMsgText;
 	public GameObject Core;
 	public EnemyWaves enemyWaves;
 	public Enemy enemy;
@@ -48,6 +49,7 @@ public class Game : MonoBehaviour {
 	//public GameObject tutorial;
 
 	private bool tutorialdone;
+	private float errorMsgDisplayTime;
 
 	public GameObject defense_1;
 	public GameObject defense_2;
@@ -68,6 +70,8 @@ public class Game : MonoBehaviour {
 		resourceText.text = "Resources: " + resources;
 		levelText.text = "Level: " + level;
 		enemyLeftText.text = "Enemy Left: " + enemyLeft;
+		errorMsgText.enabled = false;
+		errorMsgDisplayTime = 0.0f;
 		infoPanel = GameObject.Find ("Info panel");
 		resultPanel = GameObject.Find ("ResultScreen");
 		winningScreen = GameObject.Find ("WinningScreen");
@@ -88,6 +92,13 @@ public class Game : MonoBehaviour {
 		if (wingame || losegame) {
 			PopUpResult();
 		}
+		if (errorMsgDisplayTime > 0.0f) {
+			errorMsgDisplayTime -= Time.deltaTime;
+		} else {
+			errorMsgDisplayTime = 0.0f;
+			errorMsgText.enabled = false;
+		}
+
 		InputPos = new Vector2 (0, 0);
 		#if UNITY_ANDROID
 		if (Input.touchCount > 0) {
@@ -209,5 +220,10 @@ public class Game : MonoBehaviour {
 				newpos.y = 0.0f;
 			resultPanel.transform.position = newpos;
 		}
+	}
+
+	public void DisplayErrorMsg() {
+		errorMsgText.enabled = true;
+		errorMsgDisplayTime = 3.0f;
 	}
 }
