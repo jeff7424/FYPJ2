@@ -22,15 +22,17 @@ public class EnemySpawner : MonoBehaviour {
 	void Start () {
 		WaveText.text = "Wave 1";
 		if (Application.loadedLevelName == "Game")
-			level = PlayerPrefs.GetInt ("level", 1) - 1;
+			level = game.GetComponent<Game>().level;
 		else
 			level = 1;
+
+		Debug.Log (level);
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		//Debug.Log (LevelWaves.levels[level].TotalEnemies());
-		if (!game.GetComponent<Game>().GetPause ()) {
+		if (!game.GetComponent<Game>().GetPause () && !game.GetComponent<Game>().endGame) {
 			if(currWave < LevelWaves.levels[level].waves.Count){
 				if(LevelWaves.levels[level].waves[currWave].TotalEnemies() <= 0){
 					//When wave has finished spawning all enemies

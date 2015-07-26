@@ -18,10 +18,6 @@ public class Core : MonoBehaviour {
 		if (Application.loadedLevelName == "Game")
 			player = GameObject.Find ("Player");
 		else if (Application.loadedLevelName == "Multiplayer") {
-//			if (gameObject.tag == "Player 1")
-//				player = GameObject.Find ("Player 1");
-//			else if (gameObject.tag == "Player 2")
-//				player = GameObject.Find ("Player 2");
 			player = GameObject.Find (gameObject.tag);
 		}
 	}
@@ -34,11 +30,21 @@ public class Core : MonoBehaviour {
 			Destroy (explosion.gameObject, explosion.startLifetime);
 			Destroy (gameObject);
 			Time.timeScale = 0.5f;
-			//GameObject lose = GameObject.Find ("GameOver");
-			//lose.GetComponent<Text>().enabled = true;
+
 			if (!player.GetComponent<Player1>().losegame) {
 				player.GetComponent<Player1>().losegame = true;
 				player.GetComponent<Player1>().EnableLosingScreen();
+				game.GetComponent<Game>().SetEndGame(true);
+
+				GameObject player2 = null;
+				if (gameObject.tag == "Player 1")
+					player2 = GameObject.Find ("Player 2");
+				else if (gameObject.tag == "Player 2")
+					player2 = GameObject.Find ("Player 1");
+
+				player2.GetComponent<Player1>().wingame = true;
+				player2.GetComponent<Player1>().EnableWinningScreen();
+
 			}
 		}
 	}

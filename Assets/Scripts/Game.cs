@@ -273,18 +273,22 @@ public class Game : MonoBehaviour {
 	
 	float timeElapsed;
 	bool isPause;
-	bool endGame;
+	public bool endGame;
 	public int level;
 	
 	GameObject pauseScreen;
 	
 	// Use this for initialization
-	void Start () {
+	void Awake () {
+		if (Time.timeScale != 1.0f)
+			Time.timeScale = 1.0f;
 		timeElapsed = 0.0f;
 		isPause = false;
 		endGame = false;
-		if (Application.loadedLevelName == "Multiplayer")
+		if (Application.loadedLevelName == "Game")
 			level = PlayerPrefs.GetInt("level", 1) - 1;
+		else
+			level = 1;
 		pauseScreen = GameObject.Find ("PauseScreen");
 		pauseScreen.GetComponent<PauseScreen>().DisablePanel();
 	}

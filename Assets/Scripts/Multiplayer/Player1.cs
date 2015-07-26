@@ -34,8 +34,10 @@ public class Player1 : MonoBehaviour {
 	public bool wingame;
 	public bool losegame;
 
+	public Sprite[] buttonSprite;
+
 	// Use this for initialization
-	void Awake () {
+	void Start () {
 		game = GameObject.Find ("Game");
 		if (Application.loadedLevelName == "Game") {
 			infoPanel = GameObject.Find ("Info panel");
@@ -54,8 +56,8 @@ public class Player1 : MonoBehaviour {
 			
 			enemyWaves = GameObject.Find ("EnemyWaves");
 
-			enemyLeft = enemyWaves.GetComponent<EnemyWaves>().levels[game.GetComponent<Game>().level - 1].TotalEnemies();
-			enemyLeftText.GetComponent<Text>().text = "Enemy Left: " + enemyLeft;
+//			enemyLeft = enemyWaves.GetComponent<EnemyWaves>().levels[game.GetComponent<Game>().level].TotalEnemies();
+//			enemyLeftText.GetComponent<Text>().text = "Enemy Left: " + enemyLeft;
 		} else if (Application.loadedLevelName == "Multiplayer") {
 			if (gameObject.tag == "Player 1") {
 				infoPanel = GameObject.Find ("Info panel 1");
@@ -90,6 +92,8 @@ public class Player1 : MonoBehaviour {
 				enemyWaves = GameObject.Find ("EnemyWaves 2");
 			}
 		}
+		enemyLeft = enemyWaves.GetComponent<EnemyWaves>().levels[game.GetComponent<Game>().level].TotalEnemies();
+
 		defenseUsed = 0;
 		defenseDeleted = 0;
 		selection = 0;
@@ -105,12 +109,16 @@ public class Player1 : MonoBehaviour {
 		losegame = false;
 
 		infoPanel.GetComponent<InfoPanelScript>().DisablePanel ();
+		winningScreen.GetComponent<WinningScreen>().DisablePanel ();
+		losingScreen.GetComponent<LosingScreen>().DisablePanel();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (!game.GetComponent<Game>().GetPause ()) {
 			CheckIfAffordable();
+			CheckForResult ();
+			ButtonUpdate ();
 			if (wingame || losegame)
 				PopUpResult ();
 			if (errorMsgDisplayTime > 0.0f)
@@ -122,7 +130,6 @@ public class Player1 : MonoBehaviour {
 			resourceText.GetComponent<Text>().text = "Resources: " + resources;
 			if (Application.loadedLevelName == "Game")
 				enemyLeftText.GetComponent<Text>().text = "Enemy Left: " + enemyLeft;
-
 		}
 	}
 
@@ -203,15 +210,35 @@ public class Player1 : MonoBehaviour {
 			button_defense5.GetComponent<Button>().interactable = true;
 		}
 	}
-	
-	void PopUpResult() {
-		if (resultPanel.transform.position.y < 0.0f) {
-			Vector2 newpos = resultPanel.transform.position;
-			newpos.y += 25.0f * Time.deltaTime;
-			if (newpos.y >= 0.0f)
-				newpos.y = 0.0f;
-			resultPanel.transform.position = newpos;
+
+	void CheckForResult() {
+		if (enemyLeft <= 0) {
+			if (!wingame) {
+				EnableWinningScreen ();
+				wingame = true;
+				game.GetComponent<Game>().SetEndGame(true);
+			}
 		}
+	}
+
+	void PopUpResult() {
+		//if (Application.loadedLevelName == "Game") {
+			if (resultPanel.transform.position.y < 0.0f) {
+				Vector2 newpos = resultPanel.transform.position;
+				newpos.y += 25.0f * Time.deltaTime;
+				if (newpos.y >= 0.0f)
+					newpos.y = 0.0f;
+				resultPanel.transform.position = newpos;
+			}
+//		} else if (Application.loadedLevelName == "Multiplayer") {
+//			if (resultPanel.transform.localPosition.x < -5.0f) {
+//				Vector2 newpos = resultPanel.transform.position;
+//				newpos.x += 20.0f * Time.deltaTime;
+//				if (newpos.x >= -5.0f)
+//					newpos.x = -5.0f;
+//				resultPanel.transform.localPosition = newpos;
+//			}
+//		}
 	}
 	
 	public void DisplayErrorMsg() {
@@ -219,35 +246,36 @@ public class Player1 : MonoBehaviour {
 		errorMsgDisplayTime = 3.0f;
 	}
 
-//	void ButtonUpdate() {
-//		if (selection == 1) {
-//			button_defense1.GetComponent<Image>().sprite = buttonSprite[0];
-//		} else {
-//			button_defense1.GetComponent<Image>().sprite = buttonSprite[1];
-//		}
-//		
-//		if (selection == 2) {
-//			button_defense2.GetComponent<Image>().sprite = buttonSprite[0];
-//		} else {
-//			button_defense2.GetComponent<Image>().sprite = buttonSprite[1];
-//		}
-//		
-//		if (selection == 3) {
-//			button_defense3.GetComponent<Image>().sprite = buttonSprite[0];
-//		} else {
-//			button_defense3.GetComponent<Image>().sprite = buttonSprite[1];
-//		}
-//		
-//		if (selection == 4) {
-//			button_defense4.GetComponent<Image>().sprite = buttonSprite[0];
-//		} else {
-//			button_defense4.GetComponent<Image>().sprite = buttonSprite[1];
-//		}
-//		
-//		if (selection == 5) {
-//			button_defense5.GetComponent<Image>().sprite = buttonSprite[0];
-//		} else {
-//			button_defense5.GetComponent<Image>().sprite = buttonSprite[1];
-//		}
-//	}
+	void ButtonUpdate() {
+		if (selection == 1) {
+			button_defense1.GetComponent<Button>().image.sprite = buttonSprite[1];
+
+		} else {
+			button_defense1.GetComponent<Button>().image.sprite = buttonSprite[0];
+		}
+		
+		if (selection == 2) {
+			button_defense2.GetComponent<Button>().image.sprite = buttonSprite[1];
+		} else {
+			button_defense2.GetComponent<Button>().image.sprite = buttonSprite[0];
+		}
+		
+		if (selection == 3) {
+			button_defense3.GetComponent<Button>().image.sprite = buttonSprite[1];
+		} else {
+			button_defense3.GetComponent<Button>().image.sprite = buttonSprite[0];
+		}
+		
+		if (selection == 4) {
+			button_defense4.GetComponent<Button>().image.sprite = buttonSprite[1];
+		} else {
+			button_defense4.GetComponent<Button>().image.sprite = buttonSprite[0];
+		}
+		
+		if (selection == 5) {
+			button_defense5.GetComponent<Button>().image.sprite = buttonSprite[1];
+		} else {
+			button_defense5.GetComponent<Button>().image.sprite = buttonSprite[0];
+		}
+	}
 }

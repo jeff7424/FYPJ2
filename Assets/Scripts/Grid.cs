@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Grid : MonoBehaviour {
 
 	// Script to create a grid of tiles
+	public GameObject game;
 	public GameObject thePathfinderRoot;
 	public GameObject EnemySpawner;
 	public GameObject Core;
@@ -27,7 +28,8 @@ public class Grid : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
-		level = PlayerPrefs.GetInt ("level", 1) - 1;
+		game = GameObject.Find ("Game");
+		level = game.GetComponent<Game>().level;
 		CreateTiles ();
 		maxSpawn = 0;
 		tileSize = 1.0f;
