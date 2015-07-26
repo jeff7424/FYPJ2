@@ -32,11 +32,18 @@ public class EnemySpawner : MonoBehaviour {
 		//Debug.Log (LevelWaves.levels[level].TotalEnemies());
 		if (!game.GetComponent<Game>().GetPause ()) {
 			if(currWave < LevelWaves.levels[level].waves.Count){
+
+				//If the level has unlimited wsves, create more
+				if(currWave == LevelWaves.levels[level].waves.Count - 1 &&
+				   LevelWaves.levels[level].unlimitedWaves){
+					LevelWaves.levels[level].generateWave();
+				}
+
 				if(LevelWaves.levels[level].waves[currWave].TotalEnemies() <= 0){
 					//When wave has finished spawning all enemies
 					//Wait for timer before going to next wave
 					waveChangeTimer += Time.deltaTime;
-					if(waveChangeTimer > 10.0f && currWave < 5){
+					if(waveChangeTimer > 10.0f){
 						++currWave;
 						WaveText.text = "Wave " + (currWave+1);
 						waveChangeTimer = 0.0f;

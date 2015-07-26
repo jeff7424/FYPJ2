@@ -88,21 +88,37 @@ public class EnemyWavesEditor : Editor {
 				++j;
 			}
 		}
-		
+
+		for(int i = 0; i < myTarget.levels.Count; ++i){
+			//Add more subwave index if there are more waves
+			while(myTarget.levels[i].waves.Count > subwaveIndex[i].Count){
+				subwaveIndex[i].Add(0);
+			}
+			//Reset index if wave/subwave does not exist
+			//Wave index
+			if(waveIndex[i] >= myTarget.levels[i].waves.Count)
+				waveIndex[i] = 0;
+			//Subwave index
+			foreach(EnemyWaves.Wave wave in myTarget.levels[i].waves){
+				if(subwaveIndex[i][waveIndex[i]] >= wave.Subwaves.Count)
+					subwaveIndex[i][waveIndex[i]] = 0;
+			}
+		}
+
 		GUILayout.Space(10.0f);
-		
+
 		//Level select
 		////////////////////////////////////////////////////////////////////////////////////////////
 		GUILayout.BeginHorizontal();
-		
+
 		string[] theLevels = new string[myTarget.levels.Count];
 		for(int i = 0; i < theLevels.Length; ++i){
 			theLevels[i] = "Level " + (i+1).ToString();
 		}
 		levelIndex = GUILayout.Toolbar(levelIndex, theLevels, EditorStyles.toolbarButton);
-		
+
 		GUILayout.Space(10);
-		
+
 		//"+" button to add levels
 		if(GUILayout.Button("+", EditorStyles.toolbarButton, GUILayout.Width(40))){
 			myTarget.levels.Add(new EnemyWaves.Level());
@@ -122,16 +138,24 @@ public class EnemyWavesEditor : Editor {
 			if(levelIndex < 0)
 				levelIndex = 0;
 		}
-		
+
 		GUILayout.EndHorizontal();
 		////////////////////////////////////////////////////////////////////////////////////////////
 
 
-		//Level terrain
+		//Level details
 		////////////////////////////////////////////////////////////////////////////////////////////
 		EditorGUILayout.BeginVertical(EditorStyles.textField);
-		GUILayout.Space(3);
 
+		//Unlimited waves
+		GUILayout.Space(3);
+		GUILayout.BeginHorizontal();
+		GUILayout.Label ("Unlimited Waves", GUILayout.Width(100));
+		myTarget.levels[levelIndex].unlimitedWaves = EditorGUILayout.Toggle(myTarget.levels[levelIndex].unlimitedWaves);
+		GUILayout.EndHorizontal();
+		GUILayout.Space(3);
+		
+		//Level terrain
 		//The grid buttons
 		for(int i = 0; i < 9; ++i){
 			GUILayout.BeginHorizontal();
