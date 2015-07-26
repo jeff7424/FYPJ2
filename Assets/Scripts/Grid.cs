@@ -9,6 +9,7 @@ public class Grid : MonoBehaviour {
 	public GameObject EnemySpawner;
 	public GameObject Core;
 	public ObstacleSpawnMaster ObstacleSpawn;
+	public SpawnObstacles spawnObs;
 	public PathfinderScript thePathfinder;
 
 	public GameObject node;
@@ -72,6 +73,41 @@ public class Grid : MonoBehaviour {
 				currTile++;
 
 				if (Application.loadedLevelName != "Multiplayer") {
+					for(int i = 0; i < spawnObs.levels.Count; i++)
+					{
+						if(level == spawnObs.levels[i].level)
+						{
+							for(int j  = 0; j < spawnObs.levels[i].TreePos.Length; j++)
+							{
+								if(currTile == spawnObs.levels[i].TreePos[j])
+								{
+									GameObject newObstacle = (GameObject)Instantiate (obstacleTile, newTile.transform.position, Quaternion.identity);
+									newTile.GetComponent<Tile>().isOccupied = true;
+									newTile.GetComponent<Node>().setNodeType(Node.NodeType.NODE_OBSTACLE);
+								}
+							}
+							for(int k = 0; k < spawnObs.levels[i].PlatformPos.Length; k++)
+							{
+								if(currTile == spawnObs.levels[i].PlatformPos[k])
+								{
+									GameObject newObstacle = (GameObject)Instantiate (obstacleTile, newTile.transform.position, Quaternion.identity);
+									newTile.GetComponent<Node>().setNodeType(Node.NodeType.NODE_PLATFORM);
+								}
+							}
+							for(int l = 0; l < spawnObs.levels[i].TunnelPos.Length; l++)
+							{
+								if(currTile == spawnObs.levels[i].TunnelPos[l])
+								{
+									GameObject newObstacle = (GameObject)Instantiate (obstacleTile, newTile.transform.position, Quaternion.identity);
+									newTile.GetComponent<Tile>().isOccupied = true;
+									newTile.GetComponent<Node>().setNodeType(Node.NodeType.NODE_TUNNEL);
+								}
+							}
+						}
+					}
+				}
+
+				/*if (Application.loadedLevelName != "Multiplayer") {
 					for (int i = 0; i < ObstacleSpawn.levels[level].type.Count; ++i) {
 							for (int j = 0; j < ObstacleSpawn.levels[level].type[i].quantity.Count; ++j) {
 								if (currTile == ObstacleSpawn.levels[level].type[i].quantity[j]) {
@@ -90,7 +126,7 @@ public class Grid : MonoBehaviour {
 								}
 							}
 					}
-				}
+				}*/
 
 				//Linking nodes together
 				thePathfinder.Nodes[y-1][x] = newTile;
