@@ -270,14 +270,14 @@ public class Game : MonoBehaviour {
 		DEF_ANTIAIR = 18,
 		DEF_FLAME	= 12
 	}
-	
+
 	float timeElapsed;
 	bool isPause;
 	public bool endGame;
 	public int level;
 	
 	GameObject pauseScreen;
-	
+
 	// Use this for initialization
 	void Awake () {
 		if (Time.timeScale != 1.0f)

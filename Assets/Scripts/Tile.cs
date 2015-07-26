@@ -5,6 +5,11 @@ using System.Collections.Generic;
 
 public class Tile : MonoBehaviour {
 
+	enum soundclip {
+		SOUND_DEPLOY	= 0,
+		SOUND_BLOCKED	= 1
+	}
+
 	public Defense defenses;
 	private Defense defense;
 	private GameObject game;
@@ -18,12 +23,15 @@ public class Tile : MonoBehaviour {
 	public Rect temp;
 	private float errorDeployTime;
 
+	public AudioClip[] sounds;
+
 	// Use this for initialization
 	void Start () {
 		game = GameObject.Find ("Game");
 		errorDeployTime = 0.0f;
-		if (Application.loadedLevelName == "Game")
+		if (Application.loadedLevelName == "Game") {
 			player = GameObject.Find ("Player");
+		}
 		else if (Application.loadedLevelName == "Multiplayer") {
 			player = GameObject.Find (gameObject.tag);
 		}
@@ -47,6 +55,7 @@ public class Tile : MonoBehaviour {
 		defense = (Defense)Instantiate (defenses);
 		defense.tag = gameObject.tag;
 		defense.transform.position = transform.position;
+		defense.transform.localScale = transform.localScale;
 		defense.transform.parent = transform;
 		isOccupied = true;
 
@@ -145,9 +154,11 @@ public class Tile : MonoBehaviour {
 					if (!checkAIPath ()) {	//If monsters cannot find a path to the core
 						Debug.Log ("Monsters cannot pass through");
 						DisplayDeployError();
+						PlaySound (soundclip.SOUND_BLOCKED);
 					}
 					else if (GetComponent<Node>().getNodeType() == Node.NodeType.NODE_OPEN || GetComponent<Node>().getNodeType() == Node.NodeType.NODE_PLATFORM) {
 						BuildDefense ();
+						PlaySound (soundclip.SOUND_DEPLOY);
 						player.GetComponent<Player1> ().DisableInfoPanel ();
 						player.GetComponent<Player1> ().resources -= cost;
 						Debug.Log ("Defense built");
@@ -161,6 +172,11 @@ public class Tile : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+	void PlaySound(soundclip sound) {
+		GetComponent<AudioSource>().clip = sounds[(int)sound];
+		GetComponent<AudioSource>().Play ();
 	}
 
 	public void DisplayInfo() {

@@ -9,19 +9,46 @@ public class InfoPanelScript : MonoBehaviour {
 	private bool enabledDisplay = false;
 	private GameObject game;
 
+	private GameObject towerName;
+	private GameObject damage;
+	private GameObject firerate;
+	private GameObject range;
+	private GameObject special;
+
 	// Use this for initialization
 	void Awake () {
 		game = GameObject.Find ("Game");
+		if (Application.loadedLevelName == "Game") {
+			towerName = GameObject.Find ("Tower name");
+			damage = GameObject.Find ("Damage");
+			firerate = GameObject.Find ("Firing rate");
+			range = GameObject.Find ("Range");
+			special = GameObject.Find ("Special");
+		} else if (Application.loadedLevelName == "Multiplayer") {
+			if (gameObject.tag == "Player 1") {
+				towerName = GameObject.Find ("Tower name 1");
+				damage = GameObject.Find ("Damage 1");
+				firerate = GameObject.Find ("Firing rate 1");
+				range = GameObject.Find ("Range 1");
+				special = GameObject.Find ("Special 1");
+			} else if (gameObject.tag == "Player 2") {
+				towerName = GameObject.Find ("Tower name 2");
+				damage = GameObject.Find ("Damage 2");
+				firerate = GameObject.Find ("Firing rate 2");
+				range = GameObject.Find ("Range 2");
+				special = GameObject.Find ("Special 2");
+			}
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (enabledDisplay) {
-			transform.Find ("Tower name").GetComponent<Text> ().text = defense.name;
-			transform.Find ("Damage").GetComponent<Text> ().text = "Damage: " + defense.damage;
-			transform.Find ("Firing rate").GetComponent<Text> ().text = "Fire rate: " + defense.GetFireRate ();
-			transform.Find ("Range").GetComponent<Text> ().text = "Range: " + defense.GetRange ();
-			transform.Find ("Special").GetComponent<Text>().text = "Level: " + defense.GetLevel();
+			towerName.GetComponent<Text> ().text = defense.name;
+			damage.GetComponent<Text> ().text = "Damage: " + defense.damage;
+			firerate.GetComponent<Text> ().text = "Fire rate: " + defense.GetFireRate ();
+			range.GetComponent<Text> ().text = "Range: " + defense.GetRange ();
+			special.GetComponent<Text>().text = "Level: " + defense.GetLevel();
 		}
 	}
 

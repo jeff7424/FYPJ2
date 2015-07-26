@@ -3,6 +3,12 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class Player1 : MonoBehaviour {
+	
+	enum soundclip
+	{
+		SOUND_WIN	= 0,
+		SOUND_LOSE	= 1
+	}
 
 	GameObject game;
 	public GameObject infoPanel;
@@ -35,6 +41,8 @@ public class Player1 : MonoBehaviour {
 	public bool losegame;
 
 	public Sprite[] buttonSprite;
+	
+	public AudioClip[] sound;
 
 	// Use this for initialization
 	void Start () {
@@ -97,7 +105,7 @@ public class Player1 : MonoBehaviour {
 		defenseUsed = 0;
 		defenseDeleted = 0;
 		selection = 0;
-		resources = 200;
+		resources = 150;
 
 		resourceText.GetComponent<Text>().text = "Resources: " + resources;
 		errorMsgText.GetComponent<Text>().enabled = false;
@@ -162,6 +170,7 @@ public class Player1 : MonoBehaviour {
 		winningScreen.GetComponent<WinningScreen>().SetGameTime (game.GetComponent<Game>().GetTimeElapsed());
 		winningScreen.GetComponent<WinningScreen>().SetDefenseUsed (defenseUsed);
 		winningScreen.GetComponent<WinningScreen>().SetDefenseDeleted (defenseDeleted);
+		PlaySound (soundclip.SOUND_WIN);
 	}
 	
 	public void EnableLosingScreen() {
@@ -169,6 +178,7 @@ public class Player1 : MonoBehaviour {
 		losingScreen.GetComponent<LosingScreen>().SetGameTime (game.GetComponent<Game>().GetTimeElapsed());
 		losingScreen.GetComponent<LosingScreen>().SetDefenseUsed (defenseUsed);
 		losingScreen.GetComponent<LosingScreen>().SetDefenseDeleted (defenseDeleted);
+		PlaySound (soundclip.SOUND_LOSE);
 	}
 	
 	public void IncreaseDefenseUsed() {
@@ -277,5 +287,10 @@ public class Player1 : MonoBehaviour {
 		} else {
 			button_defense5.GetComponent<Button>().image.sprite = buttonSprite[0];
 		}
+	}
+	
+	void PlaySound(soundclip index) {
+		GetComponent<AudioSource>().clip = sound[(int)index];
+		GetComponent<AudioSource>().Play();
 	}
 }

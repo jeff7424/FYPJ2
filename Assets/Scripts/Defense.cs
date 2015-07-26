@@ -49,6 +49,8 @@ public class Defense : MonoBehaviour {
 	public Sprite[] barrel;
 	public Sprite[] body;
 	public Sprite[] projectile;
+
+	public AudioClip shoot;
 	
 	// Use this for initialization
 	void Start () {
@@ -156,6 +158,7 @@ public class Defense : MonoBehaviour {
 			bullet.GetComponent<SpriteRenderer>().sprite = projectile[(int)selection - 1];
 		}
 		FireFlare ();
+		PlayShootSound();
 		this.fireratecounter = this.firerate;
 	}
 
@@ -170,6 +173,7 @@ public class Defense : MonoBehaviour {
 			bulletcounttimer = 0.15f;
 			bullet.GetComponent<SpriteRenderer>().sprite = projectile[(int)selection - 1];
 			FireFlare ();
+			PlayShootSound();
 		}
 
 		if (bulletcount >= 3) {
@@ -182,6 +186,11 @@ public class Defense : MonoBehaviour {
 		GameObject flash = Instantiate (muzzleFlare, weapon.transform.position, weapon.transform.rotation) as GameObject;
 		flash.transform.parent = weapon.transform;
 		flash.transform.localPosition = new Vector2 (0.5f, 0.0f);
+	}
+
+	void PlayShootSound() {
+		GetComponent<AudioSource>().clip = shoot;
+		GetComponent<AudioSource>().Play ();
 	}
 
 	void CalculateAim(Transform target) {

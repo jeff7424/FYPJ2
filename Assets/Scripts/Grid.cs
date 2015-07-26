@@ -34,7 +34,10 @@ public class Grid : MonoBehaviour {
 		level = game.GetComponent<Game>().level;
 		CreateTiles ();
 		maxSpawn = 0;
-		tileSize = 1.0f;
+		if (Application.loadedLevelName == "Game")
+			tileSize = 1.0f;
+		else if (Application.loadedLevelName == "Multiplayer")
+			tileSize = 0.75f;
 	}
 
 	void CreateTiles() {
@@ -46,17 +49,40 @@ public class Grid : MonoBehaviour {
 			for (int x = 0; x < numberOfTilesColumn; ++x) {
 				
 				// Do offset after instantiating a tile
-				xOffset += tileSize;
-				
+				if (Application.loadedLevelName == "Game")
+					xOffset += tileSize;
+				else if (Application.loadedLevelName == "Multiplayer") {
+					if (gameObject.tag == "Player 1")
+						xOffset += tileSize;
+					else if (gameObject.tag == "Player 2")
+						xOffset -= tileSize;
+				}
+
 				// Reset x to the start and +1 to y to start next row
 				if (x % numberOfTilesColumn == 0)
 				{
-					yOffset += tileSize;
+					if (Application.loadedLevelName == "Game")
+						yOffset += tileSize;
+					else if (Application.loadedLevelName == "Multiplayer") {
+						if (gameObject.tag == "Player 1")
+							yOffset += tileSize;
+						else if (gameObject.tag == "Player 2")
+							yOffset -= tileSize;
+					}
 					xOffset = 0;
 					y++;
 
 					//Create a node that serves as enemy spawn points
-					GameObject newEnemySpawnNode = (GameObject)Instantiate (node, new Vector2(transform.position.x + tileSize*numberOfTilesColumn, transform.position.y + yOffset), Quaternion.identity);
+
+					GameObject newEnemySpawnNode = null;
+					if (Application.loadedLevelName == "Game")
+						newEnemySpawnNode = (GameObject)Instantiate (node, new Vector2(transform.position.x + tileSize*numberOfTilesColumn, transform.position.y + yOffset), Quaternion.identity);
+					else if (Application.loadedLevelName == "Multiplayer") {
+						if (gameObject.tag == "Player 1")
+							newEnemySpawnNode = (GameObject)Instantiate (node, new Vector2(transform.position.x + tileSize*numberOfTilesColumn, transform.position.y + yOffset), Quaternion.identity);
+						else if (gameObject.tag == "Player 2")
+							newEnemySpawnNode = (GameObject)Instantiate (node, new Vector2(transform.position.x - tileSize*numberOfTilesColumn, transform.position.y + yOffset), Quaternion.identity);
+					}
 					newEnemySpawnNode.name = "enemySpawn" + y.ToString();
 					newEnemySpawnNode.transform.SetParent(thePathfinderRoot.transform);
 					EnemySpawner.GetComponent<EnemySpawner>().spawnNodes[y-1] = newEnemySpawnNode;
@@ -70,8 +96,10 @@ public class Grid : MonoBehaviour {
 				}
 
 				//Create the tile
-				GameObject newTile = (GameObject)Instantiate (tile, new Vector2(transform.position.x + xOffset, transform.position.y + yOffset), Quaternion.identity);
+				GameObject newTile = (GameObject)Instantiate (tile, new Vector2(transform.position.x + xOffset*tileSize, transform.position.y + yOffset*tileSize), Quaternion.identity);
 				newTile.name = "Tile" + ((y-1)*9+x).ToString();
+				newTile.tag = gameObject.tag;
+				//newTile.transform.localScale = new Vector3(tileSize, tileSize, 1.0f);
 				newTile.transform.SetParent(thePathfinderRoot.transform);
 
 				currTile++;
