@@ -6,8 +6,9 @@ using System.Collections.Generic;
 public class Tile : MonoBehaviour {
 
 	enum soundclip {
-		SOUND_DEPLOY	= 0,
-		SOUND_BLOCKED	= 1
+		SOUND_DEPLOY		= 0,
+		SOUND_BLOCKED		= 1,
+		SOUND_INSUFFICIENT 	= 2
 	}
 
 	public Defense defenses;
@@ -163,6 +164,8 @@ public class Tile : MonoBehaviour {
 						player.GetComponent<Player1> ().resources -= cost;
 						Debug.Log ("Defense built");
 					}
+				} else {
+					PlaySound (soundclip.SOUND_INSUFFICIENT);
 				}
 			} else {
 				if (isOccupied && GetComponent<Node>().getNodeType() == Node.NodeType.NODE_TOWER) {
