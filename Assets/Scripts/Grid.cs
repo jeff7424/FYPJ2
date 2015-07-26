@@ -20,7 +20,9 @@ public class Grid : MonoBehaviour {
 	public float tileSize;
 
 	//Testing
-	public GameObject obstacleTile;
+	public GameObject TreeObstacle;
+	//public GameObject PlatformObstacle;
+	//public GameObject TunnelObstacle;
 	public int maxSpawn;
 
 	private int level = 0;
@@ -83,7 +85,7 @@ public class Grid : MonoBehaviour {
 							{
 								if(currTile == spawnObs.levels[i].TreePos[j])
 								{
-									GameObject newObstacle = (GameObject)Instantiate (obstacleTile, newTile.transform.position, Quaternion.identity);
+									GameObject newObstacle = (GameObject)Instantiate (TreeObstacle, newTile.transform.position, Quaternion.identity);
 									newTile.GetComponent<Tile>().isOccupied = true;
 									newTile.GetComponent<Node>().setNodeType(Node.NodeType.NODE_OBSTACLE);
 								}
@@ -92,7 +94,8 @@ public class Grid : MonoBehaviour {
 							{
 								if(currTile == spawnObs.levels[i].PlatformPos[k])
 								{
-									GameObject newObstacle = (GameObject)Instantiate (obstacleTile, newTile.transform.position, Quaternion.identity);
+									//GameObject newObstacle = (GameObject)Instantiate (PlatformObstacle, newTile.transform.position, Quaternion.identity);
+									newTile.GetComponent<SpriteRenderer>().color = Color.black;
 									newTile.GetComponent<Node>().setNodeType(Node.NodeType.NODE_PLATFORM);
 								}
 							}
@@ -100,7 +103,8 @@ public class Grid : MonoBehaviour {
 							{
 								if(currTile == spawnObs.levels[i].TunnelPos[l])
 								{
-									GameObject newObstacle = (GameObject)Instantiate (obstacleTile, newTile.transform.position, Quaternion.identity);
+									//GameObject newObstacle = (GameObject)Instantiate (TunnelObstacle, newTile.transform.position, Quaternion.identity);
+									newTile.GetComponent<SpriteRenderer>().color = Color.green;
 									newTile.GetComponent<Tile>().isOccupied = true;
 									newTile.GetComponent<Node>().setNodeType(Node.NodeType.NODE_TUNNEL);
 								}

@@ -58,6 +58,7 @@ public class EnemyWaves : MonoBehaviour {
 	[System.Serializable]
 	public class Level{
 		public List<Wave> waves = new List<Wave>();
+		public bool unlimitedWaves = false;
 
 		//Constructor
 		public Level(){
@@ -72,6 +73,34 @@ public class EnemyWaves : MonoBehaviour {
 			}
 
 			return total;
+		}
+
+		public void generateWave(){
+			if(unlimitedWaves){
+				Wave newWave = new Wave();
+				newWave.Subwaves.Clear();
+
+				foreach(EnemySubwave subwave in waves[waves.Count-1].Subwaves){
+					EnemySubwave newSubwave = new EnemySubwave();
+					newSubwave.spawnRate = subwave.spawnRate;
+					newSubwave.activateTime = subwave.activateTime;
+
+					for(int i = 0; i < subwave.Enemies.Count; ++i){
+						if(subwave.Enemies[i] <= 0){
+							if(waves.Count > i*2 && i < 6)
+								newSubwave.Enemies[i] = (int)Random.Range(1, 4);
+						}
+						else if(subwave.Enemies[i] < 3)
+							newSubwave.Enemies[i] = subwave.Enemies[i]*2;
+						else
+							newSubwave.Enemies[i] = (int)(subwave.Enemies[i]*Random.Range(1.25f, 1.5f));
+					}
+
+					newWave.Subwaves.Add(newSubwave);
+				}
+
+				waves.Add(newWave);
+			}
 		}
 	}
 
