@@ -23,6 +23,8 @@ public class Enemy : MonoBehaviour {
 	private GameObject game;
 	private GameObject player;
 
+	public AudioClip[] sound;
+
 	public enum enemyType{
 		TYPE_NORMAL = 0,
 		TYPE_SLOW,
@@ -33,6 +35,12 @@ public class Enemy : MonoBehaviour {
 		TYPE_SPLIT_CHILD,
 		TYPE_MAX
 	}
+
+	public enum soundclip {
+		SOUND_HIT	= 0,
+		SOUND_DEATH	= 1
+	}
+
 	private enemyType type;
 
 	// Use this for initialization
@@ -59,6 +67,7 @@ public class Enemy : MonoBehaviour {
 		// If health less than zero destroy object
 		if (!game.GetComponent<Game>().GetPause ()) {
 			if (health <= 0) {
+				GetComponent<AudioSource>().PlayOneShot(sound[(int)soundclip.SOUND_DEATH]);
 				Destroy (gameObject);
 				player.GetComponent<Player1>().enemyLeft --;
 				player.GetComponent<Player1>().resources += reward;
@@ -197,5 +206,13 @@ public class Enemy : MonoBehaviour {
 
 	public void Kamikazed(int damage) {
 		health -= damage;
+	}
+
+	public void PlaySound() {
+		if (health > 0)
+			GetComponent<AudioSource>().clip = sound[(int)soundclip.SOUND_HIT];
+		else if (health <= 0)
+			GetComponent<AudioSource>().clip = sound[(int)soundclip.SOUND_DEATH];
+		AudioSource.PlayClipAtPoint (GetComponent<AudioSource>().clip, transform.position);
 	}
 }

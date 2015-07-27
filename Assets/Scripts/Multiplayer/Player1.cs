@@ -23,7 +23,6 @@ public class Player1 : MonoBehaviour {
 
 	GameObject resourceText;
 	GameObject errorMsgText;
-	GameObject enemyLeftText;
 	
 	GameObject enemyWaves;
 
@@ -60,12 +59,9 @@ public class Player1 : MonoBehaviour {
 			
 			resourceText = GameObject.Find ("Resources");
 			errorMsgText = GameObject.Find ("ErrorMsg");
-			enemyLeftText = GameObject.Find ("Enemies Left");
 			
 			enemyWaves = GameObject.Find ("EnemyWaves");
-
-//			enemyLeft = enemyWaves.GetComponent<EnemyWaves>().levels[game.GetComponent<Game>().level].TotalEnemies();
-//			enemyLeftText.GetComponent<Text>().text = "Enemy Left: " + enemyLeft;
+			enemyLeft = enemyWaves.GetComponent<EnemyWaves>().levels[game.GetComponent<Game>().level].TotalEnemies();
 		} else if (Application.loadedLevelName == "Multiplayer") {
 			if (gameObject.tag == "Player 1") {
 				infoPanel = GameObject.Find ("Info panel 1");
@@ -100,7 +96,6 @@ public class Player1 : MonoBehaviour {
 				enemyWaves = GameObject.Find ("EnemyWaves 2");
 			}
 		}
-		enemyLeft = enemyWaves.GetComponent<EnemyWaves>().levels[game.GetComponent<Game>().level].TotalEnemies();
 
 		defenseUsed = 0;
 		defenseDeleted = 0;
@@ -125,7 +120,8 @@ public class Player1 : MonoBehaviour {
 	void Update () {
 		if (!game.GetComponent<Game>().GetPause ()) {
 			CheckIfAffordable();
-			CheckForResult ();
+			if (Application.loadedLevelName == "Game")
+				CheckForResult ();
 			ButtonUpdate ();
 			if (wingame || losegame)
 				PopUpResult ();
@@ -135,9 +131,7 @@ public class Player1 : MonoBehaviour {
 				errorMsgDisplayTime = 0.0f;
 				errorMsgText.GetComponent<Text>().enabled = false;
 			}
-			resourceText.GetComponent<Text>().text = "Resources: " + resources;
-			if (Application.loadedLevelName == "Game")
-				enemyLeftText.GetComponent<Text>().text = "Enemy Left: " + enemyLeft;
+			resourceText.GetComponent<Text>().text = resources.ToString();
 		}
 	}
 

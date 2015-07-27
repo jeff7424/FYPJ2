@@ -5,10 +5,12 @@ using System.Collections;
 public class PauseScreen : MonoBehaviour {
 	private bool enabledPauseMenu = false;
 	private GameObject game;
+	GameObject screenFade;
 
 	// Use this for initialization
 	void Awake () {
 		game = GameObject.Find ("Game");
+		screenFade = GameObject.Find ("Screenfade");
 	}
 	
 	// Update is called once per frame
@@ -23,6 +25,7 @@ public class PauseScreen : MonoBehaviour {
 		for (int i = 0; i < transform.childCount; i++) {
 			transform.GetChild(i).gameObject.SetActive(true);
 		}
+		screenFade.GetComponent<Image>().enabled = true;
 	}
 	
 	public void DisablePanel() {
@@ -32,5 +35,6 @@ public class PauseScreen : MonoBehaviour {
 		for (int i = 0; i < transform.childCount; i++) {
 			transform.GetChild(i).gameObject.SetActive(false);
 		}
+		screenFade.GetComponent<Image>().enabled = false;
 	}
 }

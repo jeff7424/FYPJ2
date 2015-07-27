@@ -273,10 +273,12 @@ public class Game : MonoBehaviour {
 
 	float timeElapsed;
 	bool isPause;
+	public bool startGame;
 	public bool endGame;
 	public int level;
 	
 	GameObject pauseScreen;
+	float countdowntimer;
 
 	// Use this for initialization
 	void Awake () {
@@ -285,18 +287,26 @@ public class Game : MonoBehaviour {
 		timeElapsed = 0.0f;
 		isPause = false;
 		endGame = false;
+		startGame = false;
 		if (Application.loadedLevelName == "Game")
 			level = PlayerPrefs.GetInt("level", 1) - 1;
 		else
 			level = 1;
 		pauseScreen = GameObject.Find ("PauseScreen");
 		pauseScreen.GetComponent<PauseScreen>().DisablePanel();
+		countdowntimer = 3.0f;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (!isPause || !endGame)
+		if (!isPause && !endGame) {
 			timeElapsed += Time.deltaTime;
+			if (countdowntimer > 3.0f)
+				countdowntimer -= Time.deltaTime;
+			else 
+				if (!startGame)
+					startGame = true;
+		}
 	}
 	
 	public void SetPause() {
