@@ -8,7 +8,8 @@ public class Tile : MonoBehaviour {
 	enum soundclip {
 		SOUND_DEPLOY		= 0,
 		SOUND_BLOCKED		= 1,
-		SOUND_INSUFFICIENT 	= 2
+		SOUND_INSUFFICIENT 	= 2,
+		SOUND_REMOVE		= 3
 	}
 
 	public Defense defenses;
@@ -83,6 +84,8 @@ public class Tile : MonoBehaviour {
 		isOccupied = false;
 		selection = 1;
 		TileDeselected();
+
+		PlaySound (soundclip.SOUND_REMOVE);
 
 		player.GetComponent<Player1>().IncreaseDefenseDeleted();
 		

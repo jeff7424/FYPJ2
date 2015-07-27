@@ -18,9 +18,7 @@ public class EnemyMovementAI : MonoBehaviour {
 	//The previous node enemy moved to
 	private Node prevNode = null;
 
-	Vector3 prevPos;
-
-	float facingdir;
+	Quaternion facingdir;
 
 	// Use this for initialization
 	void Start () {
@@ -87,19 +85,5 @@ public class EnemyMovementAI : MonoBehaviour {
 	}
 
 	void LookDirection() {
-//		Vector2 dir = new Vector2(thePath[currentWaypoint].transform.position.x - transform.position.x, thePath[currentWaypoint].transform.position.y - transform.position.y);
-//		facingdir = Mathf.Atan2 (dir.y, dir.x) * Mathf.Rad2Deg;
-//
-//		Vector3 angles = transform.eulerAngles;
-//		angles.z = Mathf.Lerp (angles.z, facingdir, 5.0f * Time.deltaTime);
-//		transform.eulerAngles = angles;
-
-//		Vector3 moveDir = transform.position - thePath[currentWaypoint].transform.position;
-//		if (moveDir != Vector3.zero) {
-//			facingdir = Mathf.Atan2 (moveDir.y, moveDir.x) * Mathf.Rad2Deg;
-//			transform.rotation = Quaternion.AngleAxis(facingdir, Vector3.forward);
-//		}
-
-
 	}
 }
