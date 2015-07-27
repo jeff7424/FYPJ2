@@ -12,14 +12,17 @@ public class PowerScript : MonoBehaviour {
 	GameObject slowbutton;
 	GameObject ragebutton;
 	GameObject kamikazebutton;
+	GameObject reinforceButton;
 
 	private float cooldown_slow;
 	private float cooldown_rage;
 	private float cooldown_kamikaze;
+	private float cooldown_reinforce;
 
 	private float cooldown_slow_original = 10.0f;
 	private float cooldown_rage_original = 10.0f;
 	private float cooldown_kamikaze_original = 10.0f;
+	private float cooldown_reinforce_original = 10.0f;
 
 	// Use this for initialization
 	void Start () {
@@ -34,11 +37,13 @@ public class PowerScript : MonoBehaviour {
 				slowbutton = GameObject.Find ("Slow Power 1");
 				ragebutton = GameObject.Find ("Rage Power 1");
 				kamikazebutton = GameObject.Find ("Kamikaze 1");
+				reinforceButton = GameObject.Find("Reinforce 1");
 				EnemyParent = GameObject.Find ("EnemyParent 1");
 			} else if (gameObject.tag == "Player 2") {
 				slowbutton = GameObject.Find ("Slow Power 2");
 				ragebutton = GameObject.Find ("Rage Power 2");
 				kamikazebutton = GameObject.Find ("Kamikaze 2");
+				reinforceButton = GameObject.Find("Reinforce 2");
 				EnemyParent = GameObject.Find ("EnemyParent 2");
 			}
 		}
@@ -68,6 +73,13 @@ public class PowerScript : MonoBehaviour {
 				cooldown_kamikaze = 0.0f;
 				kamikazebutton.GetComponent<Button>().interactable = true;
 			}
+			
+			if (cooldown_reinforce > 0.0f) {
+				cooldown_reinforce -= Time.deltaTime;
+			} else {
+				cooldown_reinforce = 0.0f;
+				reinforceButton.GetComponent<Button>().interactable = true;
+			}
 		}
 	}
 
@@ -94,6 +106,30 @@ public class PowerScript : MonoBehaviour {
 			EnemyParent.GetComponent<EnemyParentScript>().Kamikaze();
 			cooldown_kamikaze = cooldown_kamikaze_original;
 			kamikazebutton.GetComponent<Button>().interactable = false;
+		}
+	}
+
+	public void Reinforce(){
+		if (cooldown_reinforce <= 0.0f && !game.GetComponent<Game>().GetPause ()) {
+			cooldown_reinforce = cooldown_reinforce_original;
+			reinforceButton.GetComponent<Button>().interactable = false;
+
+			int opponent = 0;
+
+			if(gameObject.tag == "Player 1")
+				opponent = 2;
+			else if(gameObject.tag == "Player 2")
+				opponent = 1;
+
+			EnemySpawner opponentSpawner = GameObject.Find("EnemySpawner " + opponent.ToString()).GetComponent<EnemySpawner>();
+			EnemyWaves.Level opponentLevel = GameObject.Find("EnemyWaves " + opponent.ToString()).GetComponent<EnemyWaves>().levels[opponentSpawner.getLevel()];
+			int enemyCurrWave = opponentSpawner.getCurrWave();
+
+			//If there's no more wave after current wave, create more
+			while(enemyCurrWave >= opponentLevel.waves.Count)
+				opponentLevel.generateWave();
+
+			opponentLevel.strengthenWave(enemyCurrWave + 1);
 		}
 	}
 }

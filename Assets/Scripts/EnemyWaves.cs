@@ -102,6 +102,18 @@ public class EnemyWaves : MonoBehaviour {
 				waves.Add(newWave);
 			}
 		}
+
+		public void strengthenWave(int waveNum){
+			if(waveNum < waves.Count){
+				Wave theWave = waves[waveNum];
+
+				foreach(EnemySubwave subwave in theWave.Subwaves){
+					for(int i = 0; i < subwave.Enemies.Count; ++i){
+						subwave.Enemies[i] = (int)(subwave.Enemies[i] * Random.Range(1.15f, 1.35f));
+					}
+				}
+			}
+		}
 	}
 
 
