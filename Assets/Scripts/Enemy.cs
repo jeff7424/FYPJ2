@@ -69,7 +69,8 @@ public class Enemy : MonoBehaviour {
 			if (health <= 0) {
 				GetComponent<AudioSource>().PlayOneShot(sound[(int)soundclip.SOUND_DEATH]);
 				Destroy (gameObject);
-				player.GetComponent<Player1>().enemyLeft --;
+				if (Application.loadedLevelName == "Game")
+					player.GetComponent<Player1>().enemyLeft --;
 				player.GetComponent<Player1>().resources += reward;
 			}
 			if (slow_duration > 0.0f) {
@@ -155,7 +156,7 @@ public class Enemy : MonoBehaviour {
 
 		case enemyType.TYPE_JUMP:
 			health = 35;
-			reward = 5;
+			reward = 15;
 			originalSpeed = 1.0f;
 			speed = originalSpeed;
 			gameObject.name = "Jump";
@@ -164,7 +165,7 @@ public class Enemy : MonoBehaviour {
 			
 		case enemyType.TYPE_FLY:
 			health = 25;
-			reward = 5;
+			reward = 10;
 			originalSpeed = 1.0f;
 			speed = originalSpeed;
 			gameObject.name = "Fly";

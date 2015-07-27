@@ -37,4 +37,8 @@ public class LevelSelection : MonoBehaviour {
 	public void StartMultiplayer() {
 		Application.LoadLevel ("Multiplayer");
 	}
+
+	public void BackToMainMenu() {
+		Application.LoadLevel ("Main Menu");
+	}
 }

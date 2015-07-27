@@ -278,6 +278,7 @@ public class Game : MonoBehaviour {
 	public int level;
 	
 	GameObject pauseScreen;
+	Text countdowntext;
 	float countdowntimer;
 
 	// Use this for initialization
@@ -294,18 +295,37 @@ public class Game : MonoBehaviour {
 			level = 1;
 		pauseScreen = GameObject.Find ("PauseScreen");
 		pauseScreen.GetComponent<PauseScreen>().DisablePanel();
-		countdowntimer = 3.0f;
+		countdowntimer = 4.0f;
+		countdowntext = GameObject.Find ("Timer").GetComponent<Text>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (!isPause && !endGame) {
+		if (countdowntimer > 0.0f) {
+			countdowntimer -= Time.deltaTime;
+			startGame = false;
+			isPause = true;
+			int temp = (int)countdowntimer;
+			if (countdowntimer % 1 < 1 * Time.deltaTime) {
+				if (countdowntimer < 1.0f) {
+					GetComponent<AudioSource>().pitch = 2.0f;
+				}
+				GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip);
+			}
+			countdowntext.text = temp.ToString();
+			if (temp <= 0) {
+				countdowntext.text = "GO!";
+			}
+		}
+		else {
+			if (!startGame) {
+				startGame = true;
+				isPause = false;
+				countdowntext.enabled = false;
+			}
+		}
+		if (!isPause && !endGame && startGame) {
 			timeElapsed += Time.deltaTime;
-			if (countdowntimer > 3.0f)
-				countdowntimer -= Time.deltaTime;
-			else 
-				if (!startGame)
-					startGame = true;
 		}
 	}
 	

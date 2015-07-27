@@ -14,7 +14,7 @@ public class MainMenuButtons : MonoBehaviour {
 	}
 
 	public void PlayButton(){
-		Application.LoadLevel("Splash Screen");
+		Application.LoadLevel("Level Select");
 	}
 
 	public void CTCButton(){

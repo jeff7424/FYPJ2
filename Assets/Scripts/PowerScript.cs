@@ -73,12 +73,14 @@ public class PowerScript : MonoBehaviour {
 				cooldown_kamikaze = 0.0f;
 				kamikazebutton.GetComponent<Button>().interactable = true;
 			}
-			
-			if (cooldown_reinforce > 0.0f) {
-				cooldown_reinforce -= Time.deltaTime;
-			} else {
-				cooldown_reinforce = 0.0f;
-				reinforceButton.GetComponent<Button>().interactable = true;
+
+			if (Application.loadedLevelName == "Multiplayer") {
+				if (cooldown_reinforce > 0.0f) {
+					cooldown_reinforce -= Time.deltaTime;
+				} else {
+					cooldown_reinforce = 0.0f;
+					reinforceButton.GetComponent<Button>().interactable = true;
+				}
 			}
 		}
 	}
@@ -124,6 +126,8 @@ public class PowerScript : MonoBehaviour {
 			EnemySpawner opponentSpawner = GameObject.Find("EnemySpawner " + opponent.ToString()).GetComponent<EnemySpawner>();
 			EnemyWaves.Level opponentLevel = GameObject.Find("EnemyWaves " + opponent.ToString()).GetComponent<EnemyWaves>().levels[opponentSpawner.getLevel()];
 			int enemyCurrWave = opponentSpawner.getCurrWave();
+
+			Debug.Log (opponentSpawner);
 
 			//If there's no more wave after current wave, create more
 			while(enemyCurrWave >= opponentLevel.waves.Count)

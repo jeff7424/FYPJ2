@@ -38,7 +38,6 @@ public class Core : MonoBehaviour {
 		if (health <= 0) {
 			ParticleSystem explosion = Instantiate(explosionEffect, transform.position, Quaternion.identity) as ParticleSystem;
 			Destroy (explosion.gameObject, explosion.startLifetime);
-			//Destroy (gameObject);
 			GetComponent<SpriteRenderer>().enabled = false;
 			Time.timeScale = 0.5f;
 
@@ -65,10 +64,10 @@ public class Core : MonoBehaviour {
 	}
 
 	public void DecreaseHealth() {
+		// Decrease the health and update the slider bar
 		if (CurrentHealth () > 0)
 			health -= 1;
 		healthSlider.value = (float)((float)health / (float)startHealth);
-		Debug.Log (healthSlider.value);
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
