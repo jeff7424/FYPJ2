@@ -10,9 +10,17 @@ public class Core : MonoBehaviour {
 	public Text healthValue;
 	public ParticleSystem explosionEffect;
 
+	public int startHealth;
+	public Slider healthSlider;
+	//public Image damage;
+	//public AudioClip explodeClip;
+	public float flashSpeed = 5f;
+	public Color flashColor = new Color(1.0f, 0.0f, 0.0f, 0.2f);
+
+
 	// Use this for initialization
 	void Start () {
-		health = 10;
+		startHealth = 10;
 		healthValue.text = "Health: " + health;
 		game = GameObject.Find ("Game");
 		if (Application.loadedLevelName == "Game")
@@ -20,6 +28,8 @@ public class Core : MonoBehaviour {
 		else if (Application.loadedLevelName == "Multiplayer") {
 			player = GameObject.Find (gameObject.tag);
 		}
+		health = startHealth;
+		healthSlider.value = health / startHealth;
 	}
 	
 	// Update is called once per frame
@@ -28,7 +38,8 @@ public class Core : MonoBehaviour {
 		if (health <= 0) {
 			ParticleSystem explosion = Instantiate(explosionEffect, transform.position, Quaternion.identity) as ParticleSystem;
 			Destroy (explosion.gameObject, explosion.startLifetime);
-			Destroy (gameObject);
+			//Destroy (gameObject);
+			GetComponent<SpriteRenderer>().enabled = false;
 			Time.timeScale = 0.5f;
 
 			if (!player.GetComponent<Player1>().losegame) {
@@ -56,6 +67,8 @@ public class Core : MonoBehaviour {
 	public void DecreaseHealth() {
 		if (CurrentHealth () > 0)
 			health -= 1;
+		healthSlider.value = (float)((float)health / (float)startHealth);
+		Debug.Log (healthSlider.value);
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {

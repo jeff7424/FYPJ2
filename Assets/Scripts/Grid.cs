@@ -5,7 +5,6 @@ using System.Collections.Generic;
 public class Grid : MonoBehaviour {
 
 	// Script to create a grid of tiles
-	public GameObject game;
 	public GameObject thePathfinderRoot;
 	public GameObject EnemySpawner;
 	public GameObject Core;
@@ -21,8 +20,8 @@ public class Grid : MonoBehaviour {
 
 	//Testing
 	public GameObject TreeObstacle;
-	//public GameObject PlatformObstacle;
-	//public GameObject TunnelObstacle;
+	public GameObject TunnelObstacle;
+	public Sprite PlatformObstacle;
 	public int maxSpawn;
 
 	private int level = 0;
@@ -30,8 +29,7 @@ public class Grid : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
-		game = GameObject.Find ("Game");
-		level = game.GetComponent<Game>().level;
+		level = PlayerPrefs.GetInt ("level"); //game.GetComponent<Game>().level;
 		CreateTiles ();
 		maxSpawn = 0;
 		if (Application.loadedLevelName == "Game")
@@ -122,8 +120,7 @@ public class Grid : MonoBehaviour {
 							{
 								if(currTile == spawnObs.levels[i].PlatformPos[k])
 								{
-									//GameObject newObstacle = (GameObject)Instantiate (PlatformObstacle, newTile.transform.position, Quaternion.identity);
-									newTile.GetComponent<SpriteRenderer>().color = Color.black;
+									newTile.GetComponent<SpriteRenderer>().sprite = PlatformObstacle;
 									newTile.GetComponent<Node>().setNodeType(Node.NodeType.NODE_PLATFORM);
 								}
 							}
@@ -131,12 +128,12 @@ public class Grid : MonoBehaviour {
 							{
 								if(currTile == spawnObs.levels[i].TunnelPos[l])
 								{
-									//GameObject newObstacle = (GameObject)Instantiate (TunnelObstacle, newTile.transform.position, Quaternion.identity);
-									newTile.GetComponent<SpriteRenderer>().color = Color.green;
+									GameObject newObstacle = (GameObject)Instantiate (TunnelObstacle, newTile.transform.position, Quaternion.identity);
 									newTile.GetComponent<Tile>().isOccupied = true;
 									newTile.GetComponent<Node>().setNodeType(Node.NodeType.NODE_TUNNEL);
 								}
 							}
+							break;
 						}
 					}
 				}

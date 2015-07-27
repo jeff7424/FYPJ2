@@ -63,7 +63,7 @@ public class WinningScreen : MonoBehaviour {
 	}
 
 	public void RestartLevel() {
-		Application.LoadLevel ("Game");
+		Application.LoadLevel (Application.loadedLevelName);
 	}
 
 	public void BeckToLevelSelection() {

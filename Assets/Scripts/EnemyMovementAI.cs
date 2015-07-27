@@ -18,6 +18,9 @@ public class EnemyMovementAI : MonoBehaviour {
 	//The previous node enemy moved to
 	private Node prevNode = null;
 
+	Vector3 prevPos;
+
+	float facingdir;
 
 	// Use this for initialization
 	void Start () {
@@ -49,6 +52,7 @@ public class EnemyMovementAI : MonoBehaviour {
 			Vector3 dir = ( thePath[currentWaypoint].transform.position - transform.position ).normalized;
 			dir *= GetComponent<Enemy>().getFinalSpeed() * Time.deltaTime;
 			this.gameObject.transform.Translate( dir );
+			LookDirection ();
 
 			//Check if we are close enough to the next waypoint
 			//If we are, proceed to follow the next waypoint
@@ -56,8 +60,6 @@ public class EnemyMovementAI : MonoBehaviour {
 			{
 				prevNode = thePath[currentWaypoint].GetComponent<Node>();
 				currentWaypoint++;
-
-
 				//Behaviour change for certain enemy types
 				//--------------------------------------------------------
 				if(currentWaypoint < thePath.Count){
@@ -82,5 +84,22 @@ public class EnemyMovementAI : MonoBehaviour {
 		thePath.Clear();
 		currentWaypoint = 0;
 		thePath = transform.parent.GetComponent<EnemyParentScript>().Pathfinder.FindPath(transform.position, GetComponent<Enemy>().getType());
+	}
+
+	void LookDirection() {
+//		Vector2 dir = new Vector2(thePath[currentWaypoint].transform.position.x - transform.position.x, thePath[currentWaypoint].transform.position.y - transform.position.y);
+//		facingdir = Mathf.Atan2 (dir.y, dir.x) * Mathf.Rad2Deg;
+//
+//		Vector3 angles = transform.eulerAngles;
+//		angles.z = Mathf.Lerp (angles.z, facingdir, 5.0f * Time.deltaTime);
+//		transform.eulerAngles = angles;
+
+//		Vector3 moveDir = transform.position - thePath[currentWaypoint].transform.position;
+//		if (moveDir != Vector3.zero) {
+//			facingdir = Mathf.Atan2 (moveDir.y, moveDir.x) * Mathf.Rad2Deg;
+//			transform.rotation = Quaternion.AngleAxis(facingdir, Vector3.forward);
+//		}
+
+
 	}
 }

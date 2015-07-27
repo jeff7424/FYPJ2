@@ -54,7 +54,7 @@ public class Node : MonoBehaviour {
 			break;
 			
 		case NodeType.NODE_PLATFORM:
-			GetComponent<SpriteRenderer>().color = Color.blue;
+			GetComponent<SpriteRenderer>().color = Color.white;
 			break;
 		}
 	}
