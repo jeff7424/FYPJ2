@@ -108,6 +108,7 @@ public class Tile : MonoBehaviour {
 
 	void OnMouseEnter() {
 		if (game.GetComponent<Game>().GetPause () == false && 
+		    game.GetComponent<Game>().endGame == false &&
 		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_OPEN || 
 		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_TOWER || 
 		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_PLATFORM) {
@@ -120,6 +121,7 @@ public class Tile : MonoBehaviour {
 	void OnMouseExit() {
 		// Revert back to original sprite
 		if (game.GetComponent<Game>().GetPause () == false && 
+		    game.GetComponent<Game>().endGame == false &&
 		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_OPEN || 
 		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_TOWER || 
 		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_PLATFORM) {
@@ -153,7 +155,7 @@ public class Tile : MonoBehaviour {
 			if (!isOccupied && isMouseOver && selection != 0) {
 				if (player.GetComponent<Player1> ().resources - cost >= 0) {
 					if (!checkAIPath ()) {	//If monsters cannot find a path to the core
-						Debug.Log ("Monsters cannot pass through");
+						//Debug.Log ("Monsters cannot pass through");
 						DisplayDeployError();
 						PlaySound (soundclip.SOUND_BLOCKED);
 					}
@@ -162,7 +164,7 @@ public class Tile : MonoBehaviour {
 						PlaySound (soundclip.SOUND_DEPLOY);
 						player.GetComponent<Player1> ().DisableInfoPanel ();
 						player.GetComponent<Player1> ().resources -= cost;
-						Debug.Log ("Defense built");
+						//Debug.Log ("Defense built");
 					}
 				} else {
 					PlaySound (soundclip.SOUND_INSUFFICIENT);

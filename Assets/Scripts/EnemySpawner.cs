@@ -18,6 +18,11 @@ public class EnemySpawner : MonoBehaviour {
 	private int level = 0;
 	private int currWave = 0;
 
+	public Slider EnemyWavesSlider;
+	int enemySpawned;
+	int totalEnemies;
+	public GameObject player;
+
 	// Use this for initialization
 	void Start () {
 		WaveText.text = "Wave 1";
@@ -27,11 +32,14 @@ public class EnemySpawner : MonoBehaviour {
 			level = 1;
 
 		Debug.Log (level);
+		enemySpawned = 0;
+		totalEnemies = LevelWaves.levels[level].TotalEnemies();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		//Debug.Log (LevelWaves.levels[level].TotalEnemies());
+		EnemyWavesSlider.value = (float)((float)enemySpawned / (float)totalEnemies);
 		if (!game.GetComponent<Game>().GetPause () && !game.GetComponent<Game>().endGame) {
 			if(currWave < LevelWaves.levels[level].waves.Count){
 
@@ -53,6 +61,7 @@ public class EnemySpawner : MonoBehaviour {
 						//Victory!
 	//					GameObject win = GameObject.Find ("WinGame");
 	//					win.GetComponent<Text>().enabled = true;
+						//player.GetComponent<Player1>().wingame = true;
 					}
 				}
 				else{
@@ -64,6 +73,7 @@ public class EnemySpawner : MonoBehaviour {
 								GameObject newEnemy = (GameObject)Instantiate (Enemy, spawnNodes [Random.Range (0, spawnNodes.Length)].transform.position, Quaternion.identity);
 								newEnemy.transform.SetParent (EnemyParent.transform);
 								newEnemy.GetComponent<Enemy> ().setType ((global::Enemy.enemyType)index);
+								enemySpawned++;
 							}
 						}
 					}

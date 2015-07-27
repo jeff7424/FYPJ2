@@ -49,6 +49,7 @@ public class Bullets : MonoBehaviour {
 		if (other.gameObject.tag == "Enemy" || other.GetComponent<Enemy>()) {
 			// Deal damage to enemy (Not working yet)
 			other.GetComponent<Enemy>().health -= damage;
+			other.GetComponent<Enemy>().PlaySound();
 			if (slow == true && other.GetComponent<Enemy>().slowByBuff == false) {
 				other.GetComponent<Enemy>().slow_duration = buff_duration;
 				// Check if their speed is equivilent to their original speed, if it is then slow them (needs optimisation)
