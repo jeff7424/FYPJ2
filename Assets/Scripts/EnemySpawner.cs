@@ -28,8 +28,10 @@ public class EnemySpawner : MonoBehaviour {
 		WaveText.text = "Wave 1";
 		if (Application.loadedLevelName == "Game")
 			level = game.GetComponent<Game>().level;
-		else
+		else if (Application.loadedLevelName == "Multiplayer") {
 			level = 1;
+			EnemyWavesSlider = null;
+		}
 
 		Debug.Log (level);
 		enemySpawned = 0;
@@ -39,7 +41,9 @@ public class EnemySpawner : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//Debug.Log (LevelWaves.levels[level].TotalEnemies());
-		EnemyWavesSlider.value = (float)((float)enemySpawned / (float)totalEnemies);
+		if (Application.loadedLevelName == "Game")
+			EnemyWavesSlider.value = (float)((float)enemySpawned / (float)totalEnemies);
+
 		if (!game.GetComponent<Game>().GetPause () && !game.GetComponent<Game>().endGame) {
 			if(currWave < LevelWaves.levels[level].waves.Count){
 

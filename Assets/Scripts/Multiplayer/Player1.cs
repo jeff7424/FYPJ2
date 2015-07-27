@@ -120,7 +120,8 @@ public class Player1 : MonoBehaviour {
 	void Update () {
 		if (!game.GetComponent<Game>().GetPause ()) {
 			CheckIfAffordable();
-			CheckForResult ();
+			if (Application.loadedLevelName == "Game")
+				CheckForResult ();
 			ButtonUpdate ();
 			if (wingame || losegame)
 				PopUpResult ();

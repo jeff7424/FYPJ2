@@ -30,7 +30,6 @@ public class Core : MonoBehaviour {
 		}
 		health = startHealth;
 		healthSlider.value = health / startHealth;
-		Debug.Log (healthSlider.value);
 	}
 	
 	// Update is called once per frame
