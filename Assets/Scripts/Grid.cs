@@ -111,7 +111,7 @@ public class Grid : MonoBehaviour {
 							{
 								if(currTile == spawnObs.levels[i].TreePos[j])
 								{
-									GameObject newObstacle = (GameObject)Instantiate (TreeObstacle, newTile.transform.position, Quaternion.identity);
+									Instantiate (TreeObstacle, newTile.transform.position, Quaternion.identity);
 									newTile.GetComponent<Tile>().isOccupied = true;
 									newTile.GetComponent<Node>().setNodeType(Node.NodeType.NODE_OBSTACLE);
 								}
@@ -128,7 +128,7 @@ public class Grid : MonoBehaviour {
 							{
 								if(currTile == spawnObs.levels[i].TunnelPos[l])
 								{
-									GameObject newObstacle = (GameObject)Instantiate (TunnelObstacle, newTile.transform.position, Quaternion.identity);
+									Instantiate (TunnelObstacle, newTile.transform.position, Quaternion.identity);
 									newTile.GetComponent<Tile>().isOccupied = true;
 									newTile.GetComponent<Node>().setNodeType(Node.NodeType.NODE_TUNNEL);
 								}
