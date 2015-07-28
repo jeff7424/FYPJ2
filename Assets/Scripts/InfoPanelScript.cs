@@ -9,12 +9,12 @@ public class InfoPanelScript : MonoBehaviour {
 	private bool enabledDisplay = false;
 	private GameObject game;
 
-	private GameObject towerName;
-	private GameObject damage;
-	private GameObject firerate;
-	private GameObject range;
-	private GameObject special;
-	private GameObject upgradeCost;
+	public GameObject towerName;
+	public GameObject damage;
+	public GameObject firerate;
+	public GameObject range;
+	public GameObject special;
+	public GameObject upgradeCost;
 
 	// Use this for initialization
 	void Start () {
@@ -26,22 +26,6 @@ public class InfoPanelScript : MonoBehaviour {
 			range = GameObject.Find ("Range");
 			special = GameObject.Find ("Special");
 			upgradeCost = GameObject.Find ("UpgradeCost");
-		} else if (Application.loadedLevelName == "Multiplayer") {
-			if (gameObject.tag == "Player 1") {
-				towerName = GameObject.Find ("Tower name 1");
-				damage = GameObject.Find ("Damage 1");
-				firerate = GameObject.Find ("Firing rate 1");
-				range = GameObject.Find ("Range 1");
-				special = GameObject.Find ("Special 1");
-				upgradeCost = GameObject.Find ("UpgradeCost 1");
-			} else if (gameObject.tag == "Player 2") {
-				towerName = GameObject.Find ("Tower name 2");
-				damage = GameObject.Find ("Damage 2");
-				firerate = GameObject.Find ("Firing rate 2");
-				range = GameObject.Find ("Range 2");
-				special = GameObject.Find ("Special 2");
-				upgradeCost = GameObject.Find ("UpgradeCost 2");
-			}
 		}
 	}
 	
@@ -64,8 +48,6 @@ public class InfoPanelScript : MonoBehaviour {
 		for (int i = 0; i < transform.childCount; i++) {
 			transform.GetChild(i).gameObject.SetActive(true);
 		}
-
-		//defense = tile.ReturnDefense().GetComponent<Defense>();
 	}
 
 	public void DisablePanel() {
@@ -95,5 +77,11 @@ public class InfoPanelScript : MonoBehaviour {
 		if (defense != null) {
 			tile.GetComponent<Tile>().RankUpDefense();
 		}
+	}
+
+	public void SetSelection(Tile target, Defense targetchild) {
+		EnablePanel ();
+		tile = target;
+		defense = targetchild;
 	}
 }

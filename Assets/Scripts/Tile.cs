@@ -9,7 +9,8 @@ public class Tile : MonoBehaviour {
 		SOUND_DEPLOY		= 0,
 		SOUND_BLOCKED		= 1,
 		SOUND_INSUFFICIENT 	= 2,
-		SOUND_REMOVE		= 3
+		SOUND_REMOVE		= 3,
+		SOUND_UPGRADE		= 4
 	}
 
 	public Defense defenses;
@@ -111,6 +112,7 @@ public class Tile : MonoBehaviour {
 			if (player.GetComponent<Player1> ().resources - upgradeCost >= 0) {
 				defense.GetComponent<Defense> ().RankUp ();
 				player.GetComponent<Player1>().resources -= upgradeCost;
+				PlaySound (soundclip.SOUND_UPGRADE);
 			} else {
 				DisplayDeployError("NOT ENOUGH RESOURCES!");
 				PlaySound (soundclip.SOUND_INSUFFICIENT);
@@ -211,9 +213,9 @@ public class Tile : MonoBehaviour {
 	}
 
 	public void DisplayInfo() {
-		player.GetComponent<Player1> ().EnableInfoPanel ();
-		player.GetComponent<Player1> ().infoPanel.GetComponent<InfoPanelScript> ().tile = this;
-		player.GetComponent<Player1> ().infoPanel.GetComponent<InfoPanelScript> ().defense = this.defense;
+		player.GetComponent<Player1> ().EnableInfoPanel (this, defense);
+//		player.GetComponent<Player1> ().infoPanel.GetComponent<InfoPanelScript> ().tile = this;
+//		player.GetComponent<Player1> ().infoPanel.GetComponent<InfoPanelScript> ().defense = this.defense;
 	}
 
 	public void TileSelected() {

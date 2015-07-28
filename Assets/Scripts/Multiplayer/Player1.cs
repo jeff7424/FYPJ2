@@ -143,8 +143,8 @@ public class Player1 : MonoBehaviour {
 		return selection;
 	}
 	
-	public void EnableInfoPanel() {
-		infoPanel.GetComponent<InfoPanelScript> ().EnablePanel ();
+	public void EnableInfoPanel(Tile tile, Defense target) {
+		infoPanel.GetComponent<InfoPanelScript> ().SetSelection (tile, target);
 	}
 	
 	public void DisableInfoPanel() {
