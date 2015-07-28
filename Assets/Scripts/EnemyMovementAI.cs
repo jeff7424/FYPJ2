@@ -49,8 +49,12 @@ public class EnemyMovementAI : MonoBehaviour {
 			//Direction to the next waypoint
 			Vector3 dir = ( thePath[currentWaypoint].transform.position - transform.position ).normalized;
 			dir *= GetComponent<Enemy>().getFinalSpeed() * Time.deltaTime;
-			this.gameObject.transform.Translate( dir );
-			LookDirection ();
+			this.gameObject.transform.Translate( dir, Space.World );
+			//Rotate sprite
+			if(dir.y < 0)
+				this.transform.rotation = Quaternion.Euler(0, 0, Vector2.Angle(new Vector2(-1, 0), dir));
+			else if(dir.y > 0)
+				this.transform.rotation = Quaternion.Euler(0, 0, -Vector2.Angle(new Vector2(-1, 0), dir));
 
 			//Check if we are close enough to the next waypoint
 			//If we are, proceed to follow the next waypoint
@@ -82,8 +86,5 @@ public class EnemyMovementAI : MonoBehaviour {
 		thePath.Clear();
 		currentWaypoint = 0;
 		thePath = transform.parent.GetComponent<EnemyParentScript>().Pathfinder.FindPath(transform.position, GetComponent<Enemy>().getType());
-	}
-
-	void LookDirection() {
 	}
 }
