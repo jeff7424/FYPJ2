@@ -16,7 +16,7 @@ public class InfoPanelScript : MonoBehaviour {
 	private GameObject special;
 
 	// Use this for initialization
-	void Awake () {
+	void Start () {
 		game = GameObject.Find ("Game");
 		if (Application.loadedLevelName == "Game") {
 			towerName = GameObject.Find ("Tower name");
@@ -45,10 +45,10 @@ public class InfoPanelScript : MonoBehaviour {
 	void Update () {
 		if (enabledDisplay) {
 			towerName.GetComponent<Text> ().text = defense.name;
-			damage.GetComponent<Text> ().text = "Damage: " + defense.damage;
-			firerate.GetComponent<Text> ().text = "Fire rate: " + defense.GetFireRate ();
-			range.GetComponent<Text> ().text = "Range: " + defense.GetRange ();
-			special.GetComponent<Text>().text = "Level: " + defense.GetLevel();
+			damage.GetComponent<Text> ().text = defense.damage.ToString();
+			firerate.GetComponent<Text> ().text = defense.GetFireRate ().ToString();
+			range.GetComponent<Text> ().text = defense.GetRange ().ToString();
+			special.GetComponent<Text>().text = defense.GetLevel().ToString();
 		}
 	}
 
@@ -59,6 +59,8 @@ public class InfoPanelScript : MonoBehaviour {
 		for (int i = 0; i < transform.childCount; i++) {
 			transform.GetChild(i).gameObject.SetActive(true);
 		}
+
+		//defense = tile.ReturnDefense().GetComponent<Defense>();
 	}
 
 	public void DisablePanel() {

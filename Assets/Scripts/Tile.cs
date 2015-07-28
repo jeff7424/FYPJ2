@@ -37,6 +37,7 @@ public class Tile : MonoBehaviour {
 		else if (Application.loadedLevelName == "Multiplayer") {
 			player = GameObject.Find (gameObject.tag);
 		}
+		Debug.Log (player);
 	}
 	
 	// Update is called once per frame
@@ -50,6 +51,26 @@ public class Tile : MonoBehaviour {
 				TileDeselected();
 			}
 		}
+#if UNITY_ANDROID
+
+//		foreach (Touch touch in Input.touches) {
+//			Vector3 worldPoint = Camera.main.ScreenToWorldPoint(touch.position);
+//			Vector2 touchPos = new Vector2(worldPoint.x, worldPoint.y);
+//			if (GetComponent<Collider2D>() == Physics2D.OverlapPoint (touchPos)) {
+//				if (touch.phase == TouchPhase.Began) 
+//					TouchOnTile ();
+//				else if (touch.phase == TouchPhase.Canceled)
+//					TouchExitTile ();
+//				else if (touch.phase == TouchPhase.Ended) {
+//					CheckDeploy ();
+//					TouchExitTile ();
+//				}
+//			} else {
+//				player.GetComponent<Player1> ().mouseOverTile = false;
+//			}
+//		}
+
+#endif
 	}
 
 	public void BuildDefense() {
@@ -110,31 +131,18 @@ public class Tile : MonoBehaviour {
 	}
 
 	void OnMouseEnter() {
-		if (game.GetComponent<Game>().GetPause () == false && 
-		    game.GetComponent<Game>().endGame == false &&
-		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_OPEN || 
-		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_TOWER || 
-		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_PLATFORM) {
-			this.GetComponent<SpriteRenderer> ().color = new Color (1.0f, 1.0f, 1.0f, 0.5f);
-			player.GetComponent<Player1> ().mouseOverTile = true;
-			isMouseOver = true;
-		}
+		TouchOnTile();
 	}
 
 	void OnMouseExit() {
-		// Revert back to original sprite
-		if (game.GetComponent<Game>().GetPause () == false && 
-		    game.GetComponent<Game>().endGame == false &&
-		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_OPEN || 
-		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_TOWER || 
-		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_PLATFORM) {
-			this.GetComponent<SpriteRenderer> ().color = new Color (1.0f, 1.0f, 1.0f, 1.0f);
-			player.GetComponent<Player1> ().mouseOverTile = false;
-			isMouseOver = false;
-		}
+		TouchExitTile ();
 	}
 
 	void OnMouseDown() {
+		CheckDeploy ();
+	}
+
+	public void CheckDeploy() {
 		if (game.GetComponent<Game>().GetPause () == false) {
 			selection = player.GetComponent<Player1>().selection;
 			switch (selection) {
@@ -159,7 +167,7 @@ public class Tile : MonoBehaviour {
 				if (player.GetComponent<Player1> ().resources - cost >= 0) {
 					if (!checkAIPath ()) {	//If monsters cannot find a path to the core
 						//Debug.Log ("Monsters cannot pass through");
-						DisplayDeployError();
+						DisplayDeployError("BLOCKED!");
 						PlaySound (soundclip.SOUND_BLOCKED);
 					}
 					else if (GetComponent<Node>().getNodeType() == Node.NodeType.NODE_OPEN || GetComponent<Node>().getNodeType() == Node.NodeType.NODE_PLATFORM) {
@@ -167,9 +175,9 @@ public class Tile : MonoBehaviour {
 						PlaySound (soundclip.SOUND_DEPLOY);
 						player.GetComponent<Player1> ().DisableInfoPanel ();
 						player.GetComponent<Player1> ().resources -= cost;
-						//Debug.Log ("Defense built");
 					}
 				} else {
+					DisplayDeployError("NOT ENOUGH RESOURCES!");
 					PlaySound (soundclip.SOUND_INSUFFICIENT);
 				}
 			} else {
@@ -182,6 +190,31 @@ public class Tile : MonoBehaviour {
 		}
 	}
 
+	public void TouchOnTile() {
+		if (game.GetComponent<Game>().GetPause () == false && 
+		    game.GetComponent<Game>().endGame == false &&
+		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_OPEN || 
+		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_TOWER || 
+		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_PLATFORM) {
+			this.GetComponent<SpriteRenderer> ().color = new Color (1.0f, 1.0f, 1.0f, 0.5f);
+			player.GetComponent<Player1> ().mouseOverTile = true;
+			isMouseOver = true;
+		}
+	}
+
+	public void TouchExitTile() {
+		// Revert back to original sprite
+		if (game.GetComponent<Game>().GetPause () == false && 
+		    game.GetComponent<Game>().endGame == false &&
+		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_OPEN || 
+		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_TOWER || 
+		    GetComponent<Node>().getNodeType () == Node.NodeType.NODE_PLATFORM) {
+			this.GetComponent<SpriteRenderer> ().color = new Color (1.0f, 1.0f, 1.0f, 1.0f);
+			player.GetComponent<Player1> ().mouseOverTile = false;
+			isMouseOver = false;
+		}
+	}
+
 	void PlaySound(soundclip sound) {
 		GetComponent<AudioSource>().clip = sounds[(int)sound];
 		GetComponent<AudioSource>().Play ();
@@ -189,8 +222,8 @@ public class Tile : MonoBehaviour {
 
 	public void DisplayInfo() {
 		player.GetComponent<Player1> ().EnableInfoPanel ();
-		player.GetComponent<Player1> ().infoPanel.GetComponent<InfoPanelScript> ().defense = defense;	
 		player.GetComponent<Player1> ().infoPanel.GetComponent<InfoPanelScript> ().tile = this;
+		player.GetComponent<Player1> ().infoPanel.GetComponent<InfoPanelScript> ().defense = this.defense;
 	}
 
 	public void TileSelected() {
@@ -247,8 +280,8 @@ public class Tile : MonoBehaviour {
 		defense.Rage (duration, newValue);
 	}
 
-	void DisplayDeployError() {
-		player.GetComponent<Player1>().DisplayErrorMsg();
+	void DisplayDeployError(string errmsg) {
+		player.GetComponent<Player1>().DisplayErrorMsg(errmsg);
 		errorDeployTime = 3.0f;
 	}
 }

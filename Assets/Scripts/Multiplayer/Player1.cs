@@ -245,7 +245,8 @@ public class Player1 : MonoBehaviour {
 //		}
 	}
 	
-	public void DisplayErrorMsg() {
+	public void DisplayErrorMsg(string errmsg) {
+		errorMsgText.GetComponent<Text>().text = errmsg;
 		errorMsgText.GetComponent<Text>().enabled = true;
 		errorMsgDisplayTime = 3.0f;
 	}

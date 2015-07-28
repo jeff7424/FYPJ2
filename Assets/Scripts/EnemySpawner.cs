@@ -11,7 +11,6 @@ public class EnemySpawner : MonoBehaviour {
 	public GameObject EnemyParent;
 	public GameObject Enemy;
 	public EnemyWaves LevelWaves;
-	public Text WaveText;
 
 	private float waveChangeTimer = 0.0f;
 
@@ -25,7 +24,6 @@ public class EnemySpawner : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		WaveText.text = "Wave 1";
 		if (Application.loadedLevelName == "Game")
 			level = game.GetComponent<Game>().level;
 		else if (Application.loadedLevelName == "Multiplayer") {
@@ -59,7 +57,6 @@ public class EnemySpawner : MonoBehaviour {
 					waveChangeTimer += Time.deltaTime;
 					if(waveChangeTimer > 10.0f){
 						++currWave;
-						WaveText.text = "Wave " + (currWave+1);
 						waveChangeTimer = 0.0f;
 					} else if (currWave == LevelWaves.levels[level].waves.Count-1) {
 						//Victory!

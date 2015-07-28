@@ -14,7 +14,6 @@ public class LevelSelection : MonoBehaviour {
 		level = 0;
 		tutorial = false;
 		PlayerPrefs.SetInt ("level", level);
-		Load();
 	}
 
 	void Load() {
@@ -31,6 +30,7 @@ public class LevelSelection : MonoBehaviour {
 	public void StartLevel(int newValue) {
 		level = newValue;
 		PlayerPrefs.SetInt ("level", level);
+		Load();
 		Application.LoadLevel ("Game");
 	}
 

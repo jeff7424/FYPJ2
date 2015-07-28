@@ -38,6 +38,31 @@ public class Grid : MonoBehaviour {
 			tileSize = 0.75f;
 	}
 
+	void Update() {
+	#if UNITY_ANDROID
+		// the PathFinderRoot
+		foreach (Touch touch in Input.touches) {
+			Vector3 worldPoint = Camera.main.ScreenToWorldPoint(touch.position);
+			Vector2 touchPos = new Vector2(worldPoint.x, worldPoint.y);
+			foreach (Transform child in thePathfinderRoot.transform) {
+				if (child.GetComponent<Tile>() && child.GetComponent<Collider2D>() == Physics2D.OverlapPoint (touchPos)) {
+					if (touch.phase == TouchPhase.Began) 
+						child.GetComponent<Tile>().TouchOnTile ();
+//					else if (touch.phase == TouchPhase.Canceled)
+//						child.GetComponent<Tile>().TouchExitTile ();
+					else if (touch.phase == TouchPhase.Ended) {
+						child.GetComponent<Tile>().CheckDeploy ();
+						//child.GetComponent<Tile>().TouchExitTile ();
+					}
+				} else {
+					//player.GetComponent<Player1> ().mouseOverTile = false;
+				}
+			}
+		}
+		
+	#endif
+	}
+
 	void CreateTiles() {
 		float xOffset = 0.0f;
 		float yOffset = 0.0f;

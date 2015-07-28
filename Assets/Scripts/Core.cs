@@ -7,7 +7,6 @@ public class Core : MonoBehaviour {
 	int health;
 	private GameObject game;
 	private GameObject player;
-	public Text healthValue;
 	public ParticleSystem explosionEffect;
 
 	public int startHealth;
@@ -21,7 +20,6 @@ public class Core : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		startHealth = 10;
-		healthValue.text = "Health: " + health;
 		game = GameObject.Find ("Game");
 		if (Application.loadedLevelName == "Game")
 			player = GameObject.Find ("Player");
@@ -34,7 +32,6 @@ public class Core : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		healthValue.text = "Health: " + health;
 		if (health <= 0) {
 			ParticleSystem explosion = Instantiate(explosionEffect, transform.position, Quaternion.identity) as ParticleSystem;
 			Destroy (explosion.gameObject, explosion.startLifetime);
@@ -46,15 +43,16 @@ public class Core : MonoBehaviour {
 				player.GetComponent<Player1>().EnableLosingScreen();
 				game.GetComponent<Game>().SetEndGame(true);
 
-				GameObject player2 = null;
-				if (gameObject.tag == "Player 1")
-					player2 = GameObject.Find ("Player 2");
-				else if (gameObject.tag == "Player 2")
-					player2 = GameObject.Find ("Player 1");
+				if (Application.loadedLevelName == "Multiplayer") {
+					GameObject player2 = null;
+					if (gameObject.tag == "Player 1")
+						player2 = GameObject.Find ("Player 2");
+					else if (gameObject.tag == "Player 2")
+						player2 = GameObject.Find ("Player 1");
 
-				player2.GetComponent<Player1>().wingame = true;
-				player2.GetComponent<Player1>().EnableWinningScreen();
-
+					player2.GetComponent<Player1>().wingame = true;
+					player2.GetComponent<Player1>().EnableWinningScreen();
+				}
 			}
 		}
 	}

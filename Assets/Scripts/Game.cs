@@ -279,6 +279,8 @@ public class Game : MonoBehaviour {
 	
 	GameObject pauseScreen;
 	Text countdowntext;
+	Text player1text;
+	Text player2text;
 	float countdowntimer;
 
 	// Use this for initialization
@@ -297,6 +299,10 @@ public class Game : MonoBehaviour {
 		pauseScreen.GetComponent<PauseScreen>().DisablePanel();
 		countdowntimer = 4.0f;
 		countdowntext = GameObject.Find ("Timer").GetComponent<Text>();
+		if (Application.loadedLevelName == "Multiplayer") {
+			player1text = GameObject.Find ("Player 1 Text").GetComponent<Text>();
+			player2text = GameObject.Find ("Player 2 Text").GetComponent<Text>();
+		}
 	}
 	
 	// Update is called once per frame
@@ -322,6 +328,10 @@ public class Game : MonoBehaviour {
 				startGame = true;
 				isPause = false;
 				countdowntext.enabled = false;
+				if (Application.loadedLevelName == "Multiplayer") {
+					player1text.enabled = false;
+					player2text.enabled = false;
+				}
 			}
 		}
 		if (!isPause && !endGame && startGame) {

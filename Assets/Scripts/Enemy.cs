@@ -25,6 +25,8 @@ public class Enemy : MonoBehaviour {
 
 	public AudioClip[] sound;
 
+	public ParticleSystem deathParticle;
+
 	public enum enemyType{
 		TYPE_NORMAL = 0,
 		TYPE_SLOW,
@@ -49,7 +51,10 @@ public class Enemy : MonoBehaviour {
 		if (Application.loadedLevelName == "Game")
 			player = GameObject.Find ("Player");
 		else if (Application.loadedLevelName == "Multiplayer") {
-			player = GameObject.Find (gameObject.tag);
+			if (gameObject.transform.root.tag == "Player 1")
+				player = GameObject.Find ("Player 1");
+			else if (gameObject.transform.root.tag == "Player 2")
+				player = GameObject.Find ("Player 2");
 		}
 	}
 
@@ -67,6 +72,8 @@ public class Enemy : MonoBehaviour {
 		// If health less than zero destroy object
 		if (!game.GetComponent<Game>().GetPause ()) {
 			if (health <= 0) {
+				ParticleSystem particle = Instantiate(deathParticle, transform.position, Quaternion.identity) as ParticleSystem;
+				Destroy (particle.gameObject, particle.startLifetime);
 				GetComponent<AudioSource>().PlayOneShot(sound[(int)soundclip.SOUND_DEATH]);
 				Destroy (gameObject);
 				if (Application.loadedLevelName == "Game")
