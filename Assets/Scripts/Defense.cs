@@ -73,7 +73,7 @@ public class Defense : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		// If target is available (not null)
-		if (!game.GetComponent<Game>().GetPause ()) {
+		if (!game.GetComponent<Game>().GetPause () && !game.GetComponent<Game>().endGame) {
 			if (target) {
 				CalculateAim (target);
 				// If fire rate is not 0 then countdown else fire bullet
@@ -224,8 +224,8 @@ public class Defense : MonoBehaviour {
 		switch (selection) {
 		case defenseType.DEF_CANNON:
 			{
-				this.damage = 8;
-				this.cost = 300;
+				this.damage = 5;
+				this.cost = (int)Game.upgradeCost.DEF_CANNON;
 				this.firerate = 1.0f;
 				this.GetComponent<CircleCollider2D>().radius = 3;
 				this.gameObject.name = "Cannon";
@@ -233,8 +233,8 @@ public class Defense : MonoBehaviour {
 			}
 			case defenseType.DEF_TURRET:
 			{
-				this.damage = 2;
-				this.cost = 300;
+				this.damage = 1;
+				this.cost = (int)Game.upgradeCost.DEF_TURRET;
 				this.firerate = 1.0f;
 				this.GetComponent<CircleCollider2D>().radius = 2;
 				this.gameObject.name = "Turret";
@@ -242,17 +242,17 @@ public class Defense : MonoBehaviour {
 			}
 			case defenseType.DEF_SLOW:
 			{
-				this.damage = 5;
-				this.cost = 300;
-				this.firerate = 3.0f;
+				this.damage = 3;
+				this.cost = (int)Game.upgradeCost.DEF_SLOW;
+				this.firerate = 2.0f;
 				this.GetComponent<CircleCollider2D>().radius = 5;
 				this.gameObject.name = "Slow";
 				break;
 			}
 			case defenseType.DEF_ANTIAIR:
 			{
-				this.damage = 5;
-				this.cost = 300;
+				this.damage = 7;
+				this.cost = (int)Game.upgradeCost.DEF_ANTIAIR;
 				this.firerate = 1.0f;
 				this.GetComponent<CircleCollider2D>().radius = 5;
 				this.gameObject.name = "Anti-Air";
@@ -261,7 +261,7 @@ public class Defense : MonoBehaviour {
 			case defenseType.DEF_FLAME:
 			{
 				this.damage = 1.0f;
-				this.cost = 300;
+				this.cost = (int)Game.upgradeCost.DEF_FLAME;
 				this.firerate = 0.2f;
 				this.GetComponent<CircleCollider2D>().radius = 3;
 				this.gameObject.name = "Flamethrower";
@@ -279,6 +279,10 @@ public class Defense : MonoBehaviour {
 		this.rankImage.transform.localPosition = new Vector2 (-0.3f, -0.3f);
 		this.gameObject.tag = "Defense";
 		Destroy (temp);
+	}
+
+	public int ReturnType() {
+		return (int)selection;
 	}
 
 	public void SetCost(int newCost) {
@@ -326,12 +330,12 @@ public class Defense : MonoBehaviour {
 				}
 				case defenseType.DEF_SLOW:
 				{
-					
+					firerate -= 0.2f;
 					break;
 				}
 				case defenseType.DEF_ANTIAIR:
 				{
-
+					damage *= 1.2f;
 					break;
 				}
 				case defenseType.DEF_FLAME:
@@ -340,6 +344,7 @@ public class Defense : MonoBehaviour {
 					break;
 				}
 			}
+			this.GetComponent<CircleCollider2D>().radius += 0.5f;
 		}
 	}
 

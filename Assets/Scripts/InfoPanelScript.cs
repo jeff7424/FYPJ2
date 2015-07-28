@@ -14,6 +14,7 @@ public class InfoPanelScript : MonoBehaviour {
 	private GameObject firerate;
 	private GameObject range;
 	private GameObject special;
+	private GameObject upgradeCost;
 
 	// Use this for initialization
 	void Start () {
@@ -24,6 +25,7 @@ public class InfoPanelScript : MonoBehaviour {
 			firerate = GameObject.Find ("Firing rate");
 			range = GameObject.Find ("Range");
 			special = GameObject.Find ("Special");
+			upgradeCost = GameObject.Find ("UpgradeCost");
 		} else if (Application.loadedLevelName == "Multiplayer") {
 			if (gameObject.tag == "Player 1") {
 				towerName = GameObject.Find ("Tower name 1");
@@ -31,12 +33,14 @@ public class InfoPanelScript : MonoBehaviour {
 				firerate = GameObject.Find ("Firing rate 1");
 				range = GameObject.Find ("Range 1");
 				special = GameObject.Find ("Special 1");
+				upgradeCost = GameObject.Find ("UpgradeCost 1");
 			} else if (gameObject.tag == "Player 2") {
 				towerName = GameObject.Find ("Tower name 2");
 				damage = GameObject.Find ("Damage 2");
 				firerate = GameObject.Find ("Firing rate 2");
 				range = GameObject.Find ("Range 2");
 				special = GameObject.Find ("Special 2");
+				upgradeCost = GameObject.Find ("UpgradeCost 2");
 			}
 		}
 	}
@@ -49,6 +53,7 @@ public class InfoPanelScript : MonoBehaviour {
 			firerate.GetComponent<Text> ().text = defense.GetFireRate ().ToString();
 			range.GetComponent<Text> ().text = defense.GetRange ().ToString();
 			special.GetComponent<Text>().text = defense.GetLevel().ToString();
+			upgradeCost.GetComponent<Text>().text = "Cost: " + defense.GetCost().ToString();
 		}
 	}
 

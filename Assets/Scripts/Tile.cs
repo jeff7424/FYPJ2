@@ -37,7 +37,6 @@ public class Tile : MonoBehaviour {
 		else if (Application.loadedLevelName == "Multiplayer") {
 			player = GameObject.Find (gameObject.tag);
 		}
-		Debug.Log (player);
 	}
 	
 	// Update is called once per frame
@@ -51,26 +50,6 @@ public class Tile : MonoBehaviour {
 				TileDeselected();
 			}
 		}
-#if UNITY_ANDROID
-
-//		foreach (Touch touch in Input.touches) {
-//			Vector3 worldPoint = Camera.main.ScreenToWorldPoint(touch.position);
-//			Vector2 touchPos = new Vector2(worldPoint.x, worldPoint.y);
-//			if (GetComponent<Collider2D>() == Physics2D.OverlapPoint (touchPos)) {
-//				if (touch.phase == TouchPhase.Began) 
-//					TouchOnTile ();
-//				else if (touch.phase == TouchPhase.Canceled)
-//					TouchExitTile ();
-//				else if (touch.phase == TouchPhase.Ended) {
-//					CheckDeploy ();
-//					TouchExitTile ();
-//				}
-//			} else {
-//				player.GetComponent<Player1> ().mouseOverTile = false;
-//			}
-//		}
-
-#endif
 	}
 
 	public void BuildDefense() {
@@ -127,9 +106,19 @@ public class Tile : MonoBehaviour {
 	}
 
 	public void RankUpDefense() {
-		defense.GetComponent<Defense> ().RankUp ();
+		if (game.GetComponent<Game>().GetPause () == false) {
+			int upgradeCost = defense.GetComponent<Defense>().GetCost();
+			if (player.GetComponent<Player1> ().resources - upgradeCost >= 0) {
+				defense.GetComponent<Defense> ().RankUp ();
+				player.GetComponent<Player1>().resources -= upgradeCost;
+			} else {
+				DisplayDeployError("NOT ENOUGH RESOURCES!");
+				PlaySound (soundclip.SOUND_INSUFFICIENT);
+			}
+		}
 	}
 
+#if UNITY_EDITOR
 	void OnMouseEnter() {
 		TouchOnTile();
 	}
@@ -141,6 +130,7 @@ public class Tile : MonoBehaviour {
 	void OnMouseDown() {
 		CheckDeploy ();
 	}
+#endif
 
 	public void CheckDeploy() {
 		if (game.GetComponent<Game>().GetPause () == false) {

@@ -11,6 +11,7 @@ public class Grid : MonoBehaviour {
 	public ObstacleSpawnMaster ObstacleSpawn;
 	public SpawnObstacles spawnObs;
 	public PathfinderScript thePathfinder;
+	public Player1 player;
 
 	public GameObject node;
 	public GameObject tile;
@@ -32,10 +33,14 @@ public class Grid : MonoBehaviour {
 		level = PlayerPrefs.GetInt ("level"); //game.GetComponent<Game>().level;
 		CreateTiles ();
 		maxSpawn = 0;
-		if (Application.loadedLevelName == "Game")
+		if (Application.loadedLevelName == "Game") {
 			tileSize = 1.0f;
-		else if (Application.loadedLevelName == "Multiplayer")
+			player = GameObject.Find ("Player").GetComponent<Player1>();
+		}
+		else if (Application.loadedLevelName == "Multiplayer") {
 			tileSize = 0.75f;
+			player = GameObject.Find (gameObject.tag).GetComponent<Player1>();
+		}
 	}
 
 	void Update() {
@@ -54,8 +59,10 @@ public class Grid : MonoBehaviour {
 						child.GetComponent<Tile>().CheckDeploy ();
 						//child.GetComponent<Tile>().TouchExitTile ();
 					}
+					player.mouseOverTile = true;
 				} else {
-					//player.GetComponent<Player1> ().mouseOverTile = false;
+					if (!player.mouseOverTile && !player.mouseOverPanel)
+						player.infoPanel.GetComponent<InfoPanelScript>().DisablePanel();
 				}
 			}
 		}
