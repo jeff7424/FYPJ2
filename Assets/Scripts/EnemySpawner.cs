@@ -31,7 +31,6 @@ public class EnemySpawner : MonoBehaviour {
 			EnemyWavesSlider = null;
 		}
 
-		Debug.Log (level);
 		enemySpawned = 0;
 		totalEnemies = LevelWaves.levels[level].TotalEnemies();
 	}

@@ -264,7 +264,7 @@ public class Defense : MonoBehaviour {
 				this.cost = (int)Game.upgradeCost.DEF_FLAME;
 				this.firerate = 0.2f;
 				this.GetComponent<CircleCollider2D>().radius = 3;
-				this.gameObject.name = "Flamethrower";
+				this.gameObject.name = "Flame";
 				break;
 			}
 		}
