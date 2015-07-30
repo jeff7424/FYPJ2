@@ -56,6 +56,7 @@ public class Enemy : MonoBehaviour {
 			else if (gameObject.transform.root.tag == "Player 2")
 				player = GameObject.Find ("Player 2");
 		}
+		GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat ("volume", 1);
 	}
 
 	void OnDestroy(){

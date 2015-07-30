@@ -54,6 +54,7 @@ public class Game : MonoBehaviour {
 			player1text = GameObject.Find ("Player 1 Text").GetComponent<Text>();
 			player2text = GameObject.Find ("Player 2 Text").GetComponent<Text>();
 		}
+		GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat ("volume", 1);
 	}
 	
 	// Update is called once per frame

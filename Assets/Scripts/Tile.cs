@@ -38,6 +38,7 @@ public class Tile : MonoBehaviour {
 		else if (Application.loadedLevelName == "Multiplayer") {
 			player = GameObject.Find (gameObject.tag);
 		}
+		GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat ("volume", 1);
 	}
 	
 	// Update is called once per frame

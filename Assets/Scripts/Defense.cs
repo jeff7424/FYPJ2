@@ -68,6 +68,7 @@ public class Defense : MonoBehaviour {
 		
 		selection = (defenseType)player.GetComponent<Player1> ().selection;
 		SetType (selection);
+		GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat ("volume", 1);
 	}
 
 	// Update is called once per frame

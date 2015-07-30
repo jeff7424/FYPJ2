@@ -9,6 +9,7 @@ public class MainMenuButtons : MonoBehaviour {
 	public GameObject BackButton;
 	public GameObject ExitPanel;
 	public Text title;
+	public Slider volumeSlider;
 
 	void Start() {
 		//MainMenuPanel = GameObject.Find ("Main menu panel");
@@ -17,6 +18,7 @@ public class MainMenuButtons : MonoBehaviour {
 		DisablePanel(SettingsPanel);
 		DisablePanel (ExitPanel);
 		DisableBack();
+		volumeSlider.value = PlayerPrefs.GetFloat ("volume", 1);
 	}
 
 	public void PlayButton(){
@@ -72,5 +74,8 @@ public class MainMenuButtons : MonoBehaviour {
 			BackButton.transform.GetChild(i).gameObject.SetActive(false);
 		}
 	}
-	                      
+	 
+	public void SetVolume() {
+		PlayerPrefs.SetFloat("volume", volumeSlider.value);
+	}
 }
