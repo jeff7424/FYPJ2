@@ -37,9 +37,6 @@ public class Bullets : MonoBehaviour {
 			// Move the bullet towards the direction of enemy
 			transform.Translate (Vector3.right * Time.deltaTime * speed);
 			// Destroy object if it doesn't hit anything after 2 seconds
-			if (fire) {
-				FireAnimation();
-			}
 			Destroy (gameObject, 2.0f);
 		}
 	}
@@ -65,12 +62,5 @@ public class Bullets : MonoBehaviour {
 			//Debug.Log (damage);
 			Destroy (gameObject);
 		} 
-	}
-
-	void FireAnimation() {
-		scale.x += 5.0f * Time.deltaTime;
-		scale.y += 5.0f * Time.deltaTime;
-		Vector2 newSize = scale;
-		gameObject.transform.localScale = newSize;
 	}
 }

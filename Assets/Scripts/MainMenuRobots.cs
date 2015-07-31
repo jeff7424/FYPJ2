@@ -15,6 +15,7 @@ public class MainMenuRobots : MonoBehaviour {
 			dir = -1;
 		else
 			dir = 1;
+		Time.timeScale = 1.0f;
 	}
 	
 	// Update is called once per frame

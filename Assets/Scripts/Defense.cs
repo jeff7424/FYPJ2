@@ -68,7 +68,7 @@ public class Defense : MonoBehaviour {
 		
 		selection = (defenseType)player.GetComponent<Player1> ().selection;
 		SetType (selection);
-		GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat ("volume", 1);
+		GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat ("volume");
 	}
 
 	// Update is called once per frame
@@ -147,7 +147,7 @@ public class Defense : MonoBehaviour {
 			slowbullet.name = this.gameObject.name + " bullet";
 			slowbullet.damage = damage;
 			slowbullet.GetComponent<SpriteRenderer>().sprite = projectile[(int)selection - 1];
-		} else if (this.gameObject.name == "Flamethrower") {
+		} else if (this.gameObject.name == "Flame") {
 			Instantiate (firebullet, weapon.transform.position, weapon.transform.rotation);
 			firebullet.name = this.gameObject.name + " bullet";
 			firebullet.damage = damage;

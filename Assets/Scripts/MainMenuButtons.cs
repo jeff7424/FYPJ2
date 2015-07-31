@@ -8,6 +8,7 @@ public class MainMenuButtons : MonoBehaviour {
 	public GameObject SettingsPanel;
 	public GameObject BackButton;
 	public GameObject ExitPanel;
+	public GameObject CreditPanel;
 	public Text title;
 	public Slider volumeSlider;
 
@@ -17,6 +18,7 @@ public class MainMenuButtons : MonoBehaviour {
 		//BackButton = GameObject.Find ("Back Button");
 		DisablePanel(SettingsPanel);
 		DisablePanel (ExitPanel);
+		DisablePanel (CreditPanel);
 		DisableBack();
 		volumeSlider.value = PlayerPrefs.GetFloat ("volume", 1);
 	}
@@ -57,6 +59,8 @@ public class MainMenuButtons : MonoBehaviour {
 			title.text = "TENKZ VS ROBOTZ";
 		else if (go.name == SettingsPanel.name)
 			title.text = "SETTINGS";
+		else if (go.name == CreditPanel.name)
+			title.text = "CREDITS";
 	}
 
 	public void EnableBack() {

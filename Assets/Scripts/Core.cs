@@ -73,7 +73,10 @@ public class Core : MonoBehaviour {
 		if (other.gameObject.tag == "Enemy" || other.GetComponent<Enemy>()) {
 			DecreaseHealth ();
 			player.GetComponent<Player1>().enemyLeft --;
-			Handheld.Vibrate();
+			if (health > 0) {
+				GetComponent<AudioSource>().Play ();
+				Handheld.Vibrate();
+			}
 			Destroy (other.gameObject);
 		} 
 	}

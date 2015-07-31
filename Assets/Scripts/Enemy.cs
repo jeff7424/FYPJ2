@@ -27,6 +27,8 @@ public class Enemy : MonoBehaviour {
 
 	public ParticleSystem deathParticle;
 
+	Color blue;
+
 	public enum enemyType{
 		TYPE_NORMAL = 0,
 		TYPE_SLOW,
@@ -56,7 +58,8 @@ public class Enemy : MonoBehaviour {
 			else if (gameObject.transform.root.tag == "Player 2")
 				player = GameObject.Find ("Player 2");
 		}
-		GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat ("volume", 1);
+		GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat ("volume");
+		blue = new Color (0.3f ,0.3f, 1.0f, 1.0f);
 	}
 
 	void OnDestroy(){
@@ -81,15 +84,14 @@ public class Enemy : MonoBehaviour {
 					player.GetComponent<Player1>().enemyLeft --;
 				player.GetComponent<Player1>().resources += reward;
 			}
+
 			if (slow_duration > 0.0f) {
 				slow_duration -= Time.deltaTime;
-				GetComponent<SpriteRenderer>().color = Color.blue;
+				GetComponent<SpriteRenderer>().color = blue;
 				finalSpeed = speed * effectValue;
 			} else {
 				effectValue = 0.0f;
-				//speed = originalSpeed;
 				finalSpeed = speed;
-				GetComponent<SpriteRenderer>().color = Color.white;
 				slowByBuff = false;
 			}
 
@@ -101,7 +103,9 @@ public class Enemy : MonoBehaviour {
 					health -= burnDamage;
 					damageRate = 0.3f;
 				}
-			} else {
+			}
+
+			if (slow_duration <= 0.0f && fire_duration <= 0.0f) {
 				GetComponent<SpriteRenderer>().color = Color.white;
 			}
 		}

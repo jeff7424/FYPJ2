@@ -34,8 +34,11 @@ public class Game : MonoBehaviour {
 	Text player2text;
 	float countdowntimer;
 
+	public AudioClip countdown;
+
 	// Use this for initialization
 	void Awake () {
+		Screen.sleepTimeout = SleepTimeout.NeverSleep;
 		if (Time.timeScale != 1.0f)
 			Time.timeScale = 1.0f;
 		timeElapsed = 0.0f;
@@ -54,7 +57,7 @@ public class Game : MonoBehaviour {
 			player1text = GameObject.Find ("Player 1 Text").GetComponent<Text>();
 			player2text = GameObject.Find ("Player 2 Text").GetComponent<Text>();
 		}
-		GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat ("volume", 1);
+		GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat ("volume");
 	}
 	
 	// Update is called once per frame
@@ -68,7 +71,7 @@ public class Game : MonoBehaviour {
 				if (countdowntimer < 1.0f) {
 					GetComponent<AudioSource>().pitch = 2.0f;
 				}
-				GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip);
+				GetComponent<AudioSource>().PlayOneShot(countdown);
 			}
 			countdowntext.text = temp.ToString();
 			if (temp <= 0) {
@@ -84,6 +87,8 @@ public class Game : MonoBehaviour {
 					player1text.enabled = false;
 					player2text.enabled = false;
 				}
+				GetComponent<AudioSource>().pitch = 1.0f;
+				GetComponent<AudioSource>().Play ();
 			}
 		}
 		if (!isPause && !endGame && startGame) {
