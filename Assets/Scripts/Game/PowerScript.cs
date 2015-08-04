@@ -52,7 +52,14 @@ public class PowerScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (!game.GetComponent<Game>().GetPause ()) {
-			towers = GameObject.FindGameObjectsWithTag("Defense");
+			//if (Application.loadedLevelName == "Game")
+				towers = GameObject.FindGameObjectsWithTag("Defense");
+//			else if (Application.loadedLevelName == "Multiplayer") {
+//				if (this.gameObject.tag == "Player 1")
+//					towers = GameObject.FindGameObjectsWithTag("Defense 1");
+//				else if (this.gameObject.tag == "Player 2")
+//					towers = GameObject.FindGameObjectsWithTag("Defense 2");
+			//}
 			if (cooldown_slow > 0.0f) {
 				cooldown_slow -= Time.deltaTime;
 			} else {

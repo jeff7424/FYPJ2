@@ -23,11 +23,11 @@ public class TowerInfo : MonoBehaviour {
 		if (activated) {
 #if UNITY_EDITOR
 			Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			transform.position = new Vector2(worldPoint.x, worldPoint.y);
+			transform.position = new Vector2(worldPoint.x + 1, worldPoint.y);
 #elif UNITY_ANDROID
 			foreach (Touch touch in Input.touches) {
 				Vector3 worldPoint = Camera.main.ScreenToWorldPoint(touch.position);
-				transform.position = new Vector2(worldPoint.x, worldPoint.y);
+				transform.position = new Vector2(worldPoint.x + 1, worldPoint.y);
 			}
 #endif
 			switch (selection) {

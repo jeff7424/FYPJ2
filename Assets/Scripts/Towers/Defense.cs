@@ -58,12 +58,10 @@ public class Defense : MonoBehaviour {
 		if (Application.loadedLevelName == "Game")
 			player = GameObject.Find ("Player");
 		else if (Application.loadedLevelName == "Multiplayer") {
-//			if (gameObject.tag == "Player 1")
-//				player = GameObject.Find ("Player 1");
-//			else if (gameObject.tag == "Player 2")
-//				player = GameObject.Find ("Player 2");
-
-			player = GameObject.Find(gameObject.tag);
+			if (gameObject.tag == "Player 1")
+				player = GameObject.Find ("Player 1");
+			else if (gameObject.tag == "Player 2")
+				player = GameObject.Find ("Player 2");
 		}
 		
 		selection = (defenseType)player.GetComponent<Player1> ().selection;
@@ -219,8 +217,9 @@ public class Defense : MonoBehaviour {
 	public void SetType(defenseType type) {
 		GameObject temp = new GameObject();
 		this.pivot = Instantiate (temp, transform.position, Quaternion.identity) as GameObject;
-		this.pivot.transform.parent = transform;
+		this.pivot.transform.parent = this.transform;
 		this.pivot.gameObject.name = "Pivot";
+		Destroy (temp);
 		this.weapon = Instantiate (weaponObject, transform.position, Quaternion.identity) as GameObject;
 		this.weapon.transform.parent = pivot.transform;
 		this.weapon.gameObject.name = "Barrel";
@@ -282,7 +281,6 @@ public class Defense : MonoBehaviour {
 		this.rankImage.transform.parent = transform;
 		this.rankImage.transform.localPosition = new Vector2 (-0.3f, -0.3f);
 		this.gameObject.tag = "Defense";
-		Destroy (temp);
 	}
 
 	public int ReturnType() {
