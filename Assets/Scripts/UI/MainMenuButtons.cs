@@ -12,7 +12,7 @@ public class MainMenuButtons : MonoBehaviour {
 	public GameObject CreditPanel;
 	public Text title;
 	public Slider volumeSlider;
-	public GameObject TutorialPage1, TutorialPage2, TutorialPage3, TutorialPage4, TutorialPage5, TutorialPage6;
+	public GameObject TutorialPage1, TutorialPage2, TutorialPage3, TutorialPage4, TutorialPage5, TutorialPage6, TutorialPage7;
 	public Text TutorialText;
 	int pageNumber;
 
@@ -34,6 +34,7 @@ public class MainMenuButtons : MonoBehaviour {
 		TutorialPage4.SetActive(false);
 		TutorialPage5.SetActive(false);
 		TutorialPage6.SetActive(false);
+		TutorialPage7.SetActive(false);
 	}
 
 	public void PlayButton(){
@@ -67,6 +68,10 @@ public class MainMenuButtons : MonoBehaviour {
 			break;
 			
 		case 6:
+			pageNumber++;
+			break;
+
+		case 7:
 			pageNumber = 1;
 			break;
 
@@ -78,7 +83,7 @@ public class MainMenuButtons : MonoBehaviour {
 	public void LeftArrow(){
 		switch (pageNumber){
 		case 1:
-			pageNumber = 6;
+			pageNumber = 7;
 			break;
 			
 		case 2:
@@ -98,6 +103,10 @@ public class MainMenuButtons : MonoBehaviour {
 			break;
 
 		case 6:
+			pageNumber--;
+			break;
+			
+		case 7:
 			pageNumber--;
 			break;
 
@@ -162,6 +171,7 @@ public class MainMenuButtons : MonoBehaviour {
 			TutorialPage4.SetActive(false);
 			TutorialPage5.SetActive(false);
 			TutorialPage6.SetActive(false);
+			TutorialPage7.SetActive(false);
 			TutorialText.text = "Objectives";
 			break;
 			
@@ -172,6 +182,7 @@ public class MainMenuButtons : MonoBehaviour {
 			TutorialPage4.SetActive(false);
 			TutorialPage5.SetActive(false);
 			TutorialPage6.SetActive(false);
+			TutorialPage7.SetActive(false);
 			TutorialText.text = "Build Tower";
 			break;
 			
@@ -182,7 +193,8 @@ public class MainMenuButtons : MonoBehaviour {
 			TutorialPage4.SetActive(false);
 			TutorialPage5.SetActive(false);
 			TutorialPage6.SetActive(false);
-			TutorialText.text = "Tower Type";
+			TutorialPage7.SetActive(false);
+			TutorialText.text = "Towers";
 			break;
 
 		case 4:
@@ -192,6 +204,7 @@ public class MainMenuButtons : MonoBehaviour {
 			TutorialPage4.SetActive(true);
 			TutorialPage5.SetActive(false);
 			TutorialPage6.SetActive(false);
+			TutorialPage7.SetActive(false);
 			TutorialText.text = "Upgrade Tower";
 			break;
 
@@ -202,6 +215,7 @@ public class MainMenuButtons : MonoBehaviour {
 			TutorialPage4.SetActive(false);
 			TutorialPage5.SetActive(true);
 			TutorialPage6.SetActive(false);
+			TutorialPage7.SetActive(false);
 			TutorialText.text = "Skills";
 			break;
 			
@@ -212,7 +226,19 @@ public class MainMenuButtons : MonoBehaviour {
 			TutorialPage4.SetActive(false);
 			TutorialPage5.SetActive(false);
 			TutorialPage6.SetActive(true);
-			TutorialText.text = "Enemy Type";
+			TutorialPage7.SetActive(false);
+			TutorialText.text = "Enemies";
+			break;
+			
+		case 7:
+			TutorialPage1.SetActive(false);
+			TutorialPage2.SetActive(false);
+			TutorialPage3.SetActive(false);
+			TutorialPage4.SetActive(false);
+			TutorialPage5.SetActive(false);
+			TutorialPage6.SetActive(false);
+			TutorialPage7.SetActive(true);
+			TutorialText.text = "Obstacles";
 			break;
 
 		default:
