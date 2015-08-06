@@ -17,12 +17,12 @@ public class LosingScreen : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		game = GameObject.Find("Game");
-		gameTime = 0.0f;
+		gameTime = 0;
 		defenseUsed = 0;
 		defenseDeleted = 0;
 		timeElapsedText.text = "Time Elapsed: " + gameTime;
-		defenseUsedText.text = "Number of Defenses Used: " + defenseUsed;
-		defenseDeletedText.text = "Number of Defense Deleted: " + defenseDeleted;
+		defenseUsedText.text = "Defenses Used: " + defenseUsed;
+		defenseDeletedText.text = "Defense Deleted: " + defenseDeleted;
 	}
 	
 	// Update is called once per frame
@@ -33,9 +33,9 @@ public class LosingScreen : MonoBehaviour {
 			//			transform.Find ("Firing rate").GetComponent<Text> ().text = "Fire rate: " + defense.GetFireRate ();
 			//			transform.Find ("Range").GetComponent<Text> ().text = "Range: " + defense.GetRange ();
 			//			transform.Find ("Special").GetComponent<Text>().text = "Level: " + defense.GetLevel();
-			timeElapsedText.text = "Time Elapsed: " + gameTime;
-			defenseUsedText.text = "Number of Defenses Used: " + defenseUsed;
-			defenseDeletedText.text = "Number of Defense Deleted: " + defenseDeleted;
+			timeElapsedText.text = "Time Elapsed: " + gameTime.ToString("F2");
+			defenseUsedText.text = "Defenses Used: " + defenseUsed;
+			defenseDeletedText.text = "Defense Deleted: " + defenseDeleted;
 			
 		}
 	}
