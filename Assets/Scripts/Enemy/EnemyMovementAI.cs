@@ -66,6 +66,17 @@ public class EnemyMovementAI : MonoBehaviour {
 				//--------------------------------------------------------
 				if(currentWaypoint < thePath.Count){
 					switch(GetComponent<Enemy>().getType()){
+					case Enemy.enemyType.TYPE_NORMAL:
+					case Enemy.enemyType.TYPE_FAST:
+					case Enemy.enemyType.TYPE_SLOW:
+					case Enemy.enemyType.TYPE_SPLIT_PARENT:
+					case Enemy.enemyType.TYPE_SPLIT_CHILD:
+						if(thePath[currentWaypoint].GetComponent<Node>().getNodeType() == Node.NodeType.NODE_TOWER ||
+						   thePath[currentWaypoint].GetComponent<Node>().getNodeType() == Node.NodeType.NODE_OBSTACLE ||
+						   thePath[currentWaypoint].GetComponent<Node>().getNodeType() == Node.NodeType.NODE_PLATFORM)
+							searchPath();
+						break;
+
 					case Enemy.enemyType.TYPE_JUMP:
 						if(thePath[currentWaypoint].GetComponent<Node>().getNodeType() == Node.NodeType.NODE_TOWER || prevNode.getNodeType() == Node.NodeType.NODE_TOWER){
 							GetComponent<Enemy>().setSpeed(5.0f);
