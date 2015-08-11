@@ -68,18 +68,18 @@ public class Tile : MonoBehaviour {
 
 		//Update pathNode type and search path for all AI present
 		GetComponent<Node>().setNodeType(Node.NodeType.NODE_TOWER);
-		EnemyMovementAI[] enemyAIs = null;
-		if (Application.loadedLevelName == "Game")
-			enemyAIs = GameObject.Find("EnemyParent").GetComponentsInChildren<EnemyMovementAI>();
-		else if (Application.loadedLevelName == "Multiplayer") {
-			if (gameObject.tag == "Player 1")
-				enemyAIs = GameObject.Find("EnemyParent 1").GetComponentsInChildren<EnemyMovementAI>();
-			else if (gameObject.tag == "Player 2")
-				enemyAIs = GameObject.Find("EnemyParent 2").GetComponentsInChildren<EnemyMovementAI>();
-		}
-		foreach(EnemyMovementAI ai in enemyAIs){
-			ai.searchPath();
-		}
+//		EnemyMovementAI[] enemyAIs = null;
+//		if (Application.loadedLevelName == "Game")
+//			enemyAIs = GameObject.Find("EnemyParent").GetComponentsInChildren<EnemyMovementAI>();
+//		else if (Application.loadedLevelName == "Multiplayer") {
+//			if (gameObject.tag == "Player 1")
+//				enemyAIs = GameObject.Find("EnemyParent 1").GetComponentsInChildren<EnemyMovementAI>();
+//			else if (gameObject.tag == "Player 2")
+//				enemyAIs = GameObject.Find("EnemyParent 2").GetComponentsInChildren<EnemyMovementAI>();
+//		}
+//		foreach(EnemyMovementAI ai in enemyAIs){
+//			ai.searchPath();
+//		}
 	}
 
 	public void DestroyDefense() {
